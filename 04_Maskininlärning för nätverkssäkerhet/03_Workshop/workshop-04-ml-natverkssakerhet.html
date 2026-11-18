@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop 04 – Maskininlärning för nätverkssäkerhet · AI inom cybersäkerhet</title>
+<style>
+
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d1c19;--muted:#5c5a54;--line:#dcd8cf;
+--ok:#1f6b45;--bad:#a32b1c;--warn:#8a5a12;--soft:#efece4;--shadow:0 1px 2px rgba(0,0,0,.05)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.62 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+img,svg{max-width:100%}
+a{color:var(--dark);text-underline-offset:3px}
+a:hover{color:var(--acc)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:10px;z-index:99;border-radius:8px}
+header.top{background:var(--dark);color:#fff;padding:10px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+header.top a{color:#fff;text-decoration:none;font-weight:600;font-size:.92rem}
+header.top a:hover{color:#ffd9c9}
+header.top .kicker{font-size:.85rem;opacity:.9}
+main{max-width:1000px;margin:0 auto;padding:24px 18px 56px}
+.hero{margin:6px 0 18px}
+.eyebrow{font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--acc);font-weight:700;margin:0 0 4px}
+h1{font-size:clamp(1.55rem,3.2vw,2.2rem);line-height:1.18;margin:.1em 0 .35em;color:var(--dark)}
+.lead{font-size:1.06rem;max-width:70ch;color:#33312c;margin:.2em 0 1em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.86rem;color:var(--muted)}
+.chips b{color:var(--ink)}
+h2{font-size:1.35rem;margin:1.6em 0 .5em;color:var(--dark)}
+h3{font-size:1.06rem;margin:1.3em 0 .4em}
+h4{font-size:.98rem;margin:1em 0 .3em}
+p,li{max-width:74ch}
+ul,ol{padding-left:1.25em}
+li{margin:.25em 0}
+.goals{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:10px;padding:14px 18px;margin:16px 0 6px}
+.goals h2{margin:.1em 0 .4em;font-size:1.05rem}
+.goals ul{margin:0}
+.tabs{position:sticky;top:0;z-index:30;background:var(--bg);display:flex;gap:6px;align-items:center;flex-wrap:wrap;
+padding:10px 0;border-bottom:2px solid var(--line);margin:18px 0 6px}
+.tabs [role=tab]{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);
+color:var(--muted);border-radius:9px;padding:9px 15px}
+.tabs [role=tab]:hover{border-color:var(--acc);color:var(--ink)}
+.tabs [role=tab][aria-selected=true]{background:var(--dark);border-color:var(--dark);color:#fff}
+.tabs [role=tab]:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,th:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.timer{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:4px 8px}
+.timer .clock{font-variant-numeric:tabular-nums;font-weight:700;min-width:52px;text-align:center;color:var(--dark)}
+.timer.low .clock{color:var(--bad)}
+.timer.done .clock{color:var(--warn)}
+.timer button{font:inherit;font-size:.82rem;padding:4px 9px;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+.timer button:hover{border-color:var(--acc)}
+[role=tabpanel]{padding:8px 0 20px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.task{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;box-shadow:var(--shadow)}
+.task>h3{margin-top:0;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.task .no{background:var(--acc);color:#fff;border-radius:7px;font-size:.8rem;padding:2px 9px;font-weight:700}
+.brief{display:grid;gap:6px;margin:10px 0 14px;font-size:.95rem}
+.brief div{display:grid;grid-template-columns:110px 1fr;gap:10px}
+.brief dt,.brief b{color:var(--muted);font-weight:600}
+.brief span{min-width:0}
+@media(max-width:520px){.brief div{grid-template-columns:1fr;gap:0}}
+.hint{font-size:.9rem;color:var(--muted);margin:.4em 0}
+.note{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+.warn{background:#fdf2e2;border:1px solid #e6c9a2;border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--dark);background:var(--dark);color:#fff;padding:9px 16px}
+button:hover{filter:brightness(1.12)}
+button.ghost{background:transparent;color:var(--dark);border-color:var(--line)}
+button.ghost:hover{background:var(--soft)}
+button:disabled{opacity:.6;cursor:default;filter:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 4px}
+label.field{display:block;font-weight:600;font-size:.92rem;margin:10px 0 4px}
+select,input[type=number],input[type=range],input[type=search]{font:inherit}
+select,input[type=number],input[type=search]{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--dark);height:28px}
+input[type=checkbox],input[type=radio]{accent-color:var(--dark);width:18px;height:18px}
+.rangeout{font-variant-numeric:tabular-nums;font-weight:700;color:var(--dark)}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:10px 0}
+legend{font-weight:600;font-size:.92rem;padding:0 6px}
+.checkline{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.95rem}
+.checkline:last-child{border-bottom:0}
+.checkline input{margin-top:4px;flex:none}
+.checkline span{flex:1}
+.tablewrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.93rem;min-width:420px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-weight:600;white-space:nowrap}
+th[data-i]{cursor:pointer;user-select:none}
+th[data-i]:hover{background:#e6e2d8}
+th .arrow{opacity:.45;font-size:.8em}
+tbody tr:hover{background:#faf8f3}
+tbody tr.good{background:#eaf5ee}
+tbody tr.bad{background:#fbecea}
+.rownote{font-size:.84rem;color:var(--muted);margin-top:4px}
+.filter{margin-bottom:8px;width:min(340px,100%)}
+.fb{font-size:.93rem;margin:10px 0;padding:10px 12px;border-radius:8px;background:var(--soft)}
+.fb:empty{display:none}
+.fb.ok{background:#eaf5ee;border-left:4px solid var(--ok)}
+.fb.bad{background:#fbecea;border-left:4px solid var(--bad)}
+.fb b{color:var(--ink)}
+.whynot{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+.q{border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0;background:#fff}
+.qt{font-weight:600;margin:0 0 8px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--soft);border:1px solid var(--line);
+color:var(--ink);border-radius:8px;padding:9px 11px;font-weight:400}
+.opt:hover:not(:disabled){border-color:var(--acc)}
+.opt .k{font-weight:700;color:var(--muted);flex:none}
+.opt.correct{border-color:var(--ok);background:#e7f4ec}
+.opt.wrong{border-color:var(--bad);background:#fbe7e3}
+.opt .k{min-width:1em}
+.quizsum{font-size:.95rem;margin:12px 0 4px}
+.chart{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+.chart .grid{stroke:#e5e1d8;stroke-width:1}
+.chart .ax{font-size:11px;fill:#6b6862}
+.chart .lbl{font-size:12px;fill:#3a3833}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.86rem;color:var(--muted);margin:6px 0 0;padding:0;list-style:none}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.bars{margin:10px 0}
+.barrow{display:grid;grid-template-columns:minmax(110px,1.1fr) 2fr minmax(56px,auto);gap:10px;align-items:center;font-size:.9rem;margin:6px 0}
+.bl{color:var(--muted)}
+.btrack{background:var(--soft);border-radius:999px;height:12px;overflow:hidden}
+.bfill{display:block;height:100%;background:var(--dark);border-radius:999px;transition:width .18s ease}
+.barrow.ok .bfill{background:var(--ok)}
+.barrow.bad .bfill{background:var(--bad)}
+.barrow.warn .bfill{background:var(--warn)}
+.bv{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;margin:12px 0;font-size:.9rem}
+.cm .cmh{font-weight:600;color:var(--muted);padding:4px 6px;display:flex;align-items:center}
+.cm .cell{border-radius:8px;padding:10px;border:1px solid var(--line);background:#fff}
+.cm .cell b{display:block;font-size:1.3rem}
+.cm .cell span{font-size:.8rem;color:var(--muted)}
+.cm .tp{background:#e6f4ec;border-color:#b6ddc6}
+.cm .tn{background:#eef1f0;border-color:#cfd8d3}
+.cm .fp{background:#fdf1e2;border-color:#e8cfae}
+.cm .fn{background:#fbe8e5;border-color:#e8bcb4}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0}
+details[open]{box-shadow:var(--shadow)}
+summary{cursor:pointer;font-weight:600;color:var(--dark)}
+details[open] summary{margin-bottom:8px;border-bottom:1px solid var(--line);padding-bottom:8px}
+details .why{font-size:.95rem}
+details ul{margin:.4em 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--muted);vertical-align:middle}
+.tag.sim{background:#efe6f5;color:#5b3a72}
+.flow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flow li{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.85rem}
+.flow li.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.flow li b{font-weight:700}
+.stepbtns{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.stepbtns button{background:var(--card);color:var(--ink);border:1px solid var(--line);padding:6px 10px;font-size:.86rem;border-radius:8px}
+.stepbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.stepinfo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:8px;padding:12px 14px;margin:8px 0;min-height:76px}
+.stepinfo h4{margin:0 0 4px}
+.riskbadge{display:inline-block;border-radius:6px;padding:2px 9px;font-weight:700;font-size:.85rem}
+.riskbadge.low{background:#e6f4ec;color:#1f5c3e}
+.riskbadge.mid{background:#fdf1e2;color:#7a5112}
+.riskbadge.high{background:#fbe8e5;color:#8c2417}
+footer{border-top:1px solid var(--line);margin-top:26px;padding:18px;text-align:center;color:var(--muted);font-size:.83rem}
+@media(max-width:640px){main{padding:16px 12px 40px}.tabs{padding:8px 0}.timer{width:100%;justify-content:center}.brief div{grid-template-columns:1fr}th,td{padding:6px 8px}}
+@media print{header.top,.tabs,.actions,button{display:none}body{background:#fff}[role=tabpanel][hidden]{display:block!important}main{max-width:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* --- nya interaktiva komponenter --- */
+.figure-wrap{display:grid;gap:16px;grid-template-columns:minmax(240px,0.9fr) minmax(280px,1.1fr);align-items:start}
+@media(max-width:760px){.figure-wrap{grid-template-columns:1fr}}
+.human{position:relative;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:8px}
+.human svg{display:block;width:100%;height:auto}
+.hotspot{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--dark);background:#fff;color:var(--dark);border-radius:999px;font:inherit;font-size:.72rem;font-weight:700;padding:3px 7px;line-height:1.2;cursor:pointer;white-space:nowrap}
+.hotspot[aria-pressed=true]{background:var(--dark);color:#fff}
+.hotspot:hover{border-color:var(--acc)}
+.hotspot:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:150px}
+.panel h4{margin:.1em 0 .4em}
+.flows{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flows li{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:.82rem}
+.flows li.off{opacity:.45;text-decoration:line-through}
+.flows .arr{background:none;border:0;color:var(--muted);padding:0 1px}
+.code{background:#23261f;color:#eae7df;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.5;padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:pre;margin:8px 0}
+.code .k{color:#9ec9a8}
+.code .s{color:#e6c07b}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;border-radius:0;background:var(--card);color:var(--ink);padding:6px 10px;font-size:.85rem;font-weight:600}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--dark);color:#fff}
+.chips2{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;padding:0;list-style:none}
+.chips2 button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.85rem}
+.chips2 button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.metricgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin:10px 0}
+.metric{background:var(--soft);border-radius:9px;padding:8px 10px}
+.metric b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.metric span{font-size:.78rem;color:var(--muted)}
+.modelgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:10px 0}
+.modelcard{text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-weight:600;font-size:.9rem}
+.modelcard small{display:block;font-weight:400;color:var(--muted);font-size:.78rem;margin-top:3px}
+.modelcard[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
+.cards3{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:10px 0}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.88rem}
+.mini h5{margin:0 0 4px;font-size:.9rem}
+.legendline{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin:4px 0 0}
+
+/* --- databasvy --- */
+.db{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);margin:12px 0}
+.db-head h4{margin:0 0 4px}
+.db-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.db-tabs button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 10px;font-size:.85rem;font-weight:600}
+.db-tabs button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-grid{display:grid;gap:12px;grid-template-columns:minmax(280px,1fr) minmax(280px,1fr)}
+@media(max-width:820px){.db-grid{grid-template-columns:1fr}}
+.db-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.schema{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px;padding:0;list-style:none}
+.schema li{font-size:.75rem;background:var(--soft);border-radius:6px;padding:2px 6px;font-family:ui-monospace,Consolas,monospace}
+.schema .key{color:var(--dark);font-weight:700}
+.db-tools{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.db-tools input{flex:1;min-width:120px;border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;font-size:.85rem;background:var(--card);color:var(--ink)}
+.db-tools button{font-size:.8rem;padding:4px 9px}
+.db-scroll{overflow-x:auto}
+.db .tbl{font-size:.82rem;min-width:0}
+.db .tbl th{white-space:nowrap;cursor:pointer}
+.db .tbl td{white-space:nowrap}
+.db .tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.sqlbtns{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px}
+.sqlbtns button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:4px 9px;font-size:.8rem}
+.sqlbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-empty{padding:10px;color:var(--muted);font-size:.85rem}
+.timeline{list-style:none;margin:8px 0;padding:0 0 0 14px;border-left:3px solid var(--acc)}
+.timeline li{margin:0 0 6px;font-size:.85rem;position:relative}
+.timeline li:before{content:"";position:absolute;left:-20px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.timeline time{font-weight:700;margin-right:6px}
+.featurebox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px}
+.featurebox .checkline{margin:0 0 2px}
+.fitgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:10px 0}
+.fitgrid .mini svg{width:100%;height:auto;display:block}
+.facitbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.facitbar .hint{margin:0}
+
+:root{--dark:#5a1a22;--dark2:#43121a;--acc:#8c2f39;--acc2:#6d222b;--bg:#f6f4f3;--soft:#ece6e4}
+/* ===== Extra labb med avancerad grafik (tillagt) ===== */
+.lab{margin:34px 0 8px;border-radius:16px;overflow:hidden;border:1px solid #1d2b45;
+background:radial-gradient(1200px 520px at 12% -12%,#172c50 0%,#0b1220 46%,#070c16 100%);
+color:#dbe7ff;box-shadow:0 18px 46px rgba(8,18,38,.28);padding:20px 0 0}
+.lab-eyebrow{margin:0 18px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#6ff2d9;font-weight:700}
+.lab h2{margin:.25em 18px .3em;color:#f2f7ff;font-size:clamp(1.25rem,2.4vw,1.6rem)}
+.lab-lead{margin:0 18px 16px;color:#a8bcd8;max-width:78ch;font-size:.98rem}
+.lab-shell{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.95fr);gap:14px;padding:0 18px 18px}
+@media(max-width:860px){.lab-shell{grid-template-columns:1fr}}
+.lab-stage{position:relative;border-radius:13px;border:1px solid #1e3355;background:#060b14;overflow:hidden;align-self:start}
+.lab-stage canvas{display:block;width:100%;height:auto}
+.lab-hud{display:flex;gap:8px;flex-wrap:wrap;padding:8px 10px;border-top:1px solid #16253d;background:#08111f;font-size:.74rem}
+.lab-hud span{background:rgba(10,22,40,.9);border:1px solid #23406b;border-radius:999px;padding:3px 10px;color:#a9c6ee}
+.lab-hud b{color:#7ff2d6;font-variant-numeric:tabular-nums}
+.lab-side{display:grid;gap:10px;align-content:start}
+.lab-card{background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:12px;padding:12px 13px}
+.lab-card>b{display:block;font-size:.9rem;color:#eaf2ff;margin-bottom:6px}
+.lab label{display:block;font-size:.8rem;color:#a8bcd8;margin:9px 0 2px;font-weight:600}
+.lab output{color:#7ff2d6;font-weight:700;font-variant-numeric:tabular-nums}
+.lab input[type=range]{width:100%;accent-color:#38e1c4;height:26px}
+.lab input[type=checkbox]{accent-color:#38e1c4;width:17px;height:17px;flex:none}
+.lab select{width:100%;padding:7px 9px;border-radius:8px;border:1px solid #26456f;background:#0b1524;color:#dbe7ff;font:inherit;font-size:.88rem}
+.lab button{background:linear-gradient(180deg,#1a5cc8,#123f96);border:1px solid #2f6bff;color:#eef4ff;
+padding:8px 14px;border-radius:9px;font-size:.88rem;font-weight:600}
+.lab button:hover{filter:brightness(1.15)}
+.lab button.ghost{background:transparent;border-color:#26456f;color:#a9c6ee}
+.lab .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lab .readout{font-size:.85rem;line-height:1.55;color:#c6d7f2;margin:6px 0}
+.lab .readout b{color:#fff}
+.lab .verdict{border-radius:9px;padding:8px 10px;font-size:.8rem;font-weight:700;line-height:1.4;
+background:rgba(120,150,190,.14);border:1px solid rgba(120,150,190,.3);color:#c6d7f2;margin-top:8px}
+.lab .verdict.good{background:rgba(31,140,90,.20);border-color:#2b8a5f;color:#93f2bd}
+.lab .verdict.mid{background:rgba(160,110,25,.20);border-color:#a87a2c;color:#ffd79a}
+.lab .verdict.bad{background:rgba(180,50,35,.22);border-color:#b5452f;color:#ffb3a7}
+.lab .lab-q ul{margin:4px 0 0;padding-left:1.15em;font-size:.85rem;color:#a8bcd8}
+.lab .lab-q li{margin:5px 0;max-width:none}
+.lab .lab-bar{height:11px;border-radius:999px;background:#0d1b2e;border:1px solid #1e3355;overflow:hidden;margin:8px 0}
+.lab .lab-bar>span{display:block;height:100%;width:0;background:#38e1c4;transition:width .2s ease,background .2s ease}
+.lab .metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem;color:#a8bcd8}
+.lab .metricgrid div{background:rgba(6,14,26,.85);border:1px solid #1b2f4d;border-radius:8px;padding:6px 8px}
+.lab .metricgrid b{display:block;color:#7ff2d6;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.lab .lab-how{margin:0 18px 18px;background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:10px;padding:10px 14px;color:#c6d7f2}
+.lab .lab-how summary{color:#7ff2d6;font-weight:700;font-size:.9rem}
+.lab .lab-how ol{margin:8px 0 0;padding-left:1.3em;font-size:.86rem;color:#a8bcd8}
+.lab .lab-how li{margin:4px 0;max-width:none}
+@media(max-width:600px){.lab{padding-top:14px}.lab-shell{padding:0 12px 14px}.lab h2,.lab-lead,.lab-eyebrow,.lab-how{margin-left:12px;margin-right:12px}}
+@media print{.lab{box-shadow:none;background:#fff;color:#111;border-color:#ccc}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Hoppa till innehåll</a>
+<header class="top">
+  <a href="../../index.html" title="Öppnar kursens startsida">&#8592; Alla workshoppar</a>
+  <span class="kicker">Lektion 04 · ML för nätverkssäkerhet</span>
+</header>
+<main id="main">
+  <div class="hero">
+    <p class="eyebrow">AI inom cybersäkerhet · Workshop 04</p>
+    <h1>Workshop 04 – Maskininlärning för nätverkssäkerhet</h1>
+    <p class="lead">Här räknar du på riktigt: trösklar, confusion matrix, precision, recall och F1 – och väljer modell utifrån vad ett fel kostar. Simuleringen är byggd för att du ska kunna ändra och jämföra.</p>
+    <ul class="chips"><li><b>Tid:</b> ca 60 min</li><li><b>Individuellt:</b> 28 min</li><li><b>Grupp:</b> 18 min</li><li><b>Facit och quiz:</b> 14 min</li></ul>
+  </div>
+  <section class="goals" aria-labelledby="mal">
+    <h2 id="mal">Efter workshopen kan du</h2>
+    <ul><li>beskriva de tretton stegen från insamlad data till en modell i drift</li><li>förklara precision, recall, F1-score och confusion matrix med egna ord</li><li>ändra en tröskel och förklara varför falsklarm och missade hot rör sig åt olika håll</li><li>välja modell utifrån både prestanda och vad ett fel kostar</li></ul>
+  </section>
+  <nav class="tabs" role="tablist" aria-label="Workshopens tre delar">
+    <button type="button" role="tab" id="tab-ind" aria-controls="panel-ind" aria-selected="true" data-panel="ind">1. Individuellt arbete</button>
+    <button type="button" role="tab" id="tab-grp" aria-controls="panel-grp" aria-selected="false" tabindex="-1" data-panel="grp">2. Grupparbete</button>
+    <button type="button" role="tab" id="tab-fac" aria-controls="panel-fac" aria-selected="false" tabindex="-1" data-panel="fac">3. Facit</button>
+    <div class="timer" id="timer" data-minutes="60">
+      <span class="clock" id="tOut" aria-live="off">60:00</span>
+      <button type="button" id="tStart" aria-pressed="false" title="Starta eller pausa timern">Start</button>
+      <button type="button" id="tReset" title="Nollställ timern">Nollställ</button>
+    </div>
+  </nav>
+  <noscript><p class="warn">JavaScript är avstängt. Flikar, simuleringar och facit kräver JavaScript. Slå på det i webbläsaren och ladda om sidan.</p></noscript>
+  <section id="panel-ind" role="tabpanel" aria-labelledby="tab-ind" tabindex="0">
+
+
+<p>En modell är inte ett svar utan ett verktyg. Den kan bara lära sig av den data den fått, och
+den mäter bara det någon valt att mäta. Här går du igenom hela kedjan, räknar på en tröskel och
+jämför fem modeller med varandra. All data är syntetisk och ligger i filen.</p>
+
+<details class="card">
+  <summary>Begrepp du möter här</summary>
+  <ul>
+    <li><b>Dataset</b> – den samling exempel modellen tränas och testas på.</li>
+    <li><b>Features</b> – de kolumner modellen får se, till exempel antal paket och destinationsport.</li>
+    <li><b>Träning/test</b> – modellen lär sig på en del och prövas på en annan, osedd del.</li>
+    <li><b>Precision</b> – av alla larm, hur många var verkliga hot?</li>
+    <li><b>Recall</b> – av alla verkliga hot, hur många hittade modellen?</li>
+    <li><b>F1-score</b> – ett sammanvägt mått på precision och recall (0–1).</li>
+    <li><b>Confusion matrix</b> – tabellen över TP, FP, FN och TN.</li>
+    <li><b>Tröskel</b> – gränsen för när modellens poäng räknas som larm.</li>
+    <li><b>Hyperparameter</b> – inställning du väljer före träning, till exempel trädets djup.</li>
+    <li><b>Overfitting</b> – modellen lär sig träningsexemplen för väl och missar nya fall.</li>
+  </ul>
+</details>
+
+
+<p>Tre uppgifter, cirka 28 minuter. Allt räknas i din webbläsare på syntetiska data.</p>
+<article class="task" id="u1">
+  <h3><span class="no">Uppgift 1</span> Vilken modelltyp passar?</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Jämför sex modelltyper och tre nivåer: traditionell ML, neurala nätverk och LLM.</span></div>
+    <div><dt>Varför?</dt><span>Modelltypen ska väljas efter datans form och frågan – inte efter vad som är nyast.</span></div>
+    <div><dt>Hur?</dt><span>Klicka på modellkorten och läs vad de passar för, vad de inte klarar och ett säkerhetsexempel.</span></div>
+    <div><dt>Observera</dt><span>Vilken modell passar tidsserier? Vilken hittar okända avvikelser? Vilken är en språkmodell?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna välja modelltyp till ett givet problem och förklara varför.</span></div>
+  </dl>
+  
+<div class="modelgrid" id="mt-grid">
+  <button type="button" class="modelcard" data-mt="mlp" aria-pressed="true">MLP / feed-forward<small>Tabulära data och säkerhetsfunktioner</small></button>
+  <button type="button" class="modelcard" data-mt="cnn" aria-pressed="false">CNN<small>Mönster i bilder, byte-sekvenser och ramar</small></button>
+  <button type="button" class="modelcard" data-mt="rnn" aria-pressed="false">RNN / LSTM / GRU<small>Tidsserier och sekventiella händelser</small></button>
+  <button type="button" class="modelcard" data-mt="ae" aria-pressed="false">Autoencoder<small>Anomalidetektion utan etiketter</small></button>
+  <button type="button" class="modelcard" data-mt="tr" aria-pressed="false">Transformer<small>Lång kontext, text och loggsekvenser</small></button>
+  <button type="button" class="modelcard" data-mt="gnn" aria-pressed="false">GNN<small>Relationer mellan noder i ett nätverk</small></button>
+</div>
+<div class="panel" id="mt-panel" aria-live="polite"></div>
+<div class="cards3">
+  <div class="mini"><h5>Traditionell ML</h5>Du väljer egenskaper själv (antal misslyckade inloggningar, port, tid). Fungerar med små datamängder och är ofta lätt att förklara.</div>
+  <div class="mini"><h5>Neurala nätverk</h5>Lär sig egna representationer av data. Kräver mer data och ger mindre direkt förklaring, men klarar komplexa mönster.</div>
+  <div class="mini"><h5>LLM</h5>En språkmodell byggd på neurala nätverk (ofta transformer). Den är tränad på text och kan inte automatiskt allt som andra modeller kan.</div>
+</div>
+<p class="hint">Alla modeller är inte språkmodeller. Ett neuralt nätverk kan klassificera nätverkstrafik utan att kunna skriva en enda mening.</p>
+
+</article>
+<article class="task" id="u2">
+  <h3><span class="no">Uppgift 2</span> Hyperparametrar och tröskel</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Ändra learning rate, antal träd, djup, grannar, klassvikt och tröskel. Läs confusion matrix och måtten.</span></div>
+    <div><dt>Varför?</dt><span>Hyperparametrar styr träningen. Tröskeln styr beslutet efteråt. Båda påverkar vilka fel modellen gör.</span></div>
+    <div><dt>Hur?</dt><span>Dra i reglagen och jämför precision, recall, F1 och antalet falska larm respektive missade hot.</span></div>
+    <div><dt>Observera</dt><span>Vad händer med recall när du höjer klassvikten? Vad händer med falska larm när tröskeln sänks?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna förklara varför det inte finns en universellt optimal inställning.</span></div>
+  </dl>
+  
+<div class="grid2">
+  <div class="card">
+    <h4 style="margin-top:0">Skruva på modellen</h4>
+    <label class="field" for="hp-lr">Learning rate: <b id="hp-lrv">0,05</b></label>
+    <input type="range" id="hp-lr" min="1" max="100" value="45" step="1" style="width:100%">
+    <label class="field" for="hp-trees">Antal träd i Random Forest: <b id="hp-treesv">120</b></label>
+    <input type="range" id="hp-trees" min="10" max="300" value="120" step="10" style="width:100%">
+    <label class="field" for="hp-depth">Max depth: <b id="hp-depthv">10</b></label>
+    <input type="range" id="hp-depth" min="2" max="30" value="10" step="1" style="width:100%">
+    <label class="field" for="hp-k">Antal grannar i KNN: <b id="hp-kv">5</b></label>
+    <input type="range" id="hp-k" min="1" max="15" value="5" step="1" style="width:100%">
+    <label class="field" for="hp-cw">Klassvikt för attacker: <b id="hp-cwv">1</b></label>
+    <input type="range" id="hp-cw" min="1" max="10" value="1" step="1" style="width:100%">
+    <label class="field" for="hp-th">Beslutströskel: <b id="hp-thv">50</b> %</label>
+    <input type="range" id="hp-th" min="5" max="95" value="50" step="1" style="width:100%">
+    <div class="actions"><button type="button" class="ghost" id="hp-reset">Återställ</button></div>
+    <p class="hint">Modellen är en pedagogisk approximation med syntetiska data: 140 normala och 60 attackhändelser. Den kör ingen riktig träning.</p>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Resultat</h4>
+    <div class="metricgrid">
+      <div class="metric"><b id="hp-prec">–</b><span>Precision</span></div>
+      <div class="metric"><b id="hp-rec">–</b><span>Recall</span></div>
+      <div class="metric"><b id="hp-f1">–</b><span>F1</span></div>
+      <div class="metric"><b id="hp-fp">–</b><span>Falska larm</span></div>
+      <div class="metric"><b id="hp-fn">–</b><span>Missade attacker</span></div>
+    </div>
+    <table class="tbl" id="hp-cm" aria-label="Confusion matrix">
+      <caption class="hint">Confusion matrix – rader = verklighet, kolumner = modellens svar</caption>
+      <thead><tr><th></th><th>Modell: attack</th><th>Modell: normal</th></tr></thead>
+      <tbody>
+        <tr><th>Verklig attack</th><td id="hp-tp">–</td><td id="hp-fnc">–</td></tr>
+        <tr><th>Verklig normal</th><td id="hp-fpc">–</td><td id="hp-tn">–</td></tr>
+      </tbody>
+    </table>
+    <div id="hp-note" aria-live="polite"></div>
+  </div>
+</div>
+
+</article>
+<article class="task" id="u3">
+  <h3><span class="no">Uppgift 3</span> Från rådata till modellresultat</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Jämför rådata, rensad data, träningsdata och prediktioner. Välj features och kör SQL-frågorna.</span></div>
+    <div><dt>Varför?</dt><span>Modellens kvalitet avgörs av datan. Saknade värden, dubbletter och fel datatyp följer med in i träningen om ingen rensar.</span></div>
+    <div><dt>Hur?</dt><span>Byt tabell och jämför radantal. Kör frågorna om NULL, dubbletter och prediktioner. Välj features och kontrollera.</span></div>
+    <div><dt>Observera</dt><span>Vilka rader försvinner vid rensning? Varför får event 12 ett falskt larm? Vilka kolumner får aldrig vara features?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna förklara skillnaden mellan features och label, varför testdata hålls separat och hur ett tröskelvärde skapar falska larm.</span></div>
+  </dl>
+  <div class="db" data-db="04"></div><div class="fitgrid">
+  <div class="mini"><h5>Underfitting</h5><svg viewBox="0 0 160 70" aria-hidden="true"><path d="M8 58 L152 20" stroke="#a32b1c" stroke-width="3" fill="none"/><circle cx="30" cy="48" r="3" fill="#2b2b28"/><circle cx="60" cy="30" r="3" fill="#2b2b28"/><circle cx="90" cy="44" r="3" fill="#2b2b28"/><circle cx="120" cy="24" r="3" fill="#2b2b28"/></svg><p class="hint">Modellen är för enkel och missar mönstret – även på träningsdatan.</p></div>
+  <div class="mini"><h5>Good fit</h5><svg viewBox="0 0 160 70" aria-hidden="true"><path d="M8 56 Q40 12 80 34 T152 18" stroke="#2f6b45" stroke-width="3" fill="none"/><circle cx="30" cy="42" r="3" fill="#2b2b28"/><circle cx="60" cy="22" r="3" fill="#2b2b28"/><circle cx="90" cy="38" r="3" fill="#2b2b28"/><circle cx="120" cy="26" r="3" fill="#2b2b28"/></svg><p class="hint">Modellen följer mönstret utan att memorera varje punkt.</p></div>
+  <div class="mini"><h5>Overfitting</h5><svg viewBox="0 0 160 70" aria-hidden="true"><path d="M8 56 C22 8 34 60 48 14 S72 62 88 10 S112 60 128 16 S146 50 152 14" stroke="#8a5a12" stroke-width="2.5" fill="none"/><circle cx="30" cy="42" r="3" fill="#2b2b28"/><circle cx="60" cy="22" r="3" fill="#2b2b28"/><circle cx="90" cy="38" r="3" fill="#2b2b28"/><circle cx="120" cy="26" r="3" fill="#2b2b28"/></svg><p class="hint">Kurvan går genom varje träningspunkt men blir sämre på ny data.</p></div>
+</div>
+</article>
+
+    <section class="card" id="quiz">
+      <noscript><p class="warn">Quizet kräver JavaScript.</p></noscript>
+    </section>
+  </section>
+  <section id="panel-grp" role="tabpanel" aria-labelledby="tab-grp" tabindex="0" hidden>
+
+<h2>Uppgift 4 – Vilken modell ska SOC köpa?</h2>
+<div class="task">
+  <h3><span class="no">Gruppuppgift</span> 1 000 flöden per dygn och en budget</h3>
+  <p>Ett säkerhetsteam ska välja modell för att larma om intrång i nätverket. Ett missat hot
+  kostar i genomsnitt <b>50 000 kr</b> i utredning och skada. Ett falsklarm kostar <b>300 kr</b>
+  i analystid. Gruppen ska välja modell, tröskel och vad som ska hända med larmen.</p>
+  <dl class="brief">
+    <div><dt>Tid</dt><span>15 minuter beslut, 5 minuter redovisning.</span></div>
+    <div><dt>Roller</dt><span>Ordförande, skeptiker, sekreterare, rapportör.</span></div>
+    <div><dt>Krav</dt><span>Ett gemensamt val och en mening om varför – ingen lång rapport.</span></div>
+  </dl>
+</div>
+<div class="card">
+  <label class="field" for="g-model">Modell</label>
+  <select id="g-model">
+    <option value="rf">Random Forest (precision 0,94 / recall 0,87)</option>
+    <option value="nn" selected>Neuralt nät (0,96 / 0,89)</option>
+    <option value="lr">Logistisk regression (0,81 / 0,92)</option>
+    <option value="if">Isolation Forest, oövervakad (0,62 / 0,78)</option>
+    <option value="rule">Regelbaserad (0,55 / 0,98)</option>
+  </select>
+  <label class="field" for="g-thr">Tröskel: <span class="rangeout" id="g-thrv">50</span></label>
+  <input type="range" id="g-thr" min="20" max="90" value="50">
+  <fieldset><legend>Vad gör teamet med larmen?</legend>
+    <label class="checkline"><input type="checkbox" id="g-triage" checked><span>Analytiker granskar alla larm innan åtgärd</span></label>
+    <label class="checkline"><input type="checkbox" id="g-auto"><span>Automatisk blockering av käll-IP vid larm</span></label>
+  </fieldset>
+  <div class="actions"><button type="button" id="g-run">Räkna ut kostnaden</button></div>
+  <div id="g-out" aria-live="polite"></div>
+</div>
+<h3>Redovisa på 2 minuter</h3>
+<ol><li>Vilken modell och tröskel valde ni?</li><li>Vad kostar ett missat hot jämfört med tio falsklarm?</li><li>Varför valde ni – eller valde bort – automatisk blockering?</li></ol>
+
+  </section>
+  <section id="panel-fac" role="tabpanel" aria-labelledby="tab-fac" tabindex="0" hidden>
+    <div class="facitbar">
+      <button type="button" id="facOpenAll">Öppna alla facit</button>
+      <button type="button" class="ghost" id="facCloseAll">Fäll ihop alla</button>
+      <span class="hint">Facit kan öppnas när som helst – du behöver inte svara först.</span>
+    </div>
+
+<p>Öppna en uppgift i taget. Måtten är beräknade på syntetisk data i filen – de är inte mätningar
+från ett riktigt nätverk.</p>
+<div id="facit-lista"></div>
+<h2>Kom ihåg</h2>
+<ul>
+  <li>Hög recall utan precision ger en larmskog som ingen hinner gå igenom.</li>
+  <li>Hög precision utan recall ger lugn och tystnad – men hoten passerar.</li>
+  <li>F1 väger precision och recall lika. Det är inte alltid det verksamheten vill.</li>
+  <li>En tröskel är ett affärsbeslut, inte en teknisk inställning.</li>
+</ul>
+
+  </section>
+
+<script>(function(){if(!window.CanvasRenderingContext2D||!CanvasRenderingContext2D.prototype||CanvasRenderingContext2D.prototype.roundRect)return;
+CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){r=Math.min(typeof r==="number"?r:0,w/2,h/2);
+this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);
+this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this;};})();</script>
+<section class="lab" id="lab-extra-4" aria-labelledby="lab4-h">
+  <p class="lab-eyebrow">Extra labb · avancerad grafik · anomalidetektering</p>
+  <h2 id="lab4-h">Anomalidetektorn – priset för att larma</h2>
+  <p class="lab-lead">Varje punkt är ett nätverksflöde som passerar i realtid. Du sätter tröskeln: allt över linjen larmar. Sänker du tröskeln hittar du fler attacker – men också fler oskyldiga flöden. Hitta en nivå du kan försvara.</p>
+  <div class="lab-shell">
+    <div class="lab-stage">
+      <canvas id="lab4cv" width="960" height="520" role="img" aria-label="Strömmande punktdiagram över nätverksflöden med en tröskellinje"></canvas>
+      <div class="lab-hud">
+        <span>Flöden <b id="lab4n">0</b></span>
+        <span>Larm <b id="lab4alarm">0</b></span>
+        <span>Precision <b id="lab4prec">–</b></span>
+        <span>Recall <b id="lab4rec">–</b></span>
+      </div>
+    </div>
+    <div class="lab-side">
+      <div class="lab-card">
+        <label for="lab4th">Tröskel – larma över <output id="lab4thv">420</output></label>
+        <input type="range" id="lab4th" min="80" max="800" step="10" value="420">
+        <label for="lab4atk">Andel angreppsflöden <output id="lab4atkv">4 %</output></label>
+        <input type="range" id="lab4atk" min="0" max="40" value="4">
+        <div class="actions">
+          <button type="button" id="lab4run">Pausa</button>
+          <button type="button" class="ghost" id="lab4reset">Nollställ räknare</button>
+        </div>
+      </div>
+      <div class="lab-card">
+        <div class="metricgrid">
+          <div>TP <b id="lab4tp">0</b></div><div>FP <b id="lab4fp">0</b></div>
+          <div>FN <b id="lab4fn">0</b></div><div>TN <b id="lab4tn">0</b></div>
+        </div>
+        <div class="lab-bar"><span id="lab4barp"></span></div>
+        <div class="lab-bar"><span id="lab4barr"></span></div>
+        <div class="readout" id="lab4read"></div>
+        <div class="verdict mid" id="lab4verdict"></div>
+      </div>
+      <div class="lab-card lab-q">
+        <b>Diskutera i par</b>
+        <ul>
+          <li>Vilket är värre i en fabrik: ett missat hot eller 40 falska larm per dag?</li>
+          <li>Varför sjunker precisionen när du sänker tröskeln?</li>
+          <li>Vad skulle du göra för att få både hög recall och hög precision?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <details class="lab-how">
+    <summary>Så gör du – 10 min individuellt, 15 min i grupp</summary>
+    <ol>
+      <li>Låt det rulla en stund med standardvärden. Läs av TP, FP och FN.</li>
+      <li>Sänk tröskeln till 200. Vad händer med precisionen?</li>
+      <li>Höj till 700. Vad händer med recall – och vad kostar det?</li>
+      <li>Öka andelen angrepp till 30 % och notera hur siffrorna rör sig. Skriv ner din slutsats.</li>
+    </ol>
+  </details>
+</section>
+<script>
+(function(){
+  var cv=document.getElementById("lab4cv"),cx=cv.getContext("2d");
+  var W=960,H=520,$=function(i){return document.getElementById(i)};
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var PADL=70,PADR=30,PADT=40,PADB=70;
+  var st={pts:[],th:420,atk:4,run:true,t:0,tp:0,fp:0,fn:0,tn:0,acc:0,spawn:0};
+  var XMAX=900,YMAX=600;
+
+  function gauss(){var u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+  function spawn(){
+    var isAtk=Math.random()*100<st.atk,x,y;
+    if(!isAtk){x=180+gauss()*55;y=120+gauss()*70;}
+    else{x=470+Math.random()*380;y=140+Math.random()*380;}
+    x=Math.max(20,Math.min(XMAX-10,x));y=Math.max(20,Math.min(YMAX-10,y));
+    st.pts.push({x:x,y:y,a:isAtk,age:0,flagged:x>st.th});
+    st.acc++;
+  }
+  function classify(){
+    var i,p,th=st.th;
+    for(i=0;i<st.pts.length;i++){
+      p=st.pts[i];
+      if(p.done)continue;
+      p.done=true;
+      var flag=p.x>th;
+      if(p.a&&flag)st.tp++;else if(p.a&&!flag)st.fn++;else if(!p.a&&flag)st.fp++;else st.tn++;
+    }
+  }
+
+  function sx(x){return PADL+x/XMAX*(W-PADL-PADR)}
+  function sy(y){return H-PADB-y/YMAX*(H-PADB-PADT)}
+
+  function draw(){
+    var i,p,t=st.t;
+    var g=cx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,"#070e1a");g.addColorStop(1,"#0a1424");
+    cx.fillStyle=g;cx.fillRect(0,0,W,H);
+
+    // normalmoln (referens)
+    var rg=cx.createRadialGradient(sx(180),sy(120),10,sx(180),sy(120),190);
+    rg.addColorStop(0,"rgba(56,225,196,.13)");rg.addColorStop(1,"rgba(56,225,196,0)");
+    cx.fillStyle=rg;cx.fillRect(0,0,W,H);
+
+    // axlar
+    cx.strokeStyle="rgba(120,170,255,.18)";cx.lineWidth=1;
+    for(i=0;i<=6;i++){var gy=sy(i*YMAX/6);cx.beginPath();cx.moveTo(PADL,gy);cx.lineTo(W-PADR,gy);cx.stroke();}
+    for(i=0;i<=9;i++){var gx=sx(i*XMAX/9);cx.beginPath();cx.moveTo(gx,PADT);cx.lineTo(gx,H-PADB);cx.stroke();}
+    cx.fillStyle="rgba(170,200,240,.65)";cx.font="11px system-ui,Segoe UI,Arial";
+    cx.fillText("paket/s  →",W-PADR-90,H-26);
+    cx.save();cx.translate(24,H-PADB);cx.rotate(-Math.PI/2);cx.fillText("unika portar  →",0,0);cx.restore();
+    cx.fillText("0",PADL-12,H-PADB+16);cx.fillText(String(XMAX),W-PADR-20,H-PADB+16);
+    cx.fillText(String(YMAX),PADL-40,PADT+10);
+
+    // tröskel
+    var tx=sx(st.th);
+    cx.beginPath();cx.moveTo(tx,PADT);cx.lineTo(tx,H-PADB);
+    cx.strokeStyle="rgba(255,196,90,.95)";cx.lineWidth=2.4;
+    cx.shadowColor="rgba(255,196,90,.9)";cx.shadowBlur=14;cx.stroke();cx.shadowBlur=0;
+    cx.fillStyle="rgba(255,196,90,.95)";cx.font="700 11px system-ui,Segoe UI,Arial";
+    cx.fillText("TRÖSKEL "+st.th,tx+8,PADT+14);
+
+    // svep
+    var sw=(t*0.55)%1,swx=PADL+sw*(W-PADL-PADR);
+    var sg=cx.createLinearGradient(swx-90,0,swx,0);
+    sg.addColorStop(0,"rgba(90,210,255,0)");sg.addColorStop(1,"rgba(90,210,255,.10)");
+    cx.fillStyle=sg;cx.fillRect(swx-90,PADT,90,H-PADB-PADT);
+    cx.beginPath();cx.moveTo(swx,PADT);cx.lineTo(swx,H-PADB);
+    cx.strokeStyle="rgba(120,220,255,.35)";cx.lineWidth=1.2;cx.stroke();
+
+    // punkter
+    for(i=0;i<st.pts.length;i++){
+      p=st.pts[i];
+      var X=sx(p.x),Y=sy(p.y),fade=Math.max(0,1-p.age/14);
+      var hue=p.a?330:170;
+      cx.beginPath();cx.arc(X,Y,3.4,0,6.284);
+      cx.fillStyle="hsla("+hue+",95%,66%,"+(0.28+0.6*fade)+")";
+      cx.shadowColor="hsla("+hue+",95%,66%,.8)";cx.shadowBlur=p.a?14:8;cx.fill();cx.shadowBlur=0;
+      if(p.flagged&&fade>0.35){
+        cx.beginPath();cx.arc(X,Y,9+Math.sin(t*4+i)*1.5,0,6.284);
+        cx.strokeStyle=p.a?"rgba(255,90,90,.9)":"rgba(255,196,90,.55)";cx.lineWidth=1.6;cx.stroke();
+      }
+    }
+    readout();
+  }
+
+  function readout(){
+    var p=st.tp+st.fp?st.tp/(st.tp+st.fp):0;
+    var r=st.tp+st.fn?st.tp/(st.tp+st.fn):0;
+    $("lab4n").textContent=st.acc;
+    $("lab4alarm").textContent=st.tp+st.fp;
+    $("lab4prec").textContent=st.tp+st.fp?Math.round(p*100)+" %":"–";
+    $("lab4rec").textContent=st.tp+st.fn?Math.round(r*100)+" %":"–";
+    $("lab4tp").textContent=st.tp;$("lab4fp").textContent=st.fp;
+    $("lab4fn").textContent=st.fn;$("lab4tn").textContent=st.tn;
+    $("lab4barp").style.width=Math.round(p*100)+"%";
+    $("lab4barr").style.width=Math.round(r*100)+"%";
+    $("lab4barp").style.background="#38e1c4";$("lab4barr").style.background="#ff6bd6";
+    var v=$("lab4verdict");
+    if(st.acc<30){v.className="verdict mid";v.textContent="Låt det rulla lite till för en rättvisande bild.";}
+    else if(p>=0.85&&r>=0.85){v.className="verdict good";v.textContent="Bra balans: få falska larm och nästan alla attacker hittade.";}
+    else if(r<0.5){v.className="verdict bad";v.textContent="Du missar mer än hälften av attackerna – tröskeln är för hög.";}
+    else if(p<0.5){v.className="verdict mid";v.textContent="Du hittar attackerna men drunknar i falska larm – tröskeln är för låg.";}
+    else{v.className="verdict mid";v.textContent="Godtagbart men inte bra. Justera tröskeln och jämför.";}
+    $("lab4read").innerHTML="Av <b>"+st.acc+"</b> flöden har <b>"+(st.tp+st.fp)+"</b> larmat. "+
+      "Precision <b>"+Math.round(p*100)+" %</b> (hur många larm som var riktiga), recall <b>"+Math.round(r*100)+" %</b> "+
+      "(hur många attacker du hittade).";
+  }
+
+  function step(dt){
+    st.t+=dt;st.spawn+=dt*26;
+    while(st.spawn>=1){st.spawn-=1;spawn();}
+    var i;
+    for(i=st.pts.length-1;i>=0;i--){
+      st.pts[i].age+=dt;
+      if(st.pts[i].age>14)st.pts.splice(i,1);
+    }
+    classify();
+  }
+
+  function loop(ts){
+    var now=ts||performance.now();
+    if(!loop.last)loop.last=now;
+    var dt=Math.min(0.05,(now-loop.last)/1000);loop.last=now;
+    if(st.run)step(dt);
+    st.t+=dt;
+    draw();requestAnimationFrame(loop);
+  }
+
+  $("lab4th").addEventListener("input",function(){
+    st.th=+this.value;$("lab4thv").textContent=this.value;
+    var i;for(i=0;i<st.pts.length;i++)st.pts[i].flagged=st.pts[i].x>st.th;
+  });
+  $("lab4atk").addEventListener("input",function(){st.atk=+this.value;$("lab4atkv").textContent=this.value+" %";});
+  $("lab4run").addEventListener("click",function(){st.run=!st.run;this.textContent=st.run?"Pausa":"Kör";});
+  $("lab4reset").addEventListener("click",function(){st.tp=st.fp=st.fn=st.tn=0;st.acc=0;st.pts=[];});
+  loop();
+})();
+</script>
+
+</main>
+
+
+<script>
+var WS=(function(){
+"use strict";
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(n,d){if(!isFinite(n))return "\u2013";return n.toFixed(d==null?2:d).replace(".",",")}
+function num(v){return Number(String(v).replace(",","."))}
+
+/* ---------- flikar ---------- */
+function initTabs(){
+  var btns=$$('.tabs [role="tab"]');
+  if(!btns.length)return;
+  function show(id,setHash){
+    btns.forEach(function(b){
+      var on=b.getAttribute("data-panel")===id;
+      b.setAttribute("aria-selected",on?"true":"false");
+      b.tabIndex=on?0:-1;
+    });
+    $$('[role="tabpanel"]').forEach(function(p){p.hidden=p.id!=="panel-"+id});
+    if(setHash){try{history.replaceState(null,"","#"+id)}catch(e){}}
+  }
+  btns.forEach(function(b,i){
+    b.addEventListener("click",function(){show(b.getAttribute("data-panel"),true)});
+    b.addEventListener("keydown",function(e){
+      var n=null;
+      if(e.key==="ArrowRight")n=(i+1)%btns.length;
+      if(e.key==="ArrowLeft")n=(i-1+btns.length)%btns.length;
+      if(e.key==="Home")n=0;
+      if(e.key==="End")n=btns.length-1;
+      if(n!==null){e.preventDefault();btns[n].focus();show(btns[n].getAttribute("data-panel"),true)}
+    });
+  });
+  var h=(location.hash||"").replace("#","");
+  var ok=btns.some(function(b){return b.getAttribute("data-panel")===h});
+  show(ok?h:"ind",false);
+}
+
+/* ---------- timer ---------- */
+function initTimer(){
+  var box=$("#timer"); if(!box)return;
+  var total=(parseInt(box.getAttribute("data-minutes"),10)||60)*60;
+  var left=total,id=null;
+  var out=$("#tOut"),st=$("#tStart"),rs=$("#tReset");
+  function paint(){
+    var m=Math.floor(left/60),s=left%60;
+    out.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    box.classList.toggle("low",left>0&&left<=300);
+  }
+  function stop(){
+    if(id){clearInterval(id);id=null}
+    st.textContent=left===0?"Klar":"Forts\u00e4tt";
+    st.setAttribute("aria-pressed","false");
+  }
+  st.addEventListener("click",function(){
+    if(id){stop();return}
+    if(left===0){left=total;box.classList.remove("done");paint()}
+    id=setInterval(function(){
+      if(left>0){left--;paint()}
+      if(left===0){stop();box.classList.add("done");st.textContent="Klar"}
+    },1000);
+    st.textContent="Pausa";st.setAttribute("aria-pressed","true");
+  });
+  rs.addEventListener("click",function(){
+    stop();left=total;box.classList.remove("done");paint();st.textContent="Start";
+  });
+  paint();
+}
+
+/* ---------- quiz ---------- */
+function quiz(host,cfg){
+  if(!host)return;
+  var qs=cfg.questions||[];
+  host.innerHTML="";
+  var h=document.createElement("h3");h.textContent=cfg.title||"Avslutande kunskapskontroll";host.appendChild(h);
+  if(cfg.hint){var p=document.createElement("p");p.className="hint";p.textContent=cfg.hint;host.appendChild(p)}
+  var answered=0,right=0;
+  var status=document.createElement("p");status.className="quizsum";
+  var retry=document.createElement("button");
+  retry.type="button";retry.className="ghost";retry.textContent="G\u00f6r om quizet";retry.hidden=true;
+  retry.addEventListener("click",function(){quiz(host,cfg);host.scrollIntoView({block:"center"})});
+  qs.forEach(function(q,i){
+    var wrap=document.createElement("div");wrap.className="q";
+    var qt=document.createElement("p");qt.className="qt";qt.textContent=(i+1)+". "+q.text;wrap.appendChild(qt);
+    var opts=document.createElement("div");opts.className="opts";wrap.appendChild(opts);
+    var fb=document.createElement("p");fb.className="fb";fb.hidden=true;wrap.appendChild(fb);
+    q.options.forEach(function(o,j){
+      var b=document.createElement("button");b.type="button";b.className="opt";
+      b.innerHTML='<span class="k">'+String.fromCharCode(65+j)+'</span><span>'+esc(o)+'</span>';
+      b.addEventListener("click",function(){
+        if(wrap.getAttribute("data-done")==="1")return;
+        wrap.setAttribute("data-done","1");answered++;
+        $$(".opt",opts).forEach(function(x,k){x.disabled=true;if(k===q.answer)x.classList.add("correct")});
+        var good=j===q.answer;
+        if(good){right++}else{b.classList.add("wrong")}
+        fb.hidden=false;fb.className="fb "+(good?"ok":"bad");
+        fb.innerHTML="<b>"+(good?"R\u00e4tt.":"Fel.")+"</b> "+esc(q.why||"");
+        if(!good){var s=document.createElement("span");s.className="whynot";s.textContent="R\u00e4tt svar: "+q.options[q.answer]+".";fb.appendChild(s)}
+        status.textContent=answered+" av "+qs.length+" besvarade \u00b7 "+right+" r\u00e4tt";
+        if(answered===qs.length){
+          status.innerHTML="<b>Resultat: "+right+" av "+qs.length+" r\u00e4tt.</b> "+(right===qs.length?"Mycket bra \u2013 du kan begreppen.":"L\u00e4s f\u00f6rklaringarna och g\u00f6r om quizet om du vill.");
+          retry.hidden=false;
+        }
+      });
+      opts.appendChild(b);
+    });
+    host.appendChild(wrap);
+  });
+  status.textContent="0 av "+qs.length+" besvarade";
+  host.appendChild(status);
+  host.appendChild(retry);
+}
+
+/* ---------- klassificering med dropdown ---------- */
+function classify(host,cfg){
+  if(!host)return;
+  var rows=cfg.rows||[],opts=cfg.options||[];
+  var t=document.createElement("table");
+  t.innerHTML='<thead><tr><th scope="col">'+esc(cfg.col1||"System")+'</th><th scope="col">'+esc(cfg.col2||"Din bed\u00f6mning")+'</th></tr></thead>';
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  rows.forEach(function(r){
+    var tr=document.createElement("tr");
+    var td=document.createElement("td");td.textContent=r.text;
+    var note=document.createElement("div");note.className="rownote";note.hidden=true;td.appendChild(note);
+    var td2=document.createElement("td");
+    var sel=document.createElement("select");
+    sel.setAttribute("aria-label","Bed\u00f6mning f\u00f6r: "+r.text);
+    sel.innerHTML='<option value="">\u2013 v\u00e4lj \u2013</option>'+opts.map(function(o,i){return '<option value="'+i+'">'+esc(o)+'</option>'}).join("");
+    td2.appendChild(sel);tr.appendChild(td);tr.appendChild(td2);tb.appendChild(tr);
+  });
+  var btn=document.createElement("button");btn.type="button";btn.textContent=cfg.btn||"Kontrollera mina svar";
+  var out=document.createElement("p");out.className="fb";
+  btn.addEventListener("click",function(){
+    var ok=0,missing=0;
+    Array.prototype.forEach.call(tb.rows,function(tr,i){
+      var sel=$("select",tr),v=sel.value===""?null:Number(sel.value);
+      var good=v===rows[i].correct;if(good){ok++}if(v===null){missing++}
+      tr.classList.toggle("good",good);tr.classList.toggle("bad",!good&&v!==null);
+      var n=$(".rownote",tr);
+      if(n){n.hidden=false;n.innerHTML="<b>"+(good?"R\u00e4tt":(v===null?"Inget val":"R\u00e4tt svar: "+esc(opts[rows[i].correct])))+"</b> "+(rows[i].note||"")}
+    });
+    out.className="fb show "+(ok===rows.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+rows.length+" r\u00e4tt.</b> "+(ok===rows.length?"Bra \u2013 du ser m\u00f6nstret.":"L\u00e4s radens f\u00f6rklaring och justera"+(missing?" ("+missing+" rad(er) utan val)":"")+".");
+  });
+  host.appendChild(t);host.appendChild(btn);host.appendChild(out);
+}
+
+/* ---------- tabell med sortering och filter ---------- */
+function sortTable(host,cfg){
+  if(!host)return;
+  var cols=cfg.cols||[],rows=(cfg.rows||[]).slice();
+  var wrap=document.createElement("div");wrap.className="tablewrap";
+  var filter=null;
+  if(cfg.filter){
+    filter=document.createElement("input");filter.type="search";filter.className="filter";
+    filter.placeholder=cfg.filterPlaceholder||"Filtrera \u2026";
+    filter.setAttribute("aria-label","Filtrera tabellen");
+    wrap.appendChild(filter);
+  }
+  var t=document.createElement("table");
+  var thead=document.createElement("thead"),htr=document.createElement("tr");
+  cols.forEach(function(c,i){
+    var th=document.createElement("th");th.scope="col";th.setAttribute("data-i",i);th.tabIndex=0;
+    th.innerHTML=esc(c)+' <span class="arrow" aria-hidden="true">\u2195</span>';
+    function sort(){
+      var dir=th.getAttribute("data-dir")==="asc"?"desc":"asc";th.setAttribute("data-dir",dir);
+      rows.sort(function(a,b){
+        var x=a[i],y=b[i];
+        var nx=parseFloat(String(x).replace(/\s/g,"").replace(",",".")),ny=parseFloat(String(y).replace(/\s/g,"").replace(",","."));
+        var both=isFinite(nx)&&isFinite(ny)&&String(x).replace(/[^0-9]/g,"")!==""&&String(y).replace(/[^0-9]/g,"")!=="";
+        if(both)return dir==="asc"?nx-ny:ny-nx;
+        return dir==="asc"?String(x).localeCompare(String(y),"sv"):String(y).localeCompare(String(x),"sv");
+      });
+      render();
+    }
+    th.addEventListener("click",sort);
+    th.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();sort()}});
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr);t.appendChild(thead);
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  function render(){
+    tb.innerHTML="";
+    var q=filter?filter.value.toLowerCase():"";
+    rows.forEach(function(r){
+      if(q&&r.join(" ").toLowerCase().indexOf(q)<0)return;
+      var tr=document.createElement("tr");
+      r.forEach(function(c){var td=document.createElement("td");td.innerHTML=c;tr.appendChild(td)});
+      tb.appendChild(tr);
+    });
+  }
+  wrap.appendChild(t);host.appendChild(wrap);
+  if(filter)filter.addEventListener("input",render);
+  render();
+}
+
+/* ---------- stapeldiagram ---------- */
+function bars(host,items,opt){
+  if(!host)return;
+  opt=opt||{};host.innerHTML="";
+  var max=opt.max||Math.max.apply(null,items.map(function(i){return Math.abs(i.value)}).concat([1]));
+  var box=document.createElement("div");box.className="bars";
+  items.forEach(function(it){
+    var row=document.createElement("div");row.className="barrow"+(it.tone?" "+it.tone:"");
+    var pct=Math.max(0,Math.min(100,Math.abs(it.value)/max*100));
+    row.innerHTML='<span class="bl">'+esc(it.label)+'</span><span class="btrack"><span class="bfill" style="width:'+pct.toFixed(1)+'%"></span></span><span class="bv">'+esc(it.display!=null?it.display:it.value)+'</span>';
+    box.appendChild(row);
+  });
+  host.appendChild(box);
+  if(opt.caption){var p=document.createElement("p");p.className="hint";p.textContent=opt.caption;host.appendChild(p)}
+}
+
+/* ---------- linjediagram i ren SVG ---------- */
+function line(host,cfg){
+  if(!host)return;
+  var W=560,H=250,L=46,R=14,T=14,B=34;
+  var maxY=cfg.maxY||1,maxX=cfg.maxX||1;
+  function X(v){return L+(v/maxX)*(W-L-R)}
+  function Y(v){return H-B-(v/maxY)*(H-T-B)}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="chart" role="img" aria-label="'+esc(cfg.label||"Diagram")+'">';
+  for(var i=0;i<=4;i++){
+    var y=T+i*(H-T-B)/4;
+    s+='<line class="grid" x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'"/>';
+    s+='<text class="ax" x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+fmt(maxY*(1-i/4),maxY<=1?1:0)+'</text>';
+  }
+  (cfg.xTicks||[0,0.5,1]).forEach(function(t){
+    s+='<text class="ax" x="'+X(t*maxX)+'" y="'+(H-12)+'" text-anchor="middle">'+fmt(t*maxX,0)+'</text>';
+  });
+  (cfg.hlines||[]).forEach(function(hl){
+    s+='<line x1="'+L+'" y1="'+Y(hl.y).toFixed(1)+'" x2="'+(W-R)+'" y2="'+Y(hl.y).toFixed(1)+'" stroke="'+hl.color+'" stroke-width="1.5" stroke-dasharray="5 4"><title>'+esc(hl.label||"")+'</title></line>';
+  });
+  (cfg.series||[]).forEach(function(ser){
+    var pts=ser.points.map(function(p){return X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)}).join(" ");
+    if(!ser.onlyDots){s+='<polyline points="'+pts+'" fill="none" stroke="'+ser.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';}
+    if(ser.dots){ser.points.forEach(function(p){
+      s+='<circle cx="'+X(p[0]).toFixed(1)+'" cy="'+Y(p[1]).toFixed(1)+'" r="3.5" fill="'+ser.color+'"><title>'+esc(ser.name)+": "+fmt(p[1],2)+'</title></circle>';
+    })}
+    if(ser.fill){
+      s+='<polygon points="'+X(ser.points[0][0]).toFixed(1)+','+Y(0)+' '+pts+' '+X(ser.points[ser.points.length-1][0]).toFixed(1)+','+Y(0)+'" fill="'+ser.color+'" opacity="0.08"/>';
+    }
+  });
+  if(cfg.xLabel)s+='<text class="lbl" x="'+(L+(W-L-R)/2)+'" y="'+(H-1)+'" text-anchor="middle">'+esc(cfg.xLabel)+'</text>';
+  s+="</svg>";
+  host.innerHTML=s;
+  if((cfg.series||[]).length){
+    var ul=document.createElement("ul");ul.className="legend";
+    cfg.series.forEach(function(ser){var li=document.createElement("li");li.innerHTML='<i style="background:'+ser.color+'"></i>'+esc(ser.name);ul.appendChild(li)});
+    host.appendChild(ul);
+  }
+}
+
+/* ---------- confusion matrix ---------- */
+function cm(host,c){
+  if(!host)return;
+  host.innerHTML='<div class="cm">'+
+    '<div class="cmh"></div><div class="cmh">Modellen larmar</div><div class="cmh">Modellen \u00e4r tyst</div>'+
+    '<div class="cmh">Verkligt hot</div><div class="cell tp"><b>'+c.tp+'</b><span>TP \u2013 f\u00e5ngat hot</span></div><div class="cell fn"><b>'+c.fn+'</b><span>FN \u2013 missat hot</span></div>'+
+    '<div class="cmh">Verkligt normalt</div><div class="cell fp"><b>'+c.fp+'</b><span>FP \u2013 falsklarm</span></div><div class="cell tn"><b>'+c.tn+'</b><span>TN \u2013 korrekt tyst</span></div>'+
+    '</div>';
+}
+
+/* ---------- sm\u00e5hj\u00e4lp ---------- */
+function metric(tp,fp,fn){
+  var p=tp+fp?tp/(tp+fp):0, r=tp+fn?tp/(tp+fn):0;
+  return {precision:p,recall:r,f1:(p+r)?2*p*r/(p+r):0};
+}
+function riskLabel(v,lo,hi){
+  var t=v<lo?"low":(v<hi?"mid":"high");
+  var txt=t==="low"?"L\u00e5g risk":(t==="mid"?"Medelrisk":"H\u00f6g risk");
+  return '<span class="riskbadge '+t+'">'+txt+"</span>";
+}
+function facit(host,items){
+  if(!host)return;
+  items.forEach(function(f){
+    var d=document.createElement("details");
+    d.innerHTML="<summary>"+f[0]+"</summary>"+f[1];
+    host.appendChild(d);
+  });
+}
+function init(){initTabs();initTimer()}
+return {$,$$,esc,fmt,num,quiz,classify,sortTable,bars,line,cm,metric,riskLabel,facit,init:init};
+})();
+(function(){
+  var open=document.getElementById("facOpenAll"),close=document.getElementById("facCloseAll");
+  function all(v){Array.prototype.forEach.call(document.querySelectorAll("#panel-fac details"),function(d){d.open=v})}
+  if(open)open.addEventListener("click",function(){all(true)});
+  if(close)close.addEventListener("click",function(){all(false)});
+})();
+</script>
+
+
+<script>
+(function(){
+  var host=document.getElementById("u1-flow");
+  if(!host)return;
+  var steps=[
+    ["Samla in data","Loggar, n\u00e4tverksfl\u00f6den eller filh\u00e4ndelser. Fr\u00e5gan \u00e4r vad som faktiskt finns och f\u00e5r sparas."],
+    ["V\u00e4lj dataset","Ett offentligt dataset (t.ex. NSL-KDD) eller egen insamlad data. Dokumentera k\u00e4lla och licens."],
+    ["Hantera dataversioner","Spara vilken version av datat som tr\u00e4nade modellen. Utan det g\u00e5r resultatet inte att upprepa."],
+    ["Rensa och bearbeta","Ta bort dubbletter, hantera saknade v\u00e4rden och g\u00f6r om kategorier till tal."],
+    ["V\u00e4lj features","Bara kolumner som finns \u00e4ven i drift. IP-adresser kan l\u00e4cka in identitet."],
+    ["V\u00e4lj modell","Enkel modell f\u00f6rst. Random Forest \u00e4r ofta en bra baslinje."],
+    ["Tr\u00e4na","Modellen l\u00e4r sig p\u00e5 tr\u00e4ningsdelen \u2013 aldrig p\u00e5 testdelen."],
+    ["Testa och utv\u00e4rdera","M\u00e4t p\u00e5 data modellen inte sett. J\u00e4mf\u00f6r med en enkel baslinje."],
+    ["Tolka resultat","Vilka fel g\u00f6r modellen? \u00c4r de falska larm eller missade hot?"],
+    ["J\u00e4mf\u00f6r modeller","Samma data, samma m\u00e5tt, samma tr\u00f6skel. Annars \u00e4r j\u00e4mf\u00f6relsen meningsl\u00f6s."],
+    ["V\u00e4lj modell","Utifr\u00e5n b\u00e5de m\u00e5tt och kostnad f\u00f6r fel \u2013 inte bara h\u00f6gst F1."],
+    ["Anv\u00e4nd i ett scenario","Koppla larmet till en rutin: vem tittar, vad f\u00e5r h\u00e4nda, vad loggas?"],
+    ["\u00d6vervaka och uppt\u00e4ck drift","Nya attackm\u00f6nster g\u00f6r modellen s\u00e4mre. M\u00e4t om och tr\u00e4na om."]
+  ];
+  var wrap=document.createElement("div");wrap.className="card";
+  wrap.innerHTML='<p>Klicka p\u00e5 ett steg f\u00f6r att l\u00e4sa vad som g\u00f6rs \u2013 och vad som g\u00e5r fel om steget hoppas \u00f6ver.</p><ol class="stepbtns" id="f-btns"></ol><div class="stepinfo" id="f-info"><h4>V\u00e4lj ett steg</h4><p>B\u00f6rja med steg 1.</p></div>';
+  host.appendChild(wrap);
+  var btns=document.getElementById("f-btns"),info=document.getElementById("f-info");
+  steps.forEach(function(s,i){
+    var li=document.createElement("li");
+    var b=document.createElement("button");b.type="button";b.textContent=(i+1)+". "+s[0];
+    b.setAttribute("aria-pressed","false");
+    b.addEventListener("click",function(){
+      Array.prototype.forEach.call(btns.querySelectorAll("button"),function(x){x.setAttribute("aria-pressed","false")});
+      b.setAttribute("aria-pressed","true");
+      info.innerHTML="<h4>Steg "+(i+1)+" \u2013 "+s[0]+"</h4><p>"+s[1]+"</p>";
+    });
+    li.appendChild(b);btns.appendChild(li);
+  });
+})();
+
+(function(){
+  var host=document.getElementById("u2-thr");
+  if(!host)return;
+  var seed=20260525;
+  function rnd(){seed=(seed*1103515245+12345)%2147483648;return seed/2147483648}
+  var flows=[];
+  for(var i=0;i<100;i++){
+    var bad=rnd()<0.35;
+    flows.push({bad:bad,score:bad?(45+rnd()*55):(rnd()*80)});
+  }
+  host.innerHTML='<div class="card"><p>100 simulerade n\u00e4tverksfl\u00f6den. 35 \u00e4r verkliga intr\u00e5ng. Modellen ger varje fl\u00f6de en po\u00e4ng 0\u2013100.</p>'+
+    '<label class="field" for="thr">Tr\u00f6skel: <span class="rangeout" id="thrv">50</span></label>'+
+    '<input type="range" id="thr" min="10" max="95" value="50">'+
+    '<div id="tcm"></div><div id="tbars"></div><p class="fb" id="tsum"></p>'+
+    '<div id="tchart"></div></div>';
+  function run(){
+    var t=Number(document.getElementById("thr").value);
+    document.getElementById("thrv").textContent=t;
+    var c={tp:0,fp:0,fn:0,tn:0};
+    flows.forEach(function(f){
+      var l=f.score>=t;
+      if(l&&f.bad)c.tp++;else if(l&&!f.bad)c.fp++;else if(!l&&f.bad)c.fn++;else c.tn++;
+    });
+    var m=WS.metric(c.tp,c.fp,c.fn);
+    WS.cm(document.getElementById("tcm"),c);
+    WS.bars(document.getElementById("tbars"),[
+      {label:"Precision",value:m.precision*100,display:WS.fmt(m.precision,2),tone:m.precision>0.8?"ok":"warn"},
+      {label:"Recall",value:m.recall*100,display:WS.fmt(m.recall,2),tone:m.recall>0.8?"ok":"warn"},
+      {label:"F1-score",value:m.f1*100,display:WS.fmt(m.f1,2),tone:m.f1>0.8?"ok":"warn"}
+    ],{max:100,caption:"M\u00e5tten r\u00e4knas om vid varje tr\u00f6skel. 1,00 \u00e4r b\u00e4st."});
+    document.getElementById("tsum").className="fb show";
+    document.getElementById("tsum").innerHTML="<b>Vid tr\u00f6skel "+t+":</b> "+c.tp+" hot f\u00e5ngade, "+c.fn+" missade, "+
+      c.fp+" falsklarm och "+c.tn+" korrekt tysta. Modellen larmar "+(c.tp+c.fp)+" g\u00e5nger av 100 fl\u00f6den.";
+    var pr=[],rc=[];
+    for(var x=10;x<=95;x+=5){
+      var cc={tp:0,fp:0,fn:0,tn:0};
+      flows.forEach(function(f){var l=f.score>=x;
+        if(l&&f.bad)cc.tp++;else if(l&&!f.bad)cc.fp++;else if(!l&&f.bad)cc.fn++;else cc.tn++;});
+      var mm=WS.metric(cc.tp,cc.fp,cc.fn);pr.push([x,mm.precision]);rc.push([x,mm.recall]);
+    }
+    WS.line(document.getElementById("tchart"),{maxY:1,maxX:95,xTicks:[0.16,0.37,0.58,1],xLabel:"tr\u00f6skel",
+      label:"Precision och recall vid olika tr\u00f6skel",
+      series:[{name:"Precision",color:"#8c2f39",points:pr,dots:true},{name:"Recall",color:"#1f6b45",points:rc,dots:true}]});
+  }
+  document.getElementById("thr").addEventListener("input",run);run();
+})();
+
+(function(){
+  var host=document.getElementById("u3-models");
+  if(!host)return;
+  var models=[
+    ["Random Forest","0,94","0,87","0,90","52","Stabil baslinje, f\u00e5 falsklarm."],
+    ["Neuralt n\u00e4t","0,96","0,89","0,92","37","B\u00e4st F1, kr\u00e4ver mer data och tid."],
+    ["Logistisk regression","0,81","0,92","0,86","210","Enkel att f\u00f6rklara, fler falsklarm."],
+    ["Isolation Forest (o\u00f6vervakad)","0,62","0,78","0,69","470","Hittar det ok\u00e4nda men larmar mycket."],
+    ["Regelbaserad","0,55","0,98","0,71","800","F\u00e5ngar allt k\u00e4nt, men 800 falsklarm per 1 000."]
+  ];
+  var wrap=document.createElement("div");wrap.className="card";
+  wrap.innerHTML='<p>Fem modeller, samma testdata och samma tr\u00f6skel. Sortera tabellen genom att klicka p\u00e5 rubrikerna.</p><div id="m-table"></div>'+
+    '<fieldset><legend>Vilken modell skulle du v\u00e4lja f\u00f6r ett SOC med tv\u00e5 analytiker?</legend>'+
+    '<label class="checkline"><input type="radio" name="m" value="0"><span>Random Forest</span></label>'+
+    '<label class="checkline"><input type="radio" name="m" value="1" checked><span>Neuralt n\u00e4t</span></label>'+
+    '<label class="checkline"><input type="radio" name="m" value="4"><span>Regelbaserad \u2013 f\u00e5ngar allt</span></label>'+
+    '</fieldset><div class="actions"><button type="button" id="m-run">Motivera mitt val</button></div><div id="m-out" aria-live="polite"></div>';
+  host.appendChild(wrap);
+  WS.sortTable(document.getElementById("m-table"),{
+    cols:["Modell","Precision","Recall","F1","Falsklarm/1 000","Kommentar"],
+    rows:models,filter:false
+  });
+  document.getElementById("m-run").addEventListener("click",function(){
+    var v=document.querySelector('input[name="m"]:checked').value;
+    var out=document.getElementById("m-out");out.className="fb show";
+    if(v==="1"){out.classList.add("ok");out.innerHTML="<b>Rimligt.</b> Neuralt n\u00e4t har b\u00e4st F1 (0,92) och l\u00e5gst falsklarm. Men kontrollera att teamet kan f\u00f6rklara modellen och att tr\u00e4ningsdatan liknar er egen."}
+    else if(v==="0"){out.classList.add("ok");out.innerHTML="<b>Ocks\u00e5 rimligt.</b> Random Forest \u00e4r enklare att f\u00f6rklara och bara 15 falsklarm s\u00e4mre per 1 000. I praktiken ofta ett b\u00e4ttre f\u00f6rstaval."}
+    else{out.classList.add("bad");out.innerHTML="<b>Tveksamt.</b> Regeln f\u00e5ngar n\u00e4stan allt (recall 0,98) men 800 falsklarm per 1 000 fl\u00f6den \u00e4r 26 per dag f\u00f6r tv\u00e5 analytiker \u2013 de drunknar och slutar titta."}
+  });
+})();
+
+(function(){
+  var g=document.getElementById("g-model");
+  if(!g)return;
+  var thr=document.getElementById("g-thr"),out=document.getElementById("g-out");
+  var base={rf:[0.94,0.87],nn:[0.96,0.89],lr:[0.81,0.92],if:[0.62,0.78],rule:[0.55,0.98]};
+  var names={rf:"Random Forest",nn:"Neuralt n\u00e4t",lr:"Logistisk regression",if:"Isolation Forest",rule:"Regelbaserad"};
+  function calc(){
+    var m=base[g.value],t=Number(thr.value);
+    document.getElementById("g-thrv").textContent=t;
+    var adj=(t-50)/500;
+    var p=Math.max(0.2,Math.min(0.99,m[0]+adj)),r=Math.max(0.2,Math.min(0.99,m[1]-adj));
+    var tp=Math.round(350*r),fn=350-tp;
+    var fp=Math.round(tp*(1-p)/Math.max(p,0.01));
+    var cost=fn*50000+fp*300;
+    var auto=document.getElementById("g-auto").checked;
+    var triage=document.getElementById("g-triage").checked;
+    var notes=["<li><b>"+names[g.value]+"</b> vid tr\u00f6skel "+t+": recall "+WS.fmt(r,2)+", precision "+WS.fmt(p,2)+".</li>",
+      "<li>"+fn+" missade hot och "+fp+" falsklarm per 1 000 fl\u00f6den.</li>",
+      "<li>Kostnad: "+fn+" \u00d7 50 000 kr + "+fp+" \u00d7 300 kr = <b>"+cost.toLocaleString("sv-SE")+" kr</b> per 1 000 fl\u00f6den.</li>"];
+    var risk=cost>400000?2:(cost>150000?1:0);
+    if(auto&&!triage){risk=2;notes.push("<li>Automatisk blockering utan granskning g\u00f6r varje falsklarm till ett driftstopp.</li>")}
+    if(auto&&triage){notes.push("<li>Automatik med granskning kan vara rimlig f\u00f6r k\u00e4nda, allvarliga m\u00f6nster.</li>")}
+    if(!auto&&triage){notes.push("<li>Alla larm granskas av en m\u00e4nniska \u2013 s\u00e4kert men beroende av analystid.</li>")}
+    out.innerHTML='<div class="note"><b>Simulerat utfall</b> '+WS.riskLabel(risk,1,2)+
+      '<ul style="margin:8px 0 0">'+notes.join("")+"</ul>"+
+      '<p class="hint">Modellens m\u00e5tt justeras linj\u00e4rt med tr\u00f6skeln i den h\u00e4r simuleringen. Riktiga modeller m\u00e5ste m\u00e4tas i labben.</p></div>';
+  }
+  [g,thr,document.getElementById("g-auto"),document.getElementById("g-triage")].forEach(function(e){e.addEventListener("change",calc);e.addEventListener("input",calc)});
+  document.getElementById("g-run").addEventListener("click",calc);
+  calc();
+})();
+
+WS.facit(document.getElementById("facit-lista"),[
+  ["Uppgift 1 – Modelltyper",'<p>MLP passar tabulära säkerhetsfunktioner. CNN hittar lokala mönster i bilder och byte-sekvenser. RNN/LSTM/GRU passar tidsserier och logghändelser i ordning. Autoencoder lär sig det normala och flaggar det den inte kan återskapa – bra när angreppen är okända. Transformer hanterar lång kontext och text. GNN används när relationer mellan noder betyder något, till exempel lateral rörelse.</p><p>Traditionell ML kräver att du väljer egenskaper själv och är ofta lättare att förklara. Neurala nätverk lär sig egna representationer men behöver mer data. En LLM är en språkmodell byggd på neurala nätverk – inte alla neurala nätverk är LLM, och en LLM är inte automatiskt bäst på tabeller eller tidsserier.</p>'],
+    ["Uppgift 2 – Hyperparametrar och tröskel",'<p>Hyperparametrar sätts före träningen: learning rate, antal träd, max depth och antal grannar. Modellens inlärda parametrar är de vikter och trösklar som träningen räknar fram – dem ändrar du inte för hand. Beslutströskeln ligger efter modellen och avgör när en poäng räknas som larm.</p><p>Låg tröskel ger hög recall men många falska larm. Hög tröskel ger hög precision men missar attacker. Klassvikt för attacker flyttar samma avvägning. För djupt träd memorerar träningsdata (overfitting), för få träd ger en ostadig modell och en learning rate långt från en rimlig startpunkt gör träningen instabil eller långsam.</p><p>Det finns ingen inställning som är bäst för alla: ett missat hot och ett falsklarm kostar olika mycket i olika verksamheter. Siffrorna här är en pedagogisk approximation, inte en verklig träning.</p>'],
+    ["Uppgift 3 – Data och modellresultat",'<p><b>Rådata:</b> 12 rader. <code>bytes_sent</code> är NULL i rad 4 och 10, innehåller texten ”unknown” i rad 7 och rad 2/6 är dubbletter. <b>Rensad data:</b> 10 rader – dubbletten och den oläsbara raden är borta, NULL är ersatt med 0. <b>Attacker:</b> 2 rader (4 och 10). <b>Medel misslyckade inloggningar:</b> 8,25.</p><p><b>Prediktioner:</b> 10 rader. Event 4 (0,94) och 10 (0,88) är rätt klassade attacker. Event 12 får 0,58 och klassas som attack trots att facit är Normal – ett falskt larm. Höjer du tröskeln till 0,60 försvinner det, men då riskerar svagare attacker att passera.</p><p><b>Features:</b> duration, protocol, bytes_sent och failed_logins är rimliga. <code>event_id</code> är bara en beteckning och <code>label</code> är facit – tar du med den får du data leakage och en modell som ser perfekt ut på träningsdata. Träna på train (7 rader), mät på test (3 rader). Underfitting missar mönstret, overfitting memorerar träningsdatan.</p>'],
+    ["Uppgift 4 \u2013 SOC:ns val",'<p>R\u00e4kna alltid med b\u00e5da feltyperna. Vid 1 000 fl\u00f6den och 350 hot blir ett missat hot 16 g\u00e5nger dyrare \u00e4n ett falsklarm \u2013 d\u00e5 l\u00f6nar det sig att acceptera fler falsklarm. Med automatisk blockering utan granskning blir varje falsklarm ett driftstopp, och d\u00e5 v\u00e4nder kostnadsbilden.</p><p>Po\u00e4ngen \u00e4r att modellvalet \u00e4r ett <b>verksamhetsbeslut</b>, inte bara ett tekniskt.</p>']
+]);
+
+WS.quiz(document.getElementById("quiz"),{
+  title:"Avslutande kunskapskontroll",
+  hint:"Fyra fr\u00e5gor om m\u00e5tt, tr\u00f6skel och modellval.",
+  questions:[{"text": "Ett system larmar 100 gånger. 80 larm är verkliga hot. Vad är precisionen?", "options": ["0,20", "0,80", "0,08", "1,80"], "answer": 1, "why": "Precision = TP / (TP + FP) = 80 / 100 = 0,80. Av alla larm var 80 procent riktiga."}, {"text": "Det finns 40 verkliga hot, modellen hittar 30. Vad är recall?", "options": ["0,30", "0,75", "0,40", "1,33"], "answer": 1, "why": "Recall = TP / (TP + FN) = 30 / 40 = 0,75. Modellen missar en fjärdedel av hoten."}, {"text": "Du höjer tröskeln. Vad händer normalt?", "options": ["Fler falsklarm och fler missade hot", "Färre falsklarm och fler missade hot", "Färre falsklarm och färre missade hot", "Ingenting förändras"], "answer": 1, "why": "Högre tröskel = modellen larmar mer sällan. Falsklarmen minskar, men fler verkliga hot passerar tyst."}, {"text": "Vad betyder ett falskt negativt (FN) i intrångsdetektering?", "options": ["Ett larm utan hot", "Ett hot som modellen missar", "En trasig logg", "Ett testfall"], "answer": 1, "why": "Negativt = modellen säger att det är normalt. Falskt = det var faktiskt ett hot."}]
+});
+WS.init();
+</script>
+
+<script>
+(function(){
+  var grid=document.getElementById("mt-grid");
+  if(!grid)return;
+  var D={
+    mlp:{t:"MLP – ett enkelt feed-forward-nätverk",p:"Klassificerar rader med siffror: antal anrop, tid på dygnet, port, byte per sekund.",d:"Tabulära data och färdiga säkerhetsfunktioner.",x:"Rå loggtext, långa sekvenser och bilder.",s:"Klassificera om en inloggning är normal eller avvikande utifrån fem features.",n:"Fungerar bra med begränsad data och är relativt lätt att granska."},
+    cnn:{t:"CNN – hittar lokala mönster",p:"Letar efter återkommande mönster i närliggande värden, till exempel byte i ett paket eller pixlar i en bild.",d:"Bilder, tid-frekvensdiagram och byte-sekvenser som kan läggas i ett rutnät.",x:"Tabeller där kolumnordningen inte betyder något.",s:"Upptäcka manipulerade bilder eller känna igen mönster i paketdata.",n:"Kräver mycket data och blir lätt stor och långsam."},
+    rnn:{t:"RNN / LSTM / GRU – minns ordning",p:"Läser en sekvens steg för steg och behåller ett minne av det som hänt tidigare.",d:"Tidsserier och sekventiella händelser, t.ex. inloggningar över tid.",x:"Data utan tidsordning, och mycket långa sekvenser.",s:"Upptäcka långsamma attacker där varje steg ser normalt ut men mönstret över tid inte gör det.",n:"LSTM och GRU mildrar problemet med att glömma, men träningen är långsammare än för en transformer."},
+    ae:{t:"Autoencoder – lär sig det normala",p:"Tränas på normaldata och försöker återskapa den. Det den inte kan återskapa får högt reconstruktionsfel.",d:"Mycket normaldata och få kända attacker.",x:"När du behöver förklara exakt varför något flaggats.",s:"Anomalidetektion i nätverkstrafik där angreppen är okända.",n:"Tröskeln för reconstruktionsfel är avgörande – och kan ge många falska larm."},
+    tr:{t:"Transformer – kontext och uppmärksamhet",p:"Väger varje del av indata mot varandra och kan hantera långa sammanhang.",d:"Text, loggsekvenser och stora mängder ostrukturerad data.",x:"Små datamängder och hårdvarubegränsade miljöer.",s:"Sammanfatta incidenter, klassificera ärenden och hitta avvikelser i loggtext. LLM bygger på den här familjen.",n:"Kraftfull men resurskrävande. En LLM är en språkmodell – inte samma sak som alla transformers."},
+    gnn:{t:"GNN – lär sig av relationer",p:"Modellerar noder och kanter: vem som pratar med vem, och hur information rör sig.",d:"Grafdata som nätverkskartor, konton och behörigheter.",x:"Data utan relationer, t.ex. en enskild tabell.",s:"Upptäcka lateral rörelse och ovanliga förbindelser mellan enheter.",n:"Kräver att grafen är korrekt och uppdaterad; annars lär modellen fel relationer."}
+  };
+  var panel=document.getElementById("mt-panel");
+  function show(k){
+    var d=D[k];
+    panel.innerHTML="<h4>"+WS.esc(d.t)+"</h4><p>"+WS.esc(d.p)+"</p>"+
+      '<div class="cards3"><div class="mini"><h5>Passar</h5>'+WS.esc(d.d)+'</div><div class="mini"><h5>Passar inte</h5>'+WS.esc(d.x)+'</div><div class="mini"><h5>Säkerhetsexempel</h5>'+WS.esc(d.s)+"</div></div>"+
+      '<p class="hint">'+WS.esc(d.n)+"</p>";
+    Array.prototype.forEach.call(grid.querySelectorAll("[data-mt]"),function(b){
+      b.setAttribute("aria-pressed",b.getAttribute("data-mt")===k?"true":"false");
+    });
+  }
+  Array.prototype.forEach.call(grid.querySelectorAll("[data-mt]"),function(b){
+    b.addEventListener("click",function(){show(b.getAttribute("data-mt"))});
+  });
+  show("mlp");
+})();
+</script>
+
+<script>
+(function(){
+  var lr=document.getElementById("hp-lr");
+  if(!lr)return;
+  var trees=document.getElementById("hp-trees"),depth=document.getElementById("hp-depth"),k=document.getElementById("hp-k"),
+      cw=document.getElementById("hp-cw"),th=document.getElementById("hp-th");
+  var seed=1234567;
+  function rnd(){seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296}
+  function gauss(){var s=0;for(var i=0;i<12;i++)s+=rnd();return s-6}
+  var zN=[],zA=[],i;
+  for(i=0;i<140;i++)zN.push(gauss());
+  for(i=0;i<60;i++)zA.push(gauss());
+  function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+  function calc(){
+    var l=Math.pow(10,(+lr.value/100)*3-2); /* 0,01 - 10 */
+    var t=+trees.value,d=+depth.value,kk=+k.value,w=+cw.value,thr=+th.value/100;
+    var eff=thr-0.05*Math.log2(w);
+    var q=0.32+0.26*(1-Math.exp(-t/110))+0.22*Math.exp(-Math.abs(Math.log(l/0.05)))-0.010*Math.abs(d-10)-0.012*Math.abs(kk-5);
+    q=clamp(q,0.08,0.97);
+    var muN=34+10*q,muA=62+24*q,sd=13;
+    var tp=0,fp=0;
+    zA.forEach(function(z){var s=clamp(muA+sd*z,0,100)/100;if(s>=eff)tp++});
+    zN.forEach(function(z){var s=clamp(muN+sd*z,0,100)/100;if(s>=eff)fp++});
+    var fn=60-tp,tn=140-fp;
+    var prec=tp+fp?tp/(tp+fp):0,rec=tp/60,f1=prec+rec?2*prec*rec/(prec+rec):0;
+    document.getElementById("hp-lrv").textContent=String(l.toFixed(3)).replace(".",",");
+    document.getElementById("hp-treesv").textContent=t;
+    document.getElementById("hp-depthv").textContent=d;
+    document.getElementById("hp-kv").textContent=kk;
+    document.getElementById("hp-cwv").textContent=w;
+    document.getElementById("hp-thv").textContent=thr*100;
+    document.getElementById("hp-prec").textContent=Math.round(prec*100)+" %";
+    document.getElementById("hp-rec").textContent=Math.round(rec*100)+" %";
+    document.getElementById("hp-f1").textContent=Math.round(f1*100)+" %";
+    document.getElementById("hp-fp").textContent=fp;
+    document.getElementById("hp-fn").textContent=fn;
+    document.getElementById("hp-tp").textContent=tp;
+    document.getElementById("hp-fnc").textContent=fn;
+    document.getElementById("hp-fpc").textContent=fp;
+    document.getElementById("hp-tn").textContent=tn;
+    var msg=[];
+    if(d>18)msg.push("Max depth "+d+" ger ett djupt träd som lätt memorerar träningsdata (overfitting). Testa 8–12.");
+    if(t<40)msg.push("Få träd ger en osäker modell. Fler träd stabiliserar resultatet men tar längre tid.");
+    if(Math.abs(Math.log(l/0.05))>2)msg.push("Learning rate "+l.toFixed(3)+" ligger långt från en vanlig startpunkt. För högt ger instabil träning, för lågt ger långsam.");
+    if(kk>9)msg.push("Många grannar gör KNN mjukare och kan missa smala attacker.");
+    if(w>4)msg.push("Klassvikten höjer recall men ökar antalet falska larm – bra när missade attacker är dyrast.");
+    if(thr<0.3)msg.push("Låg tröskel: nästan allt flaggas. Hög recall, låg precision och många larm att utreda.");
+    if(thr>0.72)msg.push("Hög tröskel: få larm, men risk att attacker passerar obemärkt.");
+    document.getElementById("hp-note").innerHTML=(msg.length?'<div class="warn"><b>Vad du ser:</b><ul style="margin:6px 0 0">'+msg.map(function(x){return "<li>"+WS.esc(x)+"</li>"}).join("")+"</ul></div>":'<div class="note">Bra balans i den här inställningen – men ”bra” beror på om ett falskt larm eller en missad attack kostar mest.</div>');
+  }
+  [lr,trees,depth,k,cw,th].forEach(function(el){el.addEventListener("input",calc)});
+  document.getElementById("hp-reset").addEventListener("click",function(){
+    lr.value=45;trees.value=120;depth.value=10;k.value=5;cw.value=1;th.value=50;calc();
+  });
+  calc();
+})();
+</script>
+<script>window.__DB_CFG=window.__DB_CFG||{};window.__DB_CFG['04']={"title":"network_events_raw → clean → training_data","intro":"Samma händelser i fyra steg: rådata med fel, rensad data, träningsdata och modellens prediktioner. Jämför tabellerna – det är här data leakage och överanpassning uppstår.","tables":[{"name":"network_events_raw","pk":"event_id","cols":[["event_id","INTEGER"],["duration","INTEGER"],["protocol","TEXT"],["bytes_sent","INTEGER"],["failed_logins","INTEGER"],["label","TEXT"]],"fk":[],"rows":[[1,120,"TCP",1500,0,"Normal"],[2,15,"UDP",500,12,"Suspicious"],[3,90,"TCP",1200,0,"Normal"],[4,10,"TCP",null,25,"Attack"],[5,200,"TCP",3000,0,"Normal"],[6,15,"UDP",500,12,"Suspicious"],[7,45,"TCP","unknown",3,"Suspicious"],[8,30,"TCP",800,0,"Normal"],[9,60,"TCP",2000,5,"Suspicious"],[10,5,"UDP",null,40,"Attack"],[11,180,"TCP",2500,0,"Normal"],[12,20,"TCP",700,2,"Normal"]]},{"name":"network_events_clean","pk":"event_id","cols":[["event_id","INTEGER"],["duration","INTEGER"],["protocol","TEXT"],["bytes_sent","INTEGER"],["failed_logins","INTEGER"],["label","TEXT"]],"fk":[],"rows":[[1,120,"TCP",1500,0,"Normal"],[2,15,"UDP",500,12,"Suspicious"],[3,90,"TCP",1200,0,"Normal"],[4,10,"TCP",0,25,"Attack"],[5,200,"TCP",3000,0,"Normal"],[8,30,"TCP",800,0,"Normal"],[9,60,"TCP",2000,5,"Suspicious"],[10,5,"UDP",0,40,"Attack"],[11,180,"TCP",2500,0,"Normal"],[12,20,"TCP",700,2,"Normal"]]},{"name":"training_data","pk":"event_id","cols":[["event_id","INTEGER"],["duration","INTEGER"],["bytes_sent","INTEGER"],["failed_logins","INTEGER"],["label","TEXT"],["split","TEXT"]],"fk":[["event_id","network_events_clean.event_id"]],"rows":[[1,120,1500,0,"Normal","train"],[2,15,500,12,"Suspicious","train"],[3,90,1200,0,"Normal","train"],[4,10,0,25,"Attack","train"],[5,200,3000,0,"Normal","train"],[8,30,800,0,"Normal","train"],[9,60,2000,5,"Suspicious","train"],[10,5,0,40,"Attack","test"],[11,180,2500,0,"Normal","test"],[12,20,700,2,"Normal","test"]]},{"name":"model_predictions","pk":"prediction_id","cols":[["prediction_id","INTEGER"],["event_id","INTEGER"],["score","REAL"],["predicted","TEXT"],["actual","TEXT"]],"fk":[["event_id","training_data.event_id"]],"rows":[[1,1,0.12,"Normal","Normal"],[2,2,0.81,"Attack","Suspicious"],[3,3,0.22,"Normal","Normal"],[4,4,0.94,"Attack","Attack"],[5,5,0.08,"Normal","Normal"],[6,8,0.44,"Normal","Normal"],[7,9,0.67,"Attack","Suspicious"],[8,10,0.88,"Attack","Attack"],[9,11,0.31,"Normal","Normal"],[10,12,0.58,"Attack","Normal"]]}],"queries":[{"label":"Rådata","sql":"SELECT * FROM network_events_raw;","explain":"Tolv rader. Här finns NULL i bytes_sent, texten 'unknown' i en sifferkolumn och en dubblett (event 2 och 6). Det är så rådata ofta ser ut.","cols":["event_id","duration","protocol","bytes_sent","failed_logins","label"],"rows":[[1,120,"TCP",1500,0,"Normal"],[2,15,"UDP",500,12,"Suspicious"],[3,90,"TCP",1200,0,"Normal"],[4,10,"TCP","NULL",25,"Attack"],[5,200,"TCP",3000,0,"Normal"],[6,15,"UDP",500,12,"Suspicious"],[7,45,"TCP","unknown",3,"Suspicious"],[8,30,"TCP",800,0,"Normal"],[9,60,"TCP",2000,5,"Suspicious"],[10,5,"UDP","NULL",40,"Attack"],[11,180,"TCP",2500,0,"Normal"],[12,20,"TCP",700,2,"Normal"]]},{"label":"Saknade värden","sql":"SELECT event_id, bytes_sent FROM network_events_raw WHERE bytes_sent IS NULL;","explain":"IS NULL hittar tomma värden. Två rader saknar bytes_sent. Antingen fyller man i ett rimligt värde eller utesluter raden – men man måste dokumentera valet.","cols":["event_id","bytes_sent"],"rows":[[4,"NULL"],[10,"NULL"]]},{"label":"Dubbletter","sql":"SELECT duration, protocol, bytes_sent, failed_logins, COUNT(*) AS antal FROM network_events_raw GROUP BY duration, protocol, bytes_sent, failed_logins HAVING COUNT(*) > 1;","explain":"GROUP BY på alla värden och HAVING filtrerar grupper. En grupp förekommer två gånger: 15 sekunder, UDP, 500 byte, 12 misslyckade inloggningar.","cols":["duration","protocol","bytes_sent","failed_logins","antal"],"rows":[[15,"UDP",500,12,2]]},{"label":"Medel misslyckade","sql":"SELECT AVG(failed_logins) AS medel FROM network_events_raw;","explain":"AVG räknar medelvärde. 99 misslyckade försök på 12 rader blir 8,25. Ett enda extremvärde (40) drar upp medelvärdet.","cols":["medel"],"rows":[[8.25]]},{"label":"Rensad data – attacker","sql":"SELECT * FROM network_events_clean WHERE label = 'Attack';","explain":"I den rensade tabellen finns tio rader kvar. Två är attacker. Dubbletten och den oläsbara raden är borta, och NULL är ersatt med 0.","cols":["event_id","duration","protocol","bytes_sent","failed_logins","label"],"rows":[[4,10,"TCP",0,25,"Attack"],[10,5,"UDP",0,40,"Attack"]]},{"label":"Prediktioner","sql":"SELECT p.event_id, p.score, p.predicted, p.actual FROM model_predictions p ORDER BY p.score DESC;","explain":"Modellen ger en poäng mellan 0 och 1. Hög poäng = attack. Jämför predicted med actual: de flesta stämmer, men event 12 får 0,58 och klassas som attack trots att det är normal trafik – ett falskt larm.","cols":["event_id","score","predicted","actual"],"rows":[[4,0.94,"Attack","Attack"],[10,0.88,"Attack","Attack"],[2,0.81,"Attack","Suspicious"],[9,0.67,"Attack","Suspicious"],[12,0.58,"Attack","Normal"],[8,0.44,"Normal","Normal"],[11,0.31,"Normal","Normal"],[3,0.22,"Normal","Normal"],[1,0.12,"Normal","Normal"],[5,0.08,"Normal","Normal"]]}],"features":{"prompt":"Välj vilka kolumner som ska vara features (X). label är det modellen ska förutsäga (y) och får aldrig vara en feature.","target":"label","items":[["duration",true,"Tid är en egenskap hos flödet och finns även i drift."],["protocol",true,"Protokoll är en kategori som kan kodas om till tal."],["bytes_sent",true,"Datamängd är en rimlig signal."],["failed_logins",true,"Antal misslyckade inloggningar är en stark signal."],["event_id",false,"Ett ID är bara en radbeteckning och kan ge data leakage."],["label",false,"Label är facit. Används den som feature lär sig modellen svaret – data leakage."]]},"note":"Träna på train-radarna och mät på test-radarna. Samma data i båda ger en modell som ser bra ut men inte klarar nya händelser."};</script>
+
+<script>
+(function(){
+  var CFG=window.__DB_CFG||{};
+  function esc(s){return WS.esc(String(s))}
+  function isNum(v){return typeof v==="number"}
+  document.querySelectorAll("[data-db]").forEach(function(host){
+    var key=host.getAttribute("data-db"),db=CFG[key];
+    if(!db)return;
+    var ti=0,qi=0,filter="",sortCol=-1,sortDir=1;
+    function tab(){return db.tables[ti]}
+    function rowsNow(){
+      var t=tab(),rows=t.rows.slice();
+      if(filter){
+        var f=filter.toLowerCase();
+        rows=rows.filter(function(r){return r.join(" ").toLowerCase().indexOf(f)>=0});
+      }
+      if(sortCol>=0){
+        rows.sort(function(a,b){
+          var x=a[sortCol],y=b[sortCol];
+          if(isNum(x)&&isNum(y))return (x-y)*sortDir;
+          return String(x).localeCompare(String(y),"sv")*sortDir;
+        });
+      }
+      return rows;
+    }
+    function tableHTML(){
+      var t=tab(),rows=rowsNow();
+      var head="<tr>"+t.cols.map(function(c,i){
+        var arrow=sortCol===i?(sortDir>0?" \u2191":" \u2193"):"";
+        return '<th data-col="'+i+'" title="Sortera">'+esc(c[0])+arrow+"</th>";
+      }).join("")+"</tr>";
+      var body=rows.length?rows.map(function(r){
+        return "<tr>"+r.map(function(v){return '<td'+(isNum(v)?' class="num"':"")+">"+(v===null?"NULL":esc(v))+"</td>"}).join("")+"</tr>";
+      }).join(""):'<tr><td colspan="'+t.cols.length+'" class="db-empty">Inga rader matchar filtret.</td></tr>';
+      return '<div class="db-scroll"><table class="tbl"><thead>'+head+"</thead><tbody data-role=\"tbody\">"+body+"</tbody></table></div>"+
+        '<p class="hint" data-role="count" style="margin:6px 0 0">'+rows.length+" av "+t.rows.length+" rader \u00b7 "+t.cols.length+" kolumner</p>";
+    }
+    function paint(){
+      host.querySelector('[data-role="tablewrap"]').innerHTML=tableHTML();
+      bindSort();
+    }
+    function bindSort(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-col]"),function(th){
+        th.addEventListener("click",function(){
+          var i=+th.getAttribute("data-col");
+          if(sortCol===i)sortDir*=-1;else{sortCol=i;sortDir=1}
+          paint();
+        });
+      });
+    }
+    function schema(){
+      var t=tab();
+      return '<ul class="schema">'+t.cols.map(function(c){
+        var key=t.pk===c[0]?' <span class="key">PK</span>':"";
+        return "<li>"+esc(c[0])+" "+esc(c[1])+key+"</li>";
+      }).join("")+"</ul>"+(t.fk&&t.fk.length?'<p class="hint" style="margin:0 0 8px">Främmande nycklar: '+t.fk.map(function(f){
+        return "<code>"+esc(f[0])+"</code> \u2192 "+esc(f[1]);
+      }).join(" \u00b7 ")+"</p>":'<p class="hint" style="margin:0 0 8px">Primärnyckel: <code>'+esc(t.pk)+"</code> identifierar varje rad.</p>");
+    }
+    function timeline(){
+      if(!db.timeline)return "";
+      var t=db.tables.filter(function(x){return x.name===db.timeline.table})[0];
+      if(!t)return "";
+      return '<h5 style="margin:10px 0 0">Tidslinje</h5><ol class="timeline">'+t.rows.map(function(r){
+        return "<li><time>"+esc(r[db.timeline.time])+"</time><b>"+esc(r[db.timeline.title])+"</b> \u00b7 "+esc(r[db.timeline.level])+"</li>";
+      }).join("")+"</ol>";
+    }
+    function featureBox(){
+      var f=db.features;
+      if(!f)return "";
+      return '<div class="featurebox"><b>Features och label</b><p class="hint">'+esc(f.prompt)+"</p>"+
+        f.items.map(function(it,i){
+          return '<label class="checkline"><input type="checkbox" data-f="'+i+'"><span>'+esc(it[0])+"</span></label>";
+        }).join("")+
+        '<div class="actions"><button type="button" data-role="fcheck">Kontrollera valen</button></div><div data-role="fout" aria-live="polite"></div></div>';
+    }
+    function render(){
+      var t=tab(),q=db.queries[qi];
+      host.innerHTML='<div class="db-head"><span class="tag">Pedagogisk databas \u00b7 syntetiska data</span><h4>'+esc(db.title)+"</h4><p class=\"hint\">"+esc(db.intro)+"</p></div>"+
+        (db.timeline?timeline():"")+
+        '<div class="db-tabs" role="group" aria-label="Tabeller">'+db.tables.map(function(x,i){
+          return '<button type="button" data-t="'+i+'" aria-pressed="'+(i===ti?"true":"false")+'">'+esc(x.name)+"</button>";
+        }).join("")+"</div>"+
+        '<div class="db-grid">'+
+          '<div class="db-box"><b>Tabell: '+esc(t.name)+"</b>"+schema()+
+            '<div class="db-tools"><input type="search" data-role="filter" placeholder="Filtrera rader\u2026" value="'+esc(filter)+'" aria-label="Filtrera tabellen"><button type="button" class="ghost" data-role="reset">\u00c5terst\u00e4ll</button></div>'+
+            '<div data-role="tablewrap">'+tableHTML()+"</div></div>"+
+          '<div class="db-box"><b>SQL-fr\u00e5gor</b><div class="sqlbtns">'+db.queries.map(function(x,i){
+            return '<button type="button" data-q="'+i+'" aria-pressed="'+(i===qi?"true":"false")+'">'+esc(x.label)+"</button>";
+          }).join("")+"</div>"+
+            '<pre class="code">'+esc(q.sql)+"</pre><p>"+esc(q.explain)+"</p>"+
+            '<p class="hint" style="margin:4px 0">F\u00f6rv\u00e4ntat resultat: <b>'+q.rows.length+" rader</b></p>"+
+            '<div class="db-scroll"><table class="tbl"><thead><tr>'+q.cols.map(function(c){return "<th>"+esc(c)+"</th>"}).join("")+"</tr></thead><tbody>"+
+            q.rows.map(function(r){return "<tr>"+r.map(function(v){return "<td"+(isNum(v)?' class="num"':"")+">"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")+
+            "</tbody></table></div></div>"+
+        "</div>"+featureBox()+'<p class="hint" style="margin:10px 0 0">'+esc(db.note)+"</p>";
+      bind();
+    }
+    function bind(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-t]"),function(b){
+        b.addEventListener("click",function(){ti=+b.getAttribute("data-t");qi=0;filter="";sortCol=-1;render()});
+      });
+      Array.prototype.forEach.call(host.querySelectorAll("[data-q]"),function(b){
+        b.addEventListener("click",function(){qi=+b.getAttribute("data-q");render()});
+      });
+      var f=host.querySelector('[data-role="filter"]');
+      if(f)f.addEventListener("input",function(){filter=f.value;paint()});
+      host.querySelector('[data-role="reset"]').addEventListener("click",function(){ti=0;qi=0;filter="";sortCol=-1;render()});
+      var fc=host.querySelector('[data-role="fcheck"]');
+      if(fc)fc.addEventListener("click",function(){
+        var f=db.features,ok=0,picked=[];
+        Array.prototype.forEach.call(host.querySelectorAll("[data-f]"),function(c){
+          var i=+c.getAttribute("data-f"),good=c.checked===!!f.items[i][1];
+          if(good)ok++;else picked.push(f.items[i][0]);
+          c.parentElement.style.background=good?"#e7f4ec":"#fbe7e3";
+        });
+        var o=host.querySelector('[data-role="fout"]');
+        o.className=ok===f.items.length?"note":"warn";
+        o.innerHTML="<b>"+ok+" av "+f.items.length+" r\u00e4tt.</b> "+(picked.length?"Justera: "+picked.map(esc).join(", ")+".":"Alla val st\u00e4mmer.")+
+          "<br>"+f.items.map(function(it){return "<span class=\"hint\">"+esc(it[0])+": "+esc(it[2])+"</span>"}).join("<br>");
+      });
+      bindSort();
+    }
+    render();
+  });
+})();
+</script>
+
+</body>
+</html>

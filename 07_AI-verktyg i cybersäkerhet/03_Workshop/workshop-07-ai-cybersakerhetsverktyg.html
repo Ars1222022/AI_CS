@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop 07 – AI-verktyg i cybersäkerhet · AI inom cybersäkerhet</title>
+<style>
+
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d1c19;--muted:#5c5a54;--line:#dcd8cf;
+--ok:#1f6b45;--bad:#a32b1c;--warn:#8a5a12;--soft:#efece4;--shadow:0 1px 2px rgba(0,0,0,.05)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.62 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+img,svg{max-width:100%}
+a{color:var(--dark);text-underline-offset:3px}
+a:hover{color:var(--acc)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:10px;z-index:99;border-radius:8px}
+header.top{background:var(--dark);color:#fff;padding:10px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+header.top a{color:#fff;text-decoration:none;font-weight:600;font-size:.92rem}
+header.top a:hover{color:#ffd9c9}
+header.top .kicker{font-size:.85rem;opacity:.9}
+main{max-width:1000px;margin:0 auto;padding:24px 18px 56px}
+.hero{margin:6px 0 18px}
+.eyebrow{font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--acc);font-weight:700;margin:0 0 4px}
+h1{font-size:clamp(1.55rem,3.2vw,2.2rem);line-height:1.18;margin:.1em 0 .35em;color:var(--dark)}
+.lead{font-size:1.06rem;max-width:70ch;color:#33312c;margin:.2em 0 1em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.86rem;color:var(--muted)}
+.chips b{color:var(--ink)}
+h2{font-size:1.35rem;margin:1.6em 0 .5em;color:var(--dark)}
+h3{font-size:1.06rem;margin:1.3em 0 .4em}
+h4{font-size:.98rem;margin:1em 0 .3em}
+p,li{max-width:74ch}
+ul,ol{padding-left:1.25em}
+li{margin:.25em 0}
+.goals{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:10px;padding:14px 18px;margin:16px 0 6px}
+.goals h2{margin:.1em 0 .4em;font-size:1.05rem}
+.goals ul{margin:0}
+.tabs{position:sticky;top:0;z-index:30;background:var(--bg);display:flex;gap:6px;align-items:center;flex-wrap:wrap;
+padding:10px 0;border-bottom:2px solid var(--line);margin:18px 0 6px}
+.tabs [role=tab]{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);
+color:var(--muted);border-radius:9px;padding:9px 15px}
+.tabs [role=tab]:hover{border-color:var(--acc);color:var(--ink)}
+.tabs [role=tab][aria-selected=true]{background:var(--dark);border-color:var(--dark);color:#fff}
+.tabs [role=tab]:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,th:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.timer{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:4px 8px}
+.timer .clock{font-variant-numeric:tabular-nums;font-weight:700;min-width:52px;text-align:center;color:var(--dark)}
+.timer.low .clock{color:var(--bad)}
+.timer.done .clock{color:var(--warn)}
+.timer button{font:inherit;font-size:.82rem;padding:4px 9px;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+.timer button:hover{border-color:var(--acc)}
+[role=tabpanel]{padding:8px 0 20px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.task{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;box-shadow:var(--shadow)}
+.task>h3{margin-top:0;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.task .no{background:var(--acc);color:#fff;border-radius:7px;font-size:.8rem;padding:2px 9px;font-weight:700}
+.brief{display:grid;gap:6px;margin:10px 0 14px;font-size:.95rem}
+.brief div{display:grid;grid-template-columns:110px 1fr;gap:10px}
+.brief dt,.brief b{color:var(--muted);font-weight:600}
+.brief span{min-width:0}
+@media(max-width:520px){.brief div{grid-template-columns:1fr;gap:0}}
+.hint{font-size:.9rem;color:var(--muted);margin:.4em 0}
+.note{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+.warn{background:#fdf2e2;border:1px solid #e6c9a2;border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--dark);background:var(--dark);color:#fff;padding:9px 16px}
+button:hover{filter:brightness(1.12)}
+button.ghost{background:transparent;color:var(--dark);border-color:var(--line)}
+button.ghost:hover{background:var(--soft)}
+button:disabled{opacity:.6;cursor:default;filter:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 4px}
+label.field{display:block;font-weight:600;font-size:.92rem;margin:10px 0 4px}
+select,input[type=number],input[type=range],input[type=search]{font:inherit}
+select,input[type=number],input[type=search]{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--dark);height:28px}
+input[type=checkbox],input[type=radio]{accent-color:var(--dark);width:18px;height:18px}
+.rangeout{font-variant-numeric:tabular-nums;font-weight:700;color:var(--dark)}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:10px 0}
+legend{font-weight:600;font-size:.92rem;padding:0 6px}
+.checkline{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.95rem}
+.checkline:last-child{border-bottom:0}
+.checkline input{margin-top:4px;flex:none}
+.checkline span{flex:1}
+.tablewrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.93rem;min-width:420px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-weight:600;white-space:nowrap}
+th[data-i]{cursor:pointer;user-select:none}
+th[data-i]:hover{background:#e6e2d8}
+th .arrow{opacity:.45;font-size:.8em}
+tbody tr:hover{background:#faf8f3}
+tbody tr.good{background:#eaf5ee}
+tbody tr.bad{background:#fbecea}
+.rownote{font-size:.84rem;color:var(--muted);margin-top:4px}
+.filter{margin-bottom:8px;width:min(340px,100%)}
+.fb{font-size:.93rem;margin:10px 0;padding:10px 12px;border-radius:8px;background:var(--soft)}
+.fb:empty{display:none}
+.fb.ok{background:#eaf5ee;border-left:4px solid var(--ok)}
+.fb.bad{background:#fbecea;border-left:4px solid var(--bad)}
+.fb b{color:var(--ink)}
+.whynot{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+.q{border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0;background:#fff}
+.qt{font-weight:600;margin:0 0 8px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--soft);border:1px solid var(--line);
+color:var(--ink);border-radius:8px;padding:9px 11px;font-weight:400}
+.opt:hover:not(:disabled){border-color:var(--acc)}
+.opt .k{font-weight:700;color:var(--muted);flex:none}
+.opt.correct{border-color:var(--ok);background:#e7f4ec}
+.opt.wrong{border-color:var(--bad);background:#fbe7e3}
+.opt .k{min-width:1em}
+.quizsum{font-size:.95rem;margin:12px 0 4px}
+.chart{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+.chart .grid{stroke:#e5e1d8;stroke-width:1}
+.chart .ax{font-size:11px;fill:#6b6862}
+.chart .lbl{font-size:12px;fill:#3a3833}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.86rem;color:var(--muted);margin:6px 0 0;padding:0;list-style:none}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.bars{margin:10px 0}
+.barrow{display:grid;grid-template-columns:minmax(110px,1.1fr) 2fr minmax(56px,auto);gap:10px;align-items:center;font-size:.9rem;margin:6px 0}
+.bl{color:var(--muted)}
+.btrack{background:var(--soft);border-radius:999px;height:12px;overflow:hidden}
+.bfill{display:block;height:100%;background:var(--dark);border-radius:999px;transition:width .18s ease}
+.barrow.ok .bfill{background:var(--ok)}
+.barrow.bad .bfill{background:var(--bad)}
+.barrow.warn .bfill{background:var(--warn)}
+.bv{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;margin:12px 0;font-size:.9rem}
+.cm .cmh{font-weight:600;color:var(--muted);padding:4px 6px;display:flex;align-items:center}
+.cm .cell{border-radius:8px;padding:10px;border:1px solid var(--line);background:#fff}
+.cm .cell b{display:block;font-size:1.3rem}
+.cm .cell span{font-size:.8rem;color:var(--muted)}
+.cm .tp{background:#e6f4ec;border-color:#b6ddc6}
+.cm .tn{background:#eef1f0;border-color:#cfd8d3}
+.cm .fp{background:#fdf1e2;border-color:#e8cfae}
+.cm .fn{background:#fbe8e5;border-color:#e8bcb4}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0}
+details[open]{box-shadow:var(--shadow)}
+summary{cursor:pointer;font-weight:600;color:var(--dark)}
+details[open] summary{margin-bottom:8px;border-bottom:1px solid var(--line);padding-bottom:8px}
+details .why{font-size:.95rem}
+details ul{margin:.4em 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--muted);vertical-align:middle}
+.tag.sim{background:#efe6f5;color:#5b3a72}
+.flow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flow li{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.85rem}
+.flow li.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.flow li b{font-weight:700}
+.stepbtns{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.stepbtns button{background:var(--card);color:var(--ink);border:1px solid var(--line);padding:6px 10px;font-size:.86rem;border-radius:8px}
+.stepbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.stepinfo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:8px;padding:12px 14px;margin:8px 0;min-height:76px}
+.stepinfo h4{margin:0 0 4px}
+.riskbadge{display:inline-block;border-radius:6px;padding:2px 9px;font-weight:700;font-size:.85rem}
+.riskbadge.low{background:#e6f4ec;color:#1f5c3e}
+.riskbadge.mid{background:#fdf1e2;color:#7a5112}
+.riskbadge.high{background:#fbe8e5;color:#8c2417}
+footer{border-top:1px solid var(--line);margin-top:26px;padding:18px;text-align:center;color:var(--muted);font-size:.83rem}
+@media(max-width:640px){main{padding:16px 12px 40px}.tabs{padding:8px 0}.timer{width:100%;justify-content:center}.brief div{grid-template-columns:1fr}th,td{padding:6px 8px}}
+@media print{header.top,.tabs,.actions,button{display:none}body{background:#fff}[role=tabpanel][hidden]{display:block!important}main{max-width:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* --- nya interaktiva komponenter --- */
+.figure-wrap{display:grid;gap:16px;grid-template-columns:minmax(240px,0.9fr) minmax(280px,1.1fr);align-items:start}
+@media(max-width:760px){.figure-wrap{grid-template-columns:1fr}}
+.human{position:relative;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:8px}
+.human svg{display:block;width:100%;height:auto}
+.hotspot{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--dark);background:#fff;color:var(--dark);border-radius:999px;font:inherit;font-size:.72rem;font-weight:700;padding:3px 7px;line-height:1.2;cursor:pointer;white-space:nowrap}
+.hotspot[aria-pressed=true]{background:var(--dark);color:#fff}
+.hotspot:hover{border-color:var(--acc)}
+.hotspot:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:150px}
+.panel h4{margin:.1em 0 .4em}
+.flows{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flows li{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:.82rem}
+.flows li.off{opacity:.45;text-decoration:line-through}
+.flows .arr{background:none;border:0;color:var(--muted);padding:0 1px}
+.code{background:#23261f;color:#eae7df;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.5;padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:pre;margin:8px 0}
+.code .k{color:#9ec9a8}
+.code .s{color:#e6c07b}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;border-radius:0;background:var(--card);color:var(--ink);padding:6px 10px;font-size:.85rem;font-weight:600}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--dark);color:#fff}
+.chips2{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;padding:0;list-style:none}
+.chips2 button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.85rem}
+.chips2 button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.metricgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin:10px 0}
+.metric{background:var(--soft);border-radius:9px;padding:8px 10px}
+.metric b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.metric span{font-size:.78rem;color:var(--muted)}
+.modelgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:10px 0}
+.modelcard{text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-weight:600;font-size:.9rem}
+.modelcard small{display:block;font-weight:400;color:var(--muted);font-size:.78rem;margin-top:3px}
+.modelcard[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
+.cards3{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:10px 0}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.88rem}
+.mini h5{margin:0 0 4px;font-size:.9rem}
+.legendline{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin:4px 0 0}
+
+/* --- databasvy --- */
+.db{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);margin:12px 0}
+.db-head h4{margin:0 0 4px}
+.db-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.db-tabs button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 10px;font-size:.85rem;font-weight:600}
+.db-tabs button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-grid{display:grid;gap:12px;grid-template-columns:minmax(280px,1fr) minmax(280px,1fr)}
+@media(max-width:820px){.db-grid{grid-template-columns:1fr}}
+.db-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.schema{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px;padding:0;list-style:none}
+.schema li{font-size:.75rem;background:var(--soft);border-radius:6px;padding:2px 6px;font-family:ui-monospace,Consolas,monospace}
+.schema .key{color:var(--dark);font-weight:700}
+.db-tools{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.db-tools input{flex:1;min-width:120px;border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;font-size:.85rem;background:var(--card);color:var(--ink)}
+.db-tools button{font-size:.8rem;padding:4px 9px}
+.db-scroll{overflow-x:auto}
+.db .tbl{font-size:.82rem;min-width:0}
+.db .tbl th{white-space:nowrap;cursor:pointer}
+.db .tbl td{white-space:nowrap}
+.db .tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.sqlbtns{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px}
+.sqlbtns button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:4px 9px;font-size:.8rem}
+.sqlbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-empty{padding:10px;color:var(--muted);font-size:.85rem}
+.timeline{list-style:none;margin:8px 0;padding:0 0 0 14px;border-left:3px solid var(--acc)}
+.timeline li{margin:0 0 6px;font-size:.85rem;position:relative}
+.timeline li:before{content:"";position:absolute;left:-20px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.timeline time{font-weight:700;margin-right:6px}
+.featurebox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px}
+.featurebox .checkline{margin:0 0 2px}
+.fitgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:10px 0}
+.fitgrid .mini svg{width:100%;height:auto;display:block}
+.facitbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.facitbar .hint{margin:0}
+
+:root{--dark:#2d2a4a;--dark2:#211f38;--acc:#7a5cc4;--acc2:#60439f;--bg:#f4f3f9;--soft:#e8e5f2}
+/* ===== Extra labb med avancerad grafik (tillagt) ===== */
+.lab{margin:34px 0 8px;border-radius:16px;overflow:hidden;border:1px solid #1d2b45;
+background:radial-gradient(1200px 520px at 12% -12%,#172c50 0%,#0b1220 46%,#070c16 100%);
+color:#dbe7ff;box-shadow:0 18px 46px rgba(8,18,38,.28);padding:20px 0 0}
+.lab-eyebrow{margin:0 18px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#6ff2d9;font-weight:700}
+.lab h2{margin:.25em 18px .3em;color:#f2f7ff;font-size:clamp(1.25rem,2.4vw,1.6rem)}
+.lab-lead{margin:0 18px 16px;color:#a8bcd8;max-width:78ch;font-size:.98rem}
+.lab-shell{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.95fr);gap:14px;padding:0 18px 18px}
+@media(max-width:860px){.lab-shell{grid-template-columns:1fr}}
+.lab-stage{position:relative;border-radius:13px;border:1px solid #1e3355;background:#060b14;overflow:hidden;align-self:start}
+.lab-stage canvas{display:block;width:100%;height:auto}
+.lab-hud{display:flex;gap:8px;flex-wrap:wrap;padding:8px 10px;border-top:1px solid #16253d;background:#08111f;font-size:.74rem}
+.lab-hud span{background:rgba(10,22,40,.9);border:1px solid #23406b;border-radius:999px;padding:3px 10px;color:#a9c6ee}
+.lab-hud b{color:#7ff2d6;font-variant-numeric:tabular-nums}
+.lab-side{display:grid;gap:10px;align-content:start}
+.lab-card{background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:12px;padding:12px 13px}
+.lab-card>b{display:block;font-size:.9rem;color:#eaf2ff;margin-bottom:6px}
+.lab label{display:block;font-size:.8rem;color:#a8bcd8;margin:9px 0 2px;font-weight:600}
+.lab output{color:#7ff2d6;font-weight:700;font-variant-numeric:tabular-nums}
+.lab input[type=range]{width:100%;accent-color:#38e1c4;height:26px}
+.lab input[type=checkbox]{accent-color:#38e1c4;width:17px;height:17px;flex:none}
+.lab select{width:100%;padding:7px 9px;border-radius:8px;border:1px solid #26456f;background:#0b1524;color:#dbe7ff;font:inherit;font-size:.88rem}
+.lab button{background:linear-gradient(180deg,#1a5cc8,#123f96);border:1px solid #2f6bff;color:#eef4ff;
+padding:8px 14px;border-radius:9px;font-size:.88rem;font-weight:600}
+.lab button:hover{filter:brightness(1.15)}
+.lab button.ghost{background:transparent;border-color:#26456f;color:#a9c6ee}
+.lab .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lab .readout{font-size:.85rem;line-height:1.55;color:#c6d7f2;margin:6px 0}
+.lab .readout b{color:#fff}
+.lab .verdict{border-radius:9px;padding:8px 10px;font-size:.8rem;font-weight:700;line-height:1.4;
+background:rgba(120,150,190,.14);border:1px solid rgba(120,150,190,.3);color:#c6d7f2;margin-top:8px}
+.lab .verdict.good{background:rgba(31,140,90,.20);border-color:#2b8a5f;color:#93f2bd}
+.lab .verdict.mid{background:rgba(160,110,25,.20);border-color:#a87a2c;color:#ffd79a}
+.lab .verdict.bad{background:rgba(180,50,35,.22);border-color:#b5452f;color:#ffb3a7}
+.lab .lab-q ul{margin:4px 0 0;padding-left:1.15em;font-size:.85rem;color:#a8bcd8}
+.lab .lab-q li{margin:5px 0;max-width:none}
+.lab .lab-bar{height:11px;border-radius:999px;background:#0d1b2e;border:1px solid #1e3355;overflow:hidden;margin:8px 0}
+.lab .lab-bar>span{display:block;height:100%;width:0;background:#38e1c4;transition:width .2s ease,background .2s ease}
+.lab .metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem;color:#a8bcd8}
+.lab .metricgrid div{background:rgba(6,14,26,.85);border:1px solid #1b2f4d;border-radius:8px;padding:6px 8px}
+.lab .metricgrid b{display:block;color:#7ff2d6;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.lab .lab-how{margin:0 18px 18px;background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:10px;padding:10px 14px;color:#c6d7f2}
+.lab .lab-how summary{color:#7ff2d6;font-weight:700;font-size:.9rem}
+.lab .lab-how ol{margin:8px 0 0;padding-left:1.3em;font-size:.86rem;color:#a8bcd8}
+.lab .lab-how li{margin:4px 0;max-width:none}
+@media(max-width:600px){.lab{padding-top:14px}.lab-shell{padding:0 12px 14px}.lab h2,.lab-lead,.lab-eyebrow,.lab-how{margin-left:12px;margin-right:12px}}
+@media print{.lab{box-shadow:none;background:#fff;color:#111;border-color:#ccc}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Hoppa till innehåll</a>
+<header class="top">
+  <a href="../../index.html" title="Öppnar kursens startsida">&#8592; Alla workshoppar</a>
+  <span class="kicker">Lektion 07 · AI-verktyg</span>
+</header>
+<main id="main">
+  <div class="hero">
+    <p class="eyebrow">AI inom cybersäkerhet · Workshop 07</p>
+    <h1>Workshop 07 – AI-verktyg i cybersäkerhet</h1>
+    <p class="lead">AI-verktyg i SOC är mer än en chattbot: regler, automation, ML, LLM:er och agenter löser olika saker. Här väljer du verktyg, ställer in en LLM och bygger skyddsräcken som håller när något går fel.</p>
+    <ul class="chips"><li><b>Tid:</b> ca 60 min</li><li><b>Individuellt:</b> 30 min</li><li><b>Grupp:</b> 15 min</li><li><b>Facit och quiz:</b> 15 min</li></ul>
+  </div>
+  <section class="goals" aria-labelledby="mal">
+    <h2 id="mal">Efter workshopen kan du</h2>
+    <ul><li>välja rätt verktyg för en SOC-uppgift: regel, automation, ML, LLM eller agent</li><li>förklara hur en LLM:s konfiguration påverkar svarets tillförlitlighet</li><li>sätta skyddsräcken kring en automation så att ett fel inte blir ett driftstopp</li><li>beskriva vad en AI-agent får göra själv och vad som kräver mänskligt godkännande</li></ul>
+  </section>
+  <nav class="tabs" role="tablist" aria-label="Workshopens tre delar">
+    <button type="button" role="tab" id="tab-ind" aria-controls="panel-ind" aria-selected="true" data-panel="ind">1. Individuellt arbete</button>
+    <button type="button" role="tab" id="tab-grp" aria-controls="panel-grp" aria-selected="false" tabindex="-1" data-panel="grp">2. Grupparbete</button>
+    <button type="button" role="tab" id="tab-fac" aria-controls="panel-fac" aria-selected="false" tabindex="-1" data-panel="fac">3. Facit</button>
+    <div class="timer" id="timer" data-minutes="60">
+      <span class="clock" id="tOut" aria-live="off">60:00</span>
+      <button type="button" id="tStart" aria-pressed="false" title="Starta eller pausa timern">Start</button>
+      <button type="button" id="tReset" title="Nollställ timern">Nollställ</button>
+    </div>
+  </nav>
+  <noscript><p class="warn">JavaScript är avstängt. Flikar, simuleringar och facit kräver JavaScript. Slå på det i webbläsaren och ladda om sidan.</p></noscript>
+  <section id="panel-ind" role="tabpanel" aria-labelledby="tab-ind" tabindex="0">
+
+
+<p>Ett SOC-team har loggar, hotintel, ärenden och en budget. AI-verktygen ska spara tid – inte
+skapa nya larm att granska. Här väljer du verktyg per uppgift, ställer in en LLM och bygger
+skyddsräcken kring en automation. Allt simuleras i webbläsaren.</p>
+
+<details class="card">
+  <summary>Begrepp du möter här</summary>
+  <ul>
+    <li><b>LLM</b> – språkmodell som läser och skriver text.</li>
+    <li><b>Prompt</b> – instruktionen du ger modellen.</li>
+    <li><b>Token</b> – textbit som modellen räknar; styr kostnad och gräns.</li>
+    <li><b>RAG</b> – modellen hämtar först dokument och svarar sedan utifrån dem.</li>
+    <li><b>Hallucination</b> – modellen formulerar något som låter rimligt men är fel.</li>
+    <li><b>Guardrail</b> – skyddsräcke som begränsar vad ett system får göra.</li>
+    <li><b>MLOps</b> – arbetssätt för att driftsätta och övervaka modeller.</li>
+    <li><b>API</b> – ett program anropar en tjänst med en bestämd förfrågan och får ett svar.</li>
+    <li><b>MCP</b> – ett standardiserat sätt att ge en AI-agent verktyg och data.</li>
+    <li><b>SOC</b> – säkerhetscentralen där larm granskas och incidenter hanteras.</li>
+  </ul>
+</details>
+
+
+<p>Tre uppgifter, cirka 30 minuter. Inga riktiga AI-tjänster anropas – alla svar är fördefinierade simuleringar.</p>
+<article class="task" id="u1">
+  <h3><span class="no">Uppgift 1</span> API eller MCP?</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Jämför ett vanligt API-anrop med ett MCP-verktygsanrop och välj lösning för fem situationer.</span></div>
+    <div><dt>Varför?</dt><span>API beskriver hur program kommunicerar. MCP standardiserar hur en AI-applikation hittar och använder verktyg. De kan komplettera varandra.</span></div>
+    <div><dt>Hur?</dt><span>Byt mellan API och MCP, skicka anropet och läs svaret. Välj sedan situation och jämför rekommendationen.</span></div>
+    <div><dt>Observera</dt><span>Vad måste vara känt i förväg i ett API? Vad gör MCP-klienten innan den anropar ett verktyg?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna förklara skillnaden utan att säga att MCP ersätter API:er.</span></div>
+  </dl>
+  
+<div class="card">
+  <h4 style="margin-top:0">Samma uppgift, två vägar</h4>
+  <div class="seg" role="group" aria-label="Välj API eller MCP">
+    <button type="button" id="mc-api" aria-pressed="true">Vanligt API</button>
+    <button type="button" id="mc-mcp" aria-pressed="false">MCP</button>
+  </div>
+  <div id="mc-panel" style="margin-top:12px"></div>
+</div>
+<div class="card">
+  <h4 style="margin-top:0">Välj rätt lösning</h4>
+  <div class="modelgrid" id="mc-scen">
+    <button type="button" class="modelcard" data-sc="1">1. Webbprogram hämtar kundinfo<small>Från en databas via ett gränssnitt</small></button>
+    <button type="button" class="modelcard" data-sc="2">2. AI-agent söker i säkerhetsloggar<small>Agenten ska kunna välja verktyg själv</small></button>
+    <button type="button" class="modelcard" data-sc="3">3. Notis när en händelse inträffar<small>Något händer – ett annat system ska få veta</small></button>
+    <button type="button" class="modelcard" data-sc="4">4. AI-app ska använda flera verktyg<small>Olika system, samma gränssnitt</small></button>
+    <button type="button" class="modelcard" data-sc="5">5. Uppdatera en resurs<small>Ändra status via HTTP</small></button>
+  </div>
+  <div id="mc-out" aria-live="polite"></div>
+</div>
+
+</article>
+<article class="task" id="u2">
+  <h3><span class="no">Uppgift 2</span> Datapipeline: moln eller lokalt</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Följ data från källa till modell i en molnarkitektur och en lokal arkitektur. Byt mellan ETL och ELT.</span></div>
+    <div><dt>Varför?</dt><span>Snowflake, dbt och Databricks löser olika steg. I en lokal miljö görs samma arbete med SQL, filer och Python.</span></div>
+    <div><dt>Hur?</dt><span>Byt miljö och klicka på varje steg. Jämför sedan ETL och ELT och läs varför valet spelar roll.</span></div>
+    <div><dt>Observera</dt><span>Var sker transformationen i ELT? När kan ETL vara lämpligare? Vilket steg äger datakvaliteten?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna placera ut raw, transform, kuraterad data och ML i rätt ordning.</span></div>
+  </dl>
+  
+<div class="card">
+  <h4 style="margin-top:0">Från källa till modell</h4>
+  <div class="seg" role="group" aria-label="Miljö">
+    <button type="button" id="pl-cloud" aria-pressed="true">Molnarkitektur</button>
+    <button type="button" id="pl-local" aria-pressed="false">Lokal arkitektur</button>
+  </div>
+  <div class="seg" role="group" aria-label="ETL eller ELT" style="margin-left:8px">
+    <button type="button" id="pl-etl" aria-pressed="false">ETL</button>
+    <button type="button" id="pl-elt" aria-pressed="true">ELT</button>
+  </div>
+  <ol class="flows" id="pl-flow" style="margin-top:12px"></ol>
+  <div class="panel" id="pl-panel" aria-live="polite"></div>
+  <p class="hint" id="pl-note"></p>
+</div>
+<div class="db" data-db="07"></div>
+</article>
+<article class="task" id="u3">
+  <h3><span class="no">Uppgift 3</span> Skyddsräcken</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Sätt skyddsräcken kring en automation som spärrar konton.</span></div>
+    <div><dt>Varför?</dt><span>Ett fel i en automation slår mot alla samtidigt – skyddsräcken gör felet stoppbart.</span></div>
+    <div><dt>Hur?</dt><span>Kryssa av skyddsräckena och läs skydd, fart och bedömning.</span></div>
+    <div><dt>Observera</dt><span>Vilka skydd kostar fart? Vilka kostar ingenting?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska välja minst fyra skyddsräcken och kunna förklara varför ångring behövs.</span></div>
+  </dl>
+  <div id="u3-guard"></div>
+</article>
+
+    <section class="card" id="quiz">
+      <noscript><p class="warn">Quizet kräver JavaScript.</p></noscript>
+    </section>
+  </section>
+  <section id="panel-grp" role="tabpanel" aria-labelledby="tab-grp" tabindex="0" hidden>
+
+<h2>Uppgift 4 – Agenten i larmkön</h2>
+<div class="task">
+  <h3><span class="no">Gruppuppgift</span> 180 larm före lunch</h3>
+  <p>Ett team får 180 larm per dag och har två analytiker. Gruppen ska införa en AI-agent som
+  sorterar larmen, hämtar kontext och föreslår åtgärder. Bestäm agentens mandat.</p>
+  <dl class="brief">
+    <div><dt>Tid</dt><span>15 minuter beslut, 5 minuter redovisning.</span></div>
+    <div><dt>Roller</dt><span>Ordförande, skeptiker, sekreterare, rapportör.</span></div>
+    <div><dt>Krav</dt><span>Ett beslut per fråga och en mening om varför.</span></div>
+  </dl>
+</div>
+<div class="card">
+  <label class="field" for="g-1">1. Vad får agenten göra?</label>
+  <select id="g-1">
+    <option value="read">Bara läsa och sammanfatta</option>
+    <option value="suggest" selected>Läsa, sammanfatta och föreslå åtgärd</option>
+    <option value="act">Även verkställa lågriskåtgärder själv</option>
+  </select>
+  <label class="field" for="g-2">2. Vilka verktyg får den använda?</label>
+  <select id="g-2">
+    <option value="all">Alla API:er, inklusive brandvägg och kontoadministration</option>
+    <option value="readonly" selected>Läsbehörighet till loggar, ärenden och hotintel</option>
+    <option value="none">Inga verktyg alls</option>
+  </select>
+  <label class="field" for="g-3">3. Hur granskas agenten?</label>
+  <select id="g-3">
+    <option value="sample" selected>Veckovis stickprov på 20 ärenden och logg på varje steg</option>
+    <option value="none">Ingen granskning – den är ju snabb</option>
+    <option value="all">Varje ärende granskas manuellt före och efter</option>
+  </select>
+  <div class="actions"><button type="button" id="g-run">Visa konsekvenser</button></div>
+  <div id="g-out" aria-live="polite"></div>
+</div>
+<h3>Redovisa på 2 minuter</h3>
+<ol><li>Vilket mandat fick agenten?</li><li>Vad händer om den har fel i 5 procent av fallen?</li><li>Vilken åtgärd får aldrig automatiseras?</li></ol>
+
+  </section>
+  <section id="panel-fac" role="tabpanel" aria-labelledby="tab-fac" tabindex="0" hidden>
+    <div class="facitbar">
+      <button type="button" id="facOpenAll">Öppna alla facit</button>
+      <button type="button" class="ghost" id="facCloseAll">Fäll ihop alla</button>
+      <span class="hint">Facit kan öppnas när som helst – du behöver inte svara först.</span>
+    </div>
+
+<p>Öppna en uppgift i taget och jämför med ditt eget svar.</p>
+<div id="facit-lista"></div>
+<h2>Kom ihåg</h2>
+<ul>
+  <li>Välj det enklaste verktyget som löser uppgiften. En regel som räcker ska inte ersättas av en LLM.</li>
+  <li>En LLM utan underlag gissar. Ge den loggar och policy, och kräv att den visar var den fick svaret.</li>
+  <li>Skyddsräcken är inte byråkrati – de gör att ett fel går att stoppa och förstå.</li>
+  <li>Människan ansvarar. Agenten kan föreslå, men aldrig äga konsekvensen.</li>
+</ul>
+
+  </section>
+
+<script>(function(){if(!window.CanvasRenderingContext2D||!CanvasRenderingContext2D.prototype||CanvasRenderingContext2D.prototype.roundRect)return;
+CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){r=Math.min(typeof r==="number"?r:0,w/2,h/2);
+this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);
+this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this;};})();</script>
+<section class="lab" id="lab-extra-7" aria-labelledby="lab7-h">
+  <p class="lab-eyebrow">Extra labb · avancerad grafik · AI-verktyg i drift</p>
+  <h2 id="lab7-h">Två SOC-team – samma larm, olika tempo</h2>
+  <p class="lab-lead">Samma larmflöde går in i två team: en analytiker utan stöd och en analytiker med AI-assistent. AI:n tar larm den är säker på och skickar resten vidare. Du bestämmer hur säker den måste vara – och ser priset i missade hot.</p>
+  <div class="lab-shell">
+    <div class="lab-stage">
+      <canvas id="lab7cv" width="960" height="520" role="img" aria-label="Två larmbanor, en manuell och en AI-assisterad, med kö och genomströmning"></canvas>
+      <div class="lab-hud">
+        <span>Manuell kö <b id="lab7mq">0</b></span>
+        <span>AI-kö <b id="lab7aq">0</b></span>
+        <span>Missade <b id="lab7miss">0</b></span>
+        <span>Sparad tid <b id="lab7save">0 min</b></span>
+      </div>
+    </div>
+    <div class="lab-side">
+      <div class="lab-card">
+        <label for="lab7vol">Larm per timme <output id="lab7volv">20</output></label>
+        <input type="range" id="lab7vol" min="6" max="60" value="20">
+        <label for="lab7th">AI:ns säkerhetströskel <output id="lab7thv">70 %</output></label>
+        <input type="range" id="lab7th" min="10" max="95" value="70">
+        <div class="actions">
+          <button type="button" id="lab7run">Pausa</button>
+          <button type="button" class="ghost" id="lab7reset">Nollställ</button>
+        </div>
+      </div>
+      <div class="lab-card">
+        <div class="readout" id="lab7read">Startar…</div>
+        <div class="verdict mid" id="lab7verdict"></div>
+      </div>
+      <div class="lab-card lab-q">
+        <b>Diskutera i grupp</b>
+        <ul>
+          <li>Varför blir det fler missade hot när tröskeln är låg?</li>
+          <li>Hur många larm per timme klarar en analytiker utan AI-stöd?</li>
+          <li>Vad måste granskas innan AI:n får stänga ett ärende själv?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <details class="lab-how">
+    <summary>Så gör du – 10 min individuellt, 15 min i grupp</summary>
+    <ol>
+      <li>Kör med 20 larm/timme och tröskel 70 %. Läs av köerna efter en stund.</li>
+      <li>Höj till 60 larm/timme. Vad händer med den manuella kön?</li>
+      <li>Sänk tröskeln till 20 %. Följ antalet missade hot.</li>
+      <li>Skriv ner vilken tröskel du skulle välja i en verksamhet med dygnet-runt-drift – och varför.</li>
+    </ol>
+  </details>
+</section>
+<script>
+(function(){
+  var cv=document.getElementById("lab7cv"),cx=cv.getContext("2d");
+  var W=960,H=520,$=function(i){return document.getElementById(i)};
+  var st={vol:20,th:70,run:true,alerts:[],t:0,mt:0,at:0,mq:0,aq:0,busyM:0,busyA:0,
+          done:0,auto:0,miss:0,saved:0,spawn:0,flashA:0,flashM:0};
+
+  function spawn(){
+    var crit=Math.random()<0.22;
+    var conf=crit?45+Math.random()*55:Math.random()*100;
+    var a={crit:crit,conf:conf,x:70,y:0,lane:0,state:"move",done:false};
+    st.alerts.push({crit:crit,conf:conf,x:70,lane:"m",state:"move"});
+    st.alerts.push({crit:crit,conf:conf,x:70,lane:"a",state:"move"});
+  }
+
+  var SVC=1.5,SPEED=250,STOPX=600;
+  function step(dt){
+    st.t+=dt;
+    var perSec=st.vol/3600*60; // 1 sekund = 1 minut simulert
+    st.spawn+=dt*perSec;
+    while(st.spawn>=1){st.spawn-=1;spawn();}
+
+    var i,a,mq=[],aq=[];
+    for(i=0;i<st.alerts.length;i++){
+      a=st.alerts[i];
+      if(a.state==="move"){
+        a.x+=SPEED*dt;
+        if(a.x>=STOPX){a.x=STOPX;a.state="wait";}
+      }
+      if(a.state==="wait"){if(a.lane==="m")mq.push(a);else aq.push(a);}
+    }
+    st.mq=mq.length;st.aq=aq.length;
+
+    // manuell analytiker
+    if(st.busyM>0){st.busyM-=dt;}
+    else if(mq.length){
+      var pick=mq[0];pick.state="done";st.busyM=SVC;st.done++;st.mt+=3;
+      st.alerts.splice(st.alerts.indexOf(pick),1);
+    }
+    // AI-lane
+    if(st.busyA>0){st.busyA-=dt;}
+    for(i=0;i<aq.length;i++){
+      var q=aq[i];
+      if(q.conf>=st.th){
+        // AI hanterar själv
+        st.auto++;st.saved+=2.8;st.flashA=0.5;
+        if(q.crit&&Math.random()<0.1){st.miss++;}
+        st.alerts.splice(st.alerts.indexOf(q),1);
+      }
+    }
+    aq=st.alerts.filter(function(x){return x.lane==="a"&&x.state==="wait"});
+    st.aq=aq.length;
+    if(st.busyA<=0&&aq.length){
+      var q2=aq[0];q2.state="done";st.busyA=SVC*0.6;st.done++;
+      st.alerts.splice(st.alerts.indexOf(q2),1);
+    }
+
+    // rensa
+    for(i=st.alerts.length-1;i>=0;i--)if(st.alerts[i].x>W)st.alerts.splice(i,1);
+    if(st.flashA>0)st.flashA-=dt*1.5;
+  }
+
+  function lane(y,label,sub,color,q){
+    cx.fillStyle="rgba(9,20,34,.85)";
+    cx.beginPath();cx.roundRect(40,y-46,W-80,92,12);cx.fill();
+    cx.strokeStyle=color+".28)";cx.lineWidth=1.2;cx.stroke();
+    // band
+    cx.strokeStyle=color+".18)";cx.lineWidth=2;
+    cx.beginPath();cx.moveTo(60,y);cx.lineTo(W-60,y);cx.stroke();
+    cx.fillStyle=color+".9)";cx.font="700 12px system-ui,Segoe UI,Arial";
+    cx.fillText(label,60,y-52);
+    cx.fillStyle="rgba(170,205,245,.6)";cx.font="11px system-ui,Segoe UI,Arial";
+    cx.fillText(sub,60,y-34);
+    // kömarkör
+    cx.setLineDash([6,6]);cx.strokeStyle=color+".25)";
+    cx.beginPath();cx.moveTo(STOPX,y-40);cx.lineTo(STOPX,y+40);cx.stroke();cx.setLineDash([]);
+    cx.fillStyle="rgba(170,205,245,.45)";cx.font="10px system-ui,Segoe UI,Arial";
+    cx.fillText("ärende­gräns",STOPX-30,y+54);
+  }
+
+  function chip(a,x,y){
+    var col=a.crit?"rgba(255,90,90,":"rgba(120,220,255,";
+    var w=a.crit?18:14;
+    cx.beginPath();cx.roundRect(x-w/2,y-9,w,18,4);
+    cx.fillStyle=col+".9)";cx.shadowColor=col+".8)";cx.shadowBlur=a.crit?14:8;cx.fill();cx.shadowBlur=0;
+    if(a.state==="wait"){cx.strokeStyle="rgba(255,196,90,.8)";cx.lineWidth=1.6;cx.stroke();}
+  }
+
+  function draw(){
+    var g=cx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,"#070d18");g.addColorStop(1,"#0b1526");
+    cx.fillStyle=g;cx.fillRect(0,0,W,H);
+
+    lane(170,"1 · Manuellt team","en analytiker, ett ärende i taget","rgba(255,196,90,",st.mq);
+    lane(350,"2 · AI-assisterat team","AI tar säkra larm, människa tar resten","rgba(120,230,255,",st.aq);
+
+    var i,a;
+    for(i=0;i<st.alerts.length;i++){
+      a=st.alerts[i];
+      var y=a.lane==="m"?170:350;
+      var x=a.state==="wait"?(a.lane==="m"?(STOPX-26-Math.min(20,st.alerts.indexOf(a)%20)*20):(STOPX-26-Math.min(20,i%20)*20)):a.x;
+      chip(a,x,y);
+    }
+    // AI-blixt
+    if(st.flashA>0){
+      cx.beginPath();cx.arc(STOPX,350,18+ (0.5-st.flashA)*90,0,6.284);
+      cx.strokeStyle="rgba(120,230,255,"+(st.flashA*0.7)+")";cx.lineWidth=2;cx.stroke();
+    }
+
+    // mätare
+    var savedMin=Math.max(0,Math.round(st.saved));
+    $("lab7mq").textContent=st.mq;
+    $("lab7aq").textContent=st.aq;
+    $("lab7miss").textContent=st.miss;
+    $("lab7save").textContent=savedMin+" min";
+    $("lab7read").innerHTML="Manuellt: <b>"+st.mq+"</b> i kö · AI: <b>"+st.aq+"</b> i kö · "+
+      "AI har tagit <b>"+st.auto+"</b> larm själv och sparat <b>"+savedMin+" min</b> analystid.";
+    var v=$("lab7verdict");
+    if(st.miss>3){v.className="verdict bad";v.textContent="AI:n stänger ärenden den inte borde – "+st.miss+" kritiska larm missades.";}
+    else if(st.mq>8){v.className="verdict mid";v.textContent="Manuella teamet drunknar. AI:n avlastar men kön växer ändå.";}
+    else if(st.aq>3){v.className="verdict mid";v.textContent="AI:n skickar mycket vidare – låg tröskel ger mer manuellt arbete.";}
+    else{v.className="verdict good";v.textContent="Balans: kort kö och få missade larm.";}
+  }
+
+  function loop(ts){
+    var now=ts||performance.now();
+    if(!loop.last)loop.last=now;
+    var dt=Math.min(0.05,(now-loop.last)/1000);loop.last=now;
+    if(st.run)step(dt);
+    draw();requestAnimationFrame(loop);
+  }
+
+  $("lab7vol").addEventListener("input",function(){st.vol=+this.value;$("lab7volv").textContent=this.value;});
+  $("lab7th").addEventListener("input",function(){st.th=+this.value;$("lab7thv").textContent=this.value+" %";});
+  $("lab7run").addEventListener("click",function(){st.run=!st.run;this.textContent=st.run?"Pausa":"Kör";});
+  $("lab7reset").addEventListener("click",function(){
+    st.alerts=[];st.mq=0;st.aq=0;st.done=0;st.auto=0;st.miss=0;st.saved=0;st.spawn=0;st.busyM=0;st.busyA=0;
+  });
+  for(var i=0;i<6;i++)spawn();
+  loop();
+})();
+</script>
+
+</main>
+
+
+<script>
+var WS=(function(){
+"use strict";
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(n,d){if(!isFinite(n))return "\u2013";return n.toFixed(d==null?2:d).replace(".",",")}
+function num(v){return Number(String(v).replace(",","."))}
+
+/* ---------- flikar ---------- */
+function initTabs(){
+  var btns=$$('.tabs [role="tab"]');
+  if(!btns.length)return;
+  function show(id,setHash){
+    btns.forEach(function(b){
+      var on=b.getAttribute("data-panel")===id;
+      b.setAttribute("aria-selected",on?"true":"false");
+      b.tabIndex=on?0:-1;
+    });
+    $$('[role="tabpanel"]').forEach(function(p){p.hidden=p.id!=="panel-"+id});
+    if(setHash){try{history.replaceState(null,"","#"+id)}catch(e){}}
+  }
+  btns.forEach(function(b,i){
+    b.addEventListener("click",function(){show(b.getAttribute("data-panel"),true)});
+    b.addEventListener("keydown",function(e){
+      var n=null;
+      if(e.key==="ArrowRight")n=(i+1)%btns.length;
+      if(e.key==="ArrowLeft")n=(i-1+btns.length)%btns.length;
+      if(e.key==="Home")n=0;
+      if(e.key==="End")n=btns.length-1;
+      if(n!==null){e.preventDefault();btns[n].focus();show(btns[n].getAttribute("data-panel"),true)}
+    });
+  });
+  var h=(location.hash||"").replace("#","");
+  var ok=btns.some(function(b){return b.getAttribute("data-panel")===h});
+  show(ok?h:"ind",false);
+}
+
+/* ---------- timer ---------- */
+function initTimer(){
+  var box=$("#timer"); if(!box)return;
+  var total=(parseInt(box.getAttribute("data-minutes"),10)||60)*60;
+  var left=total,id=null;
+  var out=$("#tOut"),st=$("#tStart"),rs=$("#tReset");
+  function paint(){
+    var m=Math.floor(left/60),s=left%60;
+    out.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    box.classList.toggle("low",left>0&&left<=300);
+  }
+  function stop(){
+    if(id){clearInterval(id);id=null}
+    st.textContent=left===0?"Klar":"Forts\u00e4tt";
+    st.setAttribute("aria-pressed","false");
+  }
+  st.addEventListener("click",function(){
+    if(id){stop();return}
+    if(left===0){left=total;box.classList.remove("done");paint()}
+    id=setInterval(function(){
+      if(left>0){left--;paint()}
+      if(left===0){stop();box.classList.add("done");st.textContent="Klar"}
+    },1000);
+    st.textContent="Pausa";st.setAttribute("aria-pressed","true");
+  });
+  rs.addEventListener("click",function(){
+    stop();left=total;box.classList.remove("done");paint();st.textContent="Start";
+  });
+  paint();
+}
+
+/* ---------- quiz ---------- */
+function quiz(host,cfg){
+  if(!host)return;
+  var qs=cfg.questions||[];
+  host.innerHTML="";
+  var h=document.createElement("h3");h.textContent=cfg.title||"Avslutande kunskapskontroll";host.appendChild(h);
+  if(cfg.hint){var p=document.createElement("p");p.className="hint";p.textContent=cfg.hint;host.appendChild(p)}
+  var answered=0,right=0;
+  var status=document.createElement("p");status.className="quizsum";
+  var retry=document.createElement("button");
+  retry.type="button";retry.className="ghost";retry.textContent="G\u00f6r om quizet";retry.hidden=true;
+  retry.addEventListener("click",function(){quiz(host,cfg);host.scrollIntoView({block:"center"})});
+  qs.forEach(function(q,i){
+    var wrap=document.createElement("div");wrap.className="q";
+    var qt=document.createElement("p");qt.className="qt";qt.textContent=(i+1)+". "+q.text;wrap.appendChild(qt);
+    var opts=document.createElement("div");opts.className="opts";wrap.appendChild(opts);
+    var fb=document.createElement("p");fb.className="fb";fb.hidden=true;wrap.appendChild(fb);
+    q.options.forEach(function(o,j){
+      var b=document.createElement("button");b.type="button";b.className="opt";
+      b.innerHTML='<span class="k">'+String.fromCharCode(65+j)+'</span><span>'+esc(o)+'</span>';
+      b.addEventListener("click",function(){
+        if(wrap.getAttribute("data-done")==="1")return;
+        wrap.setAttribute("data-done","1");answered++;
+        $$(".opt",opts).forEach(function(x,k){x.disabled=true;if(k===q.answer)x.classList.add("correct")});
+        var good=j===q.answer;
+        if(good){right++}else{b.classList.add("wrong")}
+        fb.hidden=false;fb.className="fb "+(good?"ok":"bad");
+        fb.innerHTML="<b>"+(good?"R\u00e4tt.":"Fel.")+"</b> "+esc(q.why||"");
+        if(!good){var s=document.createElement("span");s.className="whynot";s.textContent="R\u00e4tt svar: "+q.options[q.answer]+".";fb.appendChild(s)}
+        status.textContent=answered+" av "+qs.length+" besvarade \u00b7 "+right+" r\u00e4tt";
+        if(answered===qs.length){
+          status.innerHTML="<b>Resultat: "+right+" av "+qs.length+" r\u00e4tt.</b> "+(right===qs.length?"Mycket bra \u2013 du kan begreppen.":"L\u00e4s f\u00f6rklaringarna och g\u00f6r om quizet om du vill.");
+          retry.hidden=false;
+        }
+      });
+      opts.appendChild(b);
+    });
+    host.appendChild(wrap);
+  });
+  status.textContent="0 av "+qs.length+" besvarade";
+  host.appendChild(status);
+  host.appendChild(retry);
+}
+
+/* ---------- klassificering med dropdown ---------- */
+function classify(host,cfg){
+  if(!host)return;
+  var rows=cfg.rows||[],opts=cfg.options||[];
+  var t=document.createElement("table");
+  t.innerHTML='<thead><tr><th scope="col">'+esc(cfg.col1||"System")+'</th><th scope="col">'+esc(cfg.col2||"Din bed\u00f6mning")+'</th></tr></thead>';
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  rows.forEach(function(r){
+    var tr=document.createElement("tr");
+    var td=document.createElement("td");td.textContent=r.text;
+    var note=document.createElement("div");note.className="rownote";note.hidden=true;td.appendChild(note);
+    var td2=document.createElement("td");
+    var sel=document.createElement("select");
+    sel.setAttribute("aria-label","Bed\u00f6mning f\u00f6r: "+r.text);
+    sel.innerHTML='<option value="">\u2013 v\u00e4lj \u2013</option>'+opts.map(function(o,i){return '<option value="'+i+'">'+esc(o)+'</option>'}).join("");
+    td2.appendChild(sel);tr.appendChild(td);tr.appendChild(td2);tb.appendChild(tr);
+  });
+  var btn=document.createElement("button");btn.type="button";btn.textContent=cfg.btn||"Kontrollera mina svar";
+  var out=document.createElement("p");out.className="fb";
+  btn.addEventListener("click",function(){
+    var ok=0,missing=0;
+    Array.prototype.forEach.call(tb.rows,function(tr,i){
+      var sel=$("select",tr),v=sel.value===""?null:Number(sel.value);
+      var good=v===rows[i].correct;if(good){ok++}if(v===null){missing++}
+      tr.classList.toggle("good",good);tr.classList.toggle("bad",!good&&v!==null);
+      var n=$(".rownote",tr);
+      if(n){n.hidden=false;n.innerHTML="<b>"+(good?"R\u00e4tt":(v===null?"Inget val":"R\u00e4tt svar: "+esc(opts[rows[i].correct])))+"</b> "+(rows[i].note||"")}
+    });
+    out.className="fb show "+(ok===rows.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+rows.length+" r\u00e4tt.</b> "+(ok===rows.length?"Bra \u2013 du ser m\u00f6nstret.":"L\u00e4s radens f\u00f6rklaring och justera"+(missing?" ("+missing+" rad(er) utan val)":"")+".");
+  });
+  host.appendChild(t);host.appendChild(btn);host.appendChild(out);
+}
+
+/* ---------- tabell med sortering och filter ---------- */
+function sortTable(host,cfg){
+  if(!host)return;
+  var cols=cfg.cols||[],rows=(cfg.rows||[]).slice();
+  var wrap=document.createElement("div");wrap.className="tablewrap";
+  var filter=null;
+  if(cfg.filter){
+    filter=document.createElement("input");filter.type="search";filter.className="filter";
+    filter.placeholder=cfg.filterPlaceholder||"Filtrera \u2026";
+    filter.setAttribute("aria-label","Filtrera tabellen");
+    wrap.appendChild(filter);
+  }
+  var t=document.createElement("table");
+  var thead=document.createElement("thead"),htr=document.createElement("tr");
+  cols.forEach(function(c,i){
+    var th=document.createElement("th");th.scope="col";th.setAttribute("data-i",i);th.tabIndex=0;
+    th.innerHTML=esc(c)+' <span class="arrow" aria-hidden="true">\u2195</span>';
+    function sort(){
+      var dir=th.getAttribute("data-dir")==="asc"?"desc":"asc";th.setAttribute("data-dir",dir);
+      rows.sort(function(a,b){
+        var x=a[i],y=b[i];
+        var nx=parseFloat(String(x).replace(/\s/g,"").replace(",",".")),ny=parseFloat(String(y).replace(/\s/g,"").replace(",","."));
+        var both=isFinite(nx)&&isFinite(ny)&&String(x).replace(/[^0-9]/g,"")!==""&&String(y).replace(/[^0-9]/g,"")!=="";
+        if(both)return dir==="asc"?nx-ny:ny-nx;
+        return dir==="asc"?String(x).localeCompare(String(y),"sv"):String(y).localeCompare(String(x),"sv");
+      });
+      render();
+    }
+    th.addEventListener("click",sort);
+    th.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();sort()}});
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr);t.appendChild(thead);
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  function render(){
+    tb.innerHTML="";
+    var q=filter?filter.value.toLowerCase():"";
+    rows.forEach(function(r){
+      if(q&&r.join(" ").toLowerCase().indexOf(q)<0)return;
+      var tr=document.createElement("tr");
+      r.forEach(function(c){var td=document.createElement("td");td.innerHTML=c;tr.appendChild(td)});
+      tb.appendChild(tr);
+    });
+  }
+  wrap.appendChild(t);host.appendChild(wrap);
+  if(filter)filter.addEventListener("input",render);
+  render();
+}
+
+/* ---------- stapeldiagram ---------- */
+function bars(host,items,opt){
+  if(!host)return;
+  opt=opt||{};host.innerHTML="";
+  var max=opt.max||Math.max.apply(null,items.map(function(i){return Math.abs(i.value)}).concat([1]));
+  var box=document.createElement("div");box.className="bars";
+  items.forEach(function(it){
+    var row=document.createElement("div");row.className="barrow"+(it.tone?" "+it.tone:"");
+    var pct=Math.max(0,Math.min(100,Math.abs(it.value)/max*100));
+    row.innerHTML='<span class="bl">'+esc(it.label)+'</span><span class="btrack"><span class="bfill" style="width:'+pct.toFixed(1)+'%"></span></span><span class="bv">'+esc(it.display!=null?it.display:it.value)+'</span>';
+    box.appendChild(row);
+  });
+  host.appendChild(box);
+  if(opt.caption){var p=document.createElement("p");p.className="hint";p.textContent=opt.caption;host.appendChild(p)}
+}
+
+/* ---------- linjediagram i ren SVG ---------- */
+function line(host,cfg){
+  if(!host)return;
+  var W=560,H=250,L=46,R=14,T=14,B=34;
+  var maxY=cfg.maxY||1,maxX=cfg.maxX||1;
+  function X(v){return L+(v/maxX)*(W-L-R)}
+  function Y(v){return H-B-(v/maxY)*(H-T-B)}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="chart" role="img" aria-label="'+esc(cfg.label||"Diagram")+'">';
+  for(var i=0;i<=4;i++){
+    var y=T+i*(H-T-B)/4;
+    s+='<line class="grid" x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'"/>';
+    s+='<text class="ax" x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+fmt(maxY*(1-i/4),maxY<=1?1:0)+'</text>';
+  }
+  (cfg.xTicks||[0,0.5,1]).forEach(function(t){
+    s+='<text class="ax" x="'+X(t*maxX)+'" y="'+(H-12)+'" text-anchor="middle">'+fmt(t*maxX,0)+'</text>';
+  });
+  (cfg.hlines||[]).forEach(function(hl){
+    s+='<line x1="'+L+'" y1="'+Y(hl.y).toFixed(1)+'" x2="'+(W-R)+'" y2="'+Y(hl.y).toFixed(1)+'" stroke="'+hl.color+'" stroke-width="1.5" stroke-dasharray="5 4"><title>'+esc(hl.label||"")+'</title></line>';
+  });
+  (cfg.series||[]).forEach(function(ser){
+    var pts=ser.points.map(function(p){return X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)}).join(" ");
+    if(!ser.onlyDots){s+='<polyline points="'+pts+'" fill="none" stroke="'+ser.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';}
+    if(ser.dots){ser.points.forEach(function(p){
+      s+='<circle cx="'+X(p[0]).toFixed(1)+'" cy="'+Y(p[1]).toFixed(1)+'" r="3.5" fill="'+ser.color+'"><title>'+esc(ser.name)+": "+fmt(p[1],2)+'</title></circle>';
+    })}
+    if(ser.fill){
+      s+='<polygon points="'+X(ser.points[0][0]).toFixed(1)+','+Y(0)+' '+pts+' '+X(ser.points[ser.points.length-1][0]).toFixed(1)+','+Y(0)+'" fill="'+ser.color+'" opacity="0.08"/>';
+    }
+  });
+  if(cfg.xLabel)s+='<text class="lbl" x="'+(L+(W-L-R)/2)+'" y="'+(H-1)+'" text-anchor="middle">'+esc(cfg.xLabel)+'</text>';
+  s+="</svg>";
+  host.innerHTML=s;
+  if((cfg.series||[]).length){
+    var ul=document.createElement("ul");ul.className="legend";
+    cfg.series.forEach(function(ser){var li=document.createElement("li");li.innerHTML='<i style="background:'+ser.color+'"></i>'+esc(ser.name);ul.appendChild(li)});
+    host.appendChild(ul);
+  }
+}
+
+/* ---------- confusion matrix ---------- */
+function cm(host,c){
+  if(!host)return;
+  host.innerHTML='<div class="cm">'+
+    '<div class="cmh"></div><div class="cmh">Modellen larmar</div><div class="cmh">Modellen \u00e4r tyst</div>'+
+    '<div class="cmh">Verkligt hot</div><div class="cell tp"><b>'+c.tp+'</b><span>TP \u2013 f\u00e5ngat hot</span></div><div class="cell fn"><b>'+c.fn+'</b><span>FN \u2013 missat hot</span></div>'+
+    '<div class="cmh">Verkligt normalt</div><div class="cell fp"><b>'+c.fp+'</b><span>FP \u2013 falsklarm</span></div><div class="cell tn"><b>'+c.tn+'</b><span>TN \u2013 korrekt tyst</span></div>'+
+    '</div>';
+}
+
+/* ---------- sm\u00e5hj\u00e4lp ---------- */
+function metric(tp,fp,fn){
+  var p=tp+fp?tp/(tp+fp):0, r=tp+fn?tp/(tp+fn):0;
+  return {precision:p,recall:r,f1:(p+r)?2*p*r/(p+r):0};
+}
+function riskLabel(v,lo,hi){
+  var t=v<lo?"low":(v<hi?"mid":"high");
+  var txt=t==="low"?"L\u00e5g risk":(t==="mid"?"Medelrisk":"H\u00f6g risk");
+  return '<span class="riskbadge '+t+'">'+txt+"</span>";
+}
+function facit(host,items){
+  if(!host)return;
+  items.forEach(function(f){
+    var d=document.createElement("details");
+    d.innerHTML="<summary>"+f[0]+"</summary>"+f[1];
+    host.appendChild(d);
+  });
+}
+function init(){initTabs();initTimer()}
+return {$,$$,esc,fmt,num,quiz,classify,sortTable,bars,line,cm,metric,riskLabel,facit,init:init};
+})();
+(function(){
+  var open=document.getElementById("facOpenAll"),close=document.getElementById("facCloseAll");
+  function all(v){Array.prototype.forEach.call(document.querySelectorAll("#panel-fac details"),function(d){d.open=v})}
+  if(open)open.addEventListener("click",function(){all(true)});
+  if(close)close.addEventListener("click",function(){all(false)});
+})();
+</script>
+
+
+<script>
+(function(){
+  WS.classify(document.getElementById("u1-klass"),{
+    col1:"SOC-uppgift",col2:"Verktyg",
+    options:["Regel","Automation","Maskininl\u00e4rning (ML)","Spr\u00e5kmodell (LLM)","AI-agent"],
+    rows:[
+      {text:"Larma n\u00e4r samma IP misslyckas 20 g\u00e5nger p\u00e5 en minut",correct:0,note:"Ett k\u00e4nt m\u00f6nster med fast tr\u00f6skel \u2013 regel."},
+      {text:"Rangordna larm efter hur mycket de liknar tidigare incidenter",correct:2,note:"M\u00f6nster i historisk data \u2013 ML."},
+      {text:"Sammanfatta en incidentrapport till tre meningar",correct:3,note:"Text in, text ut \u2013 spr\u00e5kmodell."},
+      {text:"H\u00e4mta hotintel om en dom\u00e4n och f\u00f6resl\u00e5 n\u00e4sta steg",correct:4,note:"Flera steg och verktyg \u2013 agent."},
+      {text:"Sp\u00e4rra ett konto n\u00e4r HR har bekr\u00e4ftat avslut",correct:1,note:"En f\u00f6rbest\u00e4md sekvens som k\u00f6rs vid en h\u00e4ndelse."},
+      {text:"Uppt\u00e4cka avvikande trafik utan k\u00e4nda signaturer",correct:2,note:"Avvikelsedetektering \u00e4r ML, inte en signaturlista."}
+    ]
+  });
+})();
+
+(function(){
+  var host=document.getElementById("u2-llm");
+  if(!host)return;
+  host.innerHTML='<div class="card">'+
+    '<label class="field" for="sc">Uppgift</label>'+
+    '<select id="sc"><option value="sum">Sammanfatta en incidentlogg</option><option value="act">F\u00f6resl\u00e5 en \u00e5tg\u00e4rd</option><option value="cust">Skriv ett svar till en kund</option></select>'+
+    '<label class="field" for="temp">Temperatur (kreativitet): <span class="rangeout" id="tempv">0,3</span></label>'+
+    '<input type="range" id="temp" min="0" max="10" value="3">'+
+    '<label class="field" for="ctx">Underlag modellen f\u00e5r</label>'+
+    '<select id="ctx"><option value="none">Inget \u2013 bara fr\u00e5gan</option><option value="log">Loggutdrag</option><option value="policy" selected>Loggutdrag + r\u00e4ttningslinjer</option></select>'+
+    '<fieldset><legend>Verktyg</legend><label class="checkline"><input type="checkbox" id="tools"><span>L\u00e5t modellen sl\u00e5 upp hotintel och tidigare \u00e4renden</span></label></fieldset>'+
+    '<div id="l-out" aria-live="polite"></div></div>';
+  var sc=document.getElementById("sc"),temp=document.getElementById("temp"),ctx=document.getElementById("ctx"),tools=document.getElementById("tools"),out=document.getElementById("l-out");
+  var answers={
+    sum:{
+      none:"\u201cEn incident har intr\u00e4ffat. N\u00e5gon f\u00f6rs\u00f6kte logga in och det kan ha lyckats. Vidta \u00e5tg\u00e4rder.\u201d",
+      log:"\u201cKl. 02:14 misslyckades 14 inloggningar mot konto bjorn fr\u00e5n tre l\u00e4nder. Kl. 02:19 lyckades ett f\u00f6rs\u00f6k fr\u00e5n en ny adress. Kontot \u00e4r fortfarande aktivt.\u201d",
+      policy:"\u201cKl. 02:14\u201302:19 utsattes konto bjorn f\u00f6r 15 inloggningsf\u00f6rs\u00f6k fr\u00e5n tre l\u00e4nder; ett lyckades. Enligt rutinen klassas det som misst\u00e4nkt konto\u00f6vertagande och ska eskaleras till vakthavande. Underlag: loggutdrag 02:00\u201302:30.\u201d"
+    },
+    act:{
+      none:"\u201cSt\u00e4ng av kontot och hela n\u00e4tverket. Det \u00e4r s\u00e4krast.\u201d",
+      log:"\u201cKontot bjorn har 15 misslyckade f\u00f6rs\u00f6k och en lyckad inloggning fr\u00e5n ny adress. Blockera kontot och kontrollera vad som h\u00e4mtades.\u201d",
+      policy:"\u201cF\u00f6reslagen \u00e5tg\u00e4rd: sp\u00e4rr av konto bjorn och tvinga l\u00f6senordsbyte, enligt rutin 4.2. Kontrollera samtidigt om kontot anv\u00e4nds av ett tj\u00e4nstekonto (se tidigare \u00e4rende 2026-118). Godk\u00e4nns av analytiker.\u201d"
+    },
+    cust:{
+      none:"\u201cHej! Vi har tittat p\u00e5 ditt \u00e4rende och det \u00e4r l\u00f6st nu. H\u00f6r av dig om det inte fungerar.\u201d",
+      log:"\u201cHej! Vi ser att ditt konto l\u00e5stes efter flera inloggningsf\u00f6rs\u00f6k kl. 14:02. Vi har l\u00e5st upp det och du kan logga in igen.\u201d",
+      policy:"\u201cHej! Ditt konto l\u00e5stes efter upprepade inloggningsf\u00f6rs\u00f6k. Vi har verifierat \u00e5tkomsten med dig och l\u00e5st upp kontot. Byt l\u00f6senord och kontrollera dina aktiva sessioner. / Support\u201d"
+    }
+  };
+  function run(){
+    var t=Number(temp.value)/10;document.getElementById("tempv").textContent=WS.fmt(t,1);
+    var text=answers[sc.value][ctx.value];
+    var risk=0,notes=[];
+    if(ctx.value==="none"){risk=2;notes.push("Utan underlag gissar modellen. Svaret l\u00e5ter s\u00e4kert men kan vara p\u00e5hittat.")}
+    if(ctx.value==="log"){risk=1;notes.push("Loggen ger fakta, men utan r\u00e4ttningslinjer kan f\u00f6rslaget bryta mot rutinen.")}
+    if(ctx.value==="policy"){notes.push("Underlag och r\u00e4ttningslinjer g\u00f6r svaret sp\u00e5rbart och mindre ben\u00e4get att gissa.")}
+    if(t>0.7){risk=Math.max(risk,1);notes.push("H\u00f6g temperatur ger mer variation \u2013 bra f\u00f6r id\u00e9er, d\u00e5ligt f\u00f6r rapporter och \u00e5tg\u00e4rdsf\u00f6rslag.")}
+    if(t<0.2){notes.push("L\u00e5g temperatur ger stabila, f\u00f6ruts\u00e4gbara svar \u2013 oftast r\u00e4tt val i en incident.")}
+    if(tools.checked){notes.push("Med verktyg kan modellen kontrollera i st\u00e4llet f\u00f6r att minnas \u2013 men d\u00e5 \u00e4r det en agent och kr\u00e4ver beh\u00f6righetskontroll.")}
+    out.innerHTML='<div class="note"><b>Simulerat svar</b> '+WS.riskLabel(risk,1,2)+
+      '<p style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;margin:8px 0">'+WS.esc(text)+"</p>"+
+      '<ul style="margin:8px 0 0">'+notes.map(function(n){return "<li>"+n+"</li>"}).join("")+"</ul></div>";
+  }
+  [sc,ctx,tools].forEach(function(e){e.addEventListener("change",run)});
+  temp.addEventListener("input",run);run();
+})();
+
+(function(){
+  var host=document.getElementById("u3-guard");
+  if(!host)return;
+  var guards=[
+    {id:"least",t:"Minsta beh\u00f6righet \u2013 automationen n\u00e5r bara det den beh\u00f6ver"},
+    {id:"approve",t:"M\u00e4nskligt godk\u00e4nnande f\u00f6re \u00e5tg\u00e4rd"},
+    {id:"log",t:"Logg p\u00e5 varje steg och beslut"},
+    {id:"rate",t:"Gr\u00e4ns f\u00f6r antal \u00e5tg\u00e4rder per timme"},
+    {id:"rollback",t:"M\u00f6jlighet att \u00e5ngra \u00e5tg\u00e4rden"}
+  ];
+  host.innerHTML='<div class="card"><p>En automation ska sp\u00e4rra konton vid misst\u00e4nkt inloggning. Kryssa f\u00f6r skyddsr\u00e4cken.</p><div id="gd-list"></div><div id="gd-bars"></div><div id="gd-out" aria-live="polite"></div></div>';
+  var list=document.getElementById("gd-list");
+  guards.forEach(function(g,i){
+    var l=document.createElement("label");l.className="checkline";
+    l.innerHTML='<input type="checkbox" id="gd-'+g.id+'"'+(i<3?" checked":"")+'><span>'+g.t+'</span>';
+    list.appendChild(l);
+  });
+  function run(){
+    var on=guards.filter(function(g){return document.getElementById("gd-"+g.id).checked}).length;
+    var speed=Math.max(10,100-on*18);
+    WS.bars(document.getElementById("gd-bars"),[
+      {label:"Skydd",value:on/guards.length*100,display:on+" av 5",tone:on>=4?"ok":(on>=2?"warn":"bad")},
+      {label:"Fart",value:speed,display:speed+" %",tone:"warn"}
+    ],{max:100});
+    var risk=on>=4?0:(on>=2?1:2);
+    var out=document.getElementById("gd-out");
+    out.className="fb show";
+    out.innerHTML="<b>"+on+" av 5 skyddsr\u00e4cken p\u00e5 plats.</b> "+WS.riskLabel(risk,1,2)+
+      (on>=4?" Godk\u00e4nnande, logg och \u00e5ngring g\u00f6r att ett fel kan uppt\u00e4ckas och r\u00e4ttas.":
+       " Utan godk\u00e4nnande och \u00e5ngring blir ett fel i automationen ett fel i driften. Fart \u00e4r inte v\u00e4rt det.");
+  }
+  guards.forEach(function(g){document.getElementById("gd-"+g.id).addEventListener("change",run)});
+  run();
+})();
+
+(function(){
+  var g1=document.getElementById("g-1");
+  if(!g1)return;
+  var g2=document.getElementById("g-2"),g3=document.getElementById("g-3"),out=document.getElementById("g-out");
+  function calc(){
+    var risk=1,notes=[],time=0;
+    if(g1.value==="read"){notes.push("Agenten sammanfattar men fattar inga beslut \u2013 l\u00e5g risk, men lite tidsvinst.");time=45}
+    if(g1.value==="suggest"){notes.push("F\u00f6rslag + m\u00e4nskligt beslut ger st\u00f6rst nytta med bibeh\u00e5llet ansvar.");time=70}
+    if(g1.value==="act"){risk=2;notes.push("Egna \u00e5tg\u00e4rder kr\u00e4ver att varje fel \u00e4r \u00e5terst\u00e4llbart \u2013 annars blir en bugg ett avbrott.");time=85}
+    if(g2.value==="all"){risk=2;notes.push("Skrivbeh\u00f6righet till brandv\u00e4gg och konton ger agenten stor makt om den manipuleras.")}
+    if(g2.value==="readonly"){notes.push("L\u00e4sbeh\u00f6righet r\u00e4cker f\u00f6r analys och f\u00f6rslag.")}
+    if(g2.value==="none"){notes.push("Utan verktyg kan agenten inte kontrollera n\u00e5got \u2013 den gissar.");risk=Math.max(risk,1)}
+    if(g3.value==="sample"){notes.push("Stickprov och logg g\u00f6r att fel uppt\u00e4cks utan att allt granskas manuellt.")}
+    if(g3.value==="none"){risk=2;notes.push("Utan granskning vet ingen om agenten blivit s\u00e4mre eller lurad.")}
+    if(g3.value==="all"){notes.push("Full manuell granskning tar bort tidsvinsten.");time=Math.round(time*0.6)}
+    out.innerHTML='<div class="note"><b>Simulerat utfall</b> '+WS.riskLabel(risk,1,2)+
+      '<ul style="margin:8px 0 0">'+notes.map(function(n){return "<li>"+n+"</li>"}).join("")+"</ul>"+
+      '<p class="hint">Uppskattad tidsvinst: <b>'+time+" %</b> av analystiden. Siffrorna \u00e4r pedagogiska.</p></div>";
+  }
+  [g1,g2,g3].forEach(function(e){e.addEventListener("change",calc)});
+  document.getElementById("g-run").addEventListener("click",calc);calc();
+})();
+
+WS.facit(document.getElementById("facit-lista"),[
+  ["Uppgift 1 – API eller MCP",'<p><b>API:</b> applikation → HTTP-anrop (REST, GraphQL, SOAP) → extern tjänst → svar. Metoden och adressen måste vara kända i förväg. GET läser, POST skapar, PUT ersätter, PATCH ändrar delar och DELETE tar bort. En webhook är ett händelsemönster: tjänsten skickar när något inträffar.</p><p><b>MCP:</b> host → MCP-klient → MCP-server → verktyg → resultat. Klienten frågar först vilka verktyg och resurser som finns (tools/list) och anropar sedan ett (tools/call). MCP ersätter inte API:er – en MCP-server kan använda befintliga API:er bakom kulisserna. Välj API för vanlig programkommunikation, webhook för notiser och MCP när en AI-applikation ska upptäcka och använda flera verktyg på ett enhetligt sätt.</p><p>Risker: för breda behörigheter, verktygsbeskrivningar som manipulerar agenten (prompt injection) och känslig data som skickas till externa servrar.</p>'],
+    ["Uppgift 2 – Datapipeline",'<p><b>Moln:</b> källa → Snowflake raw/staging → dbt (SQL-transformation, tester, dokumentation) → kuraterade tabeller → Databricks för analys och feature engineering → MLflow för experiment och modellversioner. Snowflake + dbt är ett typiskt ELT-flöde: ladda först, transformera i datalagret.</p><p><b>Lokalt:</b> SQL Server eller filer → uttag via CSV/Parquet/JSON/connector → transformation med SQL, dbt eller Python → laddad tabell eller fillagring → ML-pipeline. Samma principer, men du äger hårdvaran och måste själv sköta säkerhetskopior och skalning.</p><p><b>ETL eller ELT:</b> ETL transformerar före lastning och passar när känsliga uppgifter måste rensas bort innan de når molnet, eller när målet inte kan transformera. ELT behåller rådata, gör transformationen i datalagret och är billigare att ändra i efterhand – men kräver kontroll över vem som får läsa rådata.</p><p><b>Databasen:</b> fyra datakällor, åtta pipeline-körningar, tio bearbetade poster och tio AI-resultat. Två körningar pågår (103, 108) och en har misslyckats (106) – den syns inte i Running-frågan och måste hanteras separat. Kvaliteten är sju Valid, två Review och en Invalid. Medelkonfidensen är 0,93 för Normal, 0,79 för Anomaly och 0,76 för Suspicious. Tolkning: ogiltig data bör stoppas före modellen, och hög konfidens är inte samma sak som rätt svar.</p>'],["Uppgift 3 \u2013 Skyddsr\u00e4cken",'<p>Alla fem \u00e4r rimliga. Viktigast \u00e4r m\u00e4nskligt godk\u00e4nnande, logg och m\u00f6jlighet att \u00e5ngra \u2013 de g\u00f6r att ett fel g\u00e5r att stoppa och f\u00f6rst\u00e5. Minsta beh\u00f6righet begr\u00e4nsar skadan om automationen missbrukas.</p><p>Farten minskar n\u00e5got med fler skydd, men en automation som sp\u00e4rrar 200 konton p\u00e5 en minut \u00e4r v\u00e4rre \u00e4n en som sp\u00e4rrar 20.</p>'],
+  ["Uppgift 4 \u2013 Agenten i k\u00f6n",'<p>Rekommendationen: l\u00e4sa, sammanfatta och f\u00f6resl\u00e5; endast l\u00e4sbeh\u00f6righet; stickprov och logg. Det ger tidsvinst utan att agenten kan st\u00e4nga av n\u00e5got sj\u00e4lv.</p><p>Om agenten har fel i 5 procent av 180 \u00e4renden \u00e4r det nio \u00e4renden per dag. Fr\u00e5gan \u00e4r inte om den har fel, utan vad som h\u00e4nder n\u00e4r den har det.</p>']
+]);
+
+WS.quiz(document.getElementById("quiz"),{
+  title:"Avslutande kunskapskontroll",
+  hint:"Fyra fr\u00e5gor om verktygsval, LLM:er och skyddsr\u00e4cken.",
+  questions:[{"text": "Vilket verktyg passar bäst för att larma när ett konto får 20 misslyckade inloggningar på en minut?", "options": ["En LLM som läser loggen", "En regel med ett fast tröskelvärde", "En AI-agent med verktyg", "Ett neuralt nät"], "answer": 1, "why": "Villkoret är enkelt och känt. En regel är billigare, snabbare och lättare att förklara."}, {"text": "Vad gör en LLM när den svarar utan att ha fått underlag?", "options": ["Den vägrar alltid", "Den kan formulera ett rimligt men felaktigt svar", "Den hämtar automatiskt fakta", "Den blir alltid kortare"], "answer": 1, "why": "Det kallas hallucination. Modellen producerar text som passar mönstret, inte nödvändigtvis sanning."}, {"text": "Varför behövs ett skyddsräcke som mänskligt godkännande?", "options": ["För att automation är långsam", "För att ett felaktigt automatiskt beslut kan slå ut drift eller data", "För att loggar inte får sparas", "För att AI inte får användas"], "answer": 1, "why": "Godkännandet placerar ansvaret hos en människa när konsekvensen är stor eller oåterkallelig."}, {"text": "Vad är skillnaden mellan en LLM och en AI-agent?", "options": ["Agenten skriver längre texter", "Agenten använder verktyg och utför flera steg mot ett mål", "Agenten kräver ingen modell", "Ingen skillnad"], "answer": 1, "why": "Agenten kombinerar modellen med verktyg och delbeslut. Det ger större nytta – och större angreppsyta."}]
+});
+WS.init();
+</script>
+
+<script>
+(function(){
+  var host=document.getElementById("mc-panel");
+  if(!host)return;
+  var mode="api",sel="";
+  var TOOLS={
+    search_logs:{desc:"Söker i säkerhetsloggar.",params:{query:"failed_login",time_range:"02:00-03:00",limit:5},
+      out:{matches:15,first:"2026-05-25T02:14:07Z bjorn failed from 198.51.100.7",note:"visar 5 av 15"}},
+    check_ip:{desc:"Slår upp rykte för en IP-adress.",params:{ip:"203.0.113.42"},
+      out:{ip:"203.0.113.42",reputation:"misstänkt",country:"NL",source:"hotintel-sim"}},
+    query_db:{desc:"Kör en läsande databasfråga.",params:{table:"login_events",filter:"failures > 10",limit:20},
+      out:{rows:[{user:"bjorn",failures:15},{user:"anna",failures:12}],row_count:2}}
+  };
+  function esc(s){return WS.esc(s)}
+  function drawApi(){
+    host.innerHTML='<div class="grid2"><div>'+
+      '<label class="field" for="mc-m">Metod</label><select id="mc-m"><option>GET</option><option>POST</option><option>PATCH</option><option>DELETE</option></select>'+
+      '<label class="field" for="mc-e">Endpoint</label><select id="mc-e"><option value="ip">/v1/ip/203.0.113.42</option><option value="alert">/v1/alerts/1042</option></select>'+
+      '<div class="actions"><button type="button" id="mc-send">Skicka</button></div>'+
+      '<p class="hint">API:et måste vara känt i förväg: vilken adress, vilken metod och vilka fält som går att skicka.</p></div>'+
+      '<div><pre class="code" id="mc-req"></pre><pre class="code" id="mc-res"></pre></div></div>';
+    document.getElementById("mc-send").addEventListener("click",sendApi);
+    sendApi();
+    function sendApi(){
+      var m=document.getElementById("mc-m").value,e=document.getElementById("mc-e").value;
+      var path=e==="ip"?"/v1/ip/203.0.113.42":"/v1/alerts/1042";
+      var body=e==="alert"&&(m==="PATCH"||m==="POST")?'\n\n{"status":"closed"}':"";
+      document.getElementById("mc-req").textContent=m+" "+path+" HTTP/1.1\nHost: api.example-sec.test\nAuthorization: Bearer ••••"+body;
+      var status=(m==="DELETE")?204:(e==="ip"&&m!=="GET"?405:200);
+      var out=(m==="DELETE")?"":JSON.stringify(e==="ip"?{ip:"203.0.113.42",reputation:"misstänkt",country:"NL"}:{id:1042,status:"closed"},null,2);
+      document.getElementById("mc-res").textContent="HTTP/1.1 "+status+(out?"\n\n"+out:" No Content");
+    }
+  }
+  function drawMcp(){
+    var keys=Object.keys(TOOLS);
+    host.innerHTML='<div class="grid2"><div>'+
+      '<label class="field" for="mc-t">Verktyg som MCP-servern erbjuder</label><select id="mc-t">'+
+      keys.map(function(k){return '<option value="'+k+'">'+k+"</option>"}).join("")+"</select>"+
+      '<div id="mc-params" class="mini" style="margin:8px 0"></div>'+
+      '<div class="actions"><button type="button" id="mc-call">Upptäck och anropa</button></div>'+
+      '<p class="hint">Host och server talar JSON-RPC. Klienten frågar först vilka verktyg som finns (tools/list) och anropar sedan ett av dem (tools/call).</p></div>'+
+      '<div><pre class="code" id="mc-json"></pre><pre class="code" id="mc-res2"></pre></div></div>';
+    var t=document.getElementById("mc-t");
+    function params(){
+      var p=TOOLS[t.value].params;
+      document.getElementById("mc-params").innerHTML="<b>"+esc(t.value)+"</b><br>"+esc(TOOLS[t.value].desc)+"<br><span class=\"hint\">Parametrar: "+esc(Object.keys(p).map(function(k){return k+"="+p[k]}).join(", "))+"</span>";
+    }
+    function call(){
+      var name=t.value,d=TOOLS[name];
+      document.getElementById("mc-json").textContent=
+        "→ tools/list {}\n← ["+Object.keys(TOOLS).map(function(k){return '"'+k+'"'}).join(", ")+"]\n\n"+
+        "→ tools/call\n"+JSON.stringify({name:name,arguments:d.params},null,2);
+      document.getElementById("mc-res2").textContent="← resultat\n"+JSON.stringify(d.out,null,2)+"\n\nAI-appen får resultatet och kan gå vidare i uppgiften.";
+    }
+    t.addEventListener("change",params);document.getElementById("mc-call").addEventListener("click",call);params();call();
+  }
+  function show(m){
+    mode=m;
+    document.getElementById("mc-api").setAttribute("aria-pressed",m==="api"?"true":"false");
+    document.getElementById("mc-mcp").setAttribute("aria-pressed",m==="mcp"?"true":"false");
+    if(m==="api")drawApi();else drawMcp();
+  }
+  document.getElementById("mc-api").addEventListener("click",function(){show("api")});
+  document.getElementById("mc-mcp").addEventListener("click",function(){show("mcp")});
+
+  var S={
+    1:{r:"REST API (GET)",why:"Ett vanligt program hämtar data. Ingen AI inblandad, inget behov av verktygsupptäckt.",flow:"Webbapp → GET /v1/customers/42 → databas → JSON-svar",risk:"Autentisering, behörighet och rate limiting. Exponera inte hela tabellen."},
+    2:{r:"MCP-verktyg (search_logs)",why:"Agenten behöver upptäcka vilka verktyg som finns och anropa dem med tydliga parametrar. MCP standardiserar det.",flow:"Host → MCP Client → MCP Server → tools/call search_logs → resultat",risk:"Ge bara läsbehörighet. Loggar kan innehålla personuppgifter och resultatet kan påverka modellens nästa steg."},
+    3:{r:"Webhook",why:"Ingen frågar – tjänsten skickar när händelsen inträffar. Det är ett kommunikationsmönster, inte en API-stil.",flow:"Säkerhetssystem → POST till din URL → ditt system tar emot",risk:"Verifiera signaturen, tål omsändningar och svara snabbt. Annars kan falska händelser eller låsningar uppstå."},
+    4:{r:"MCP",why:"Flera verktyg från olika system kan beskrivas och upptäckas på ett gemensamt sätt. MCP ersätter inte API:erna – servern kan använda dem bakom kulisserna.",flow:"AI-app → en MCP-klient per server → flera servrar → verktyg",risk:"En server kan lura agenten via verktygsbeskrivningar (prompt injection). Granska servrar och begränsa behörigheter."},
+    5:{r:"REST API (PATCH eller PUT)",why:"Ett program uppdaterar en resurs. PATCH ändrar delar, PUT ersätter hela resursen.",flow:"System → PATCH /v1/alerts/1042 → uppdaterad resurs",risk:"Kräv behörighet och spårbarhet. Gör inte ändringen utan att veta vem som godkänt den."}
+  };
+  Array.prototype.forEach.call(document.querySelectorAll("[data-sc]"),function(b){
+    b.addEventListener("click",function(){
+      var k=b.getAttribute("data-sc"),s=S[k];
+      Array.prototype.forEach.call(document.querySelectorAll("[data-sc]"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false")});
+      document.getElementById("mc-out").innerHTML='<div class="note"><b>Rekommendation: '+esc(s.r)+"</b><p>"+esc(s.why)+"</p>"+
+        "<p><b>Dataflöde:</b> "+esc(s.flow)+"</p><p><b>Begränsningar och risker:</b> "+esc(s.risk)+"</p></div>";
+    });
+  });
+  show("api");
+})();
+</script>
+
+<script>
+(function(){
+  var flow=document.getElementById("pl-flow");
+  if(!flow)return;
+  var env="cloud",load="elt",cur="0";
+  var C=[
+    ["Källa","Loggar, ärenden och tillståndsdata kommer från brandvägg, EDR och ärendesystem. Rådata landar i Snowflake raw/staging."],
+    ["Snowflake RAW","Rådata sparas nästan orörd. Här finns allt, även det som senare visar sig vara fel. Bra för spårbarhet."],
+    ["dbt","dbt läser rådata och gör transformationer i SQL: rensar, joinar, testar och dokumenterar. Resultatet blir kuraterade tabeller."],
+    ["Snowflake CURATED","Kuraterade tabeller som analytiker och modeller kan lita på. Här finns regler för vad en ”attack” är."],
+    ["Databricks","Läser relevanta data för analys, feature engineering och träning av ML-modeller."],
+    ["MLflow","Spårar experiment, parametrar och modellversioner. Gör det möjligt att jämföra och gå tillbaka."]
+  ];
+  var L=[
+    ["SQL Server / filer","Rådata ligger i en lokal SQL-databas eller i filer. Ofta samma data som i molnet, men inom den egna miljön."],
+    ["Uttag","Data hämtas via CSV, Parquet, JSON eller en connector. Formatet avgör vad nästa steg kan göra."],
+    ["Transform","SQL, dbt eller Python rensar, validerar och bygger nya tabeller. Körs lokalt eller på en egen server."],
+    ["Laddad data","Bearbetad data laddas tillbaka till databasen eller till fillagring, med tydliga kolumnnamn och datatyper."],
+    ["ML-pipeline","Träning och utvärdering använder den bearbetade datan. Samma data och samma kod ska ge samma resultat."]
+  ];
+  function draw(){
+    var steps=env==="cloud"?C:L;
+    flow.innerHTML=steps.map(function(s,i){
+      return (i?'<li class="arr" aria-hidden="true">→</li>':"")+'<li><button type="button" class="modelcard" data-pl="'+i+'" aria-pressed="'+(String(i)===cur?"true":"false")+'" style="padding:6px 9px">'+WS.esc(s[0])+"</button></li>";
+    }).join("");
+    if(+cur>=steps.length)cur="0";
+    Array.prototype.forEach.call(flow.querySelectorAll("[data-pl]"),function(b){
+      b.addEventListener("click",function(){cur=b.getAttribute("data-pl");draw()});
+    });
+    document.getElementById("pl-panel").innerHTML="<h4>"+WS.esc(steps[+cur][0])+"</h4><p>"+WS.esc(steps[+cur][1])+"</p>";
+    var note=env==="cloud"?
+      (load==="elt"?"Snowflake + dbt är ett typiskt ELT-flöde: rådata laddas först, transformationen sker sedan i datalagret med SQL. Lasten är billig och rådata finns kvar.":
+       "ETL: data transformeras innan den laddas in. Vanligt när känsliga uppgifter måste rensas bort innan de når molnet, eller när målet inte kan transformera."):
+      (load==="elt"?"Lokal ELT: rådata laddas till den lokala databasen och transformeras där med SQL eller dbt. Kräver att databasen orkar.":
+       "Lokal ETL: data rensas innan den laddas in. Passar när lagringen är begränsad eller när data inte får sparas rå.");
+    document.getElementById("pl-note").textContent=note;
+    document.getElementById("pl-cloud").setAttribute("aria-pressed",env==="cloud"?"true":"false");
+    document.getElementById("pl-local").setAttribute("aria-pressed",env==="local"?"true":"false");
+    document.getElementById("pl-etl").setAttribute("aria-pressed",load==="etl"?"true":"false");
+    document.getElementById("pl-elt").setAttribute("aria-pressed",load==="elt"?"true":"false");
+  }
+  document.getElementById("pl-cloud").addEventListener("click",function(){env="cloud";draw()});
+  document.getElementById("pl-local").addEventListener("click",function(){env="local";draw()});
+  document.getElementById("pl-etl").addEventListener("click",function(){load="etl";draw()});
+  document.getElementById("pl-elt").addEventListener("click",function(){load="elt";draw()});
+  draw();
+})();
+</script>
+<script>window.__DB_CFG=window.__DB_CFG||{};window.__DB_CFG['07']={"title":"data_sources → pipeline_runs → processed_data → ai_results","intro":"Fyra tabeller visar hela kedjan: var data kommer ifrån, vilken pipeline som körde, hur kvaliteten blev och vad AI:n svarade.","tables":[{"name":"data_sources","pk":"source_id","cols":[["source_id","INTEGER"],["source_name","TEXT"],["source_type","TEXT"]],"fk":[],"rows":[[1,"Security logs","Log"],[2,"IoT sensors","Sensor"],[3,"Network events","Network"],[4,"Endpoint telemetry","Endpoint"]]},{"name":"pipeline_runs","pk":"run_id","cols":[["run_id","INTEGER"],["source_id","INTEGER"],["process_type","TEXT"],["status","TEXT"],["started_at","TEXT"]],"fk":[["source_id","data_sources.source_id"]],"rows":[[101,1,"ETL","Completed","09:00"],[102,2,"ELT","Completed","09:10"],[103,3,"ETL","Running","09:20"],[104,4,"ELT","Completed","09:30"],[105,1,"ELT","Completed","09:40"],[106,3,"ETL","Failed","09:50"],[107,2,"ETL","Completed","10:00"],[108,4,"ELT","Running","10:10"]]},{"name":"processed_data","pk":"record_id","cols":[["record_id","INTEGER"],["run_id","INTEGER"],["quality_status","TEXT"],["processed_at","TEXT"]],"fk":[["run_id","pipeline_runs.run_id"]],"rows":[[1,101,"Valid","10:00"],[2,102,"Valid","10:05"],[3,103,"Review","10:10"],[4,104,"Valid","10:15"],[5,105,"Valid","10:20"],[6,106,"Invalid","10:25"],[7,107,"Valid","10:30"],[8,108,"Review","10:35"],[9,101,"Valid","10:40"],[10,102,"Invalid","10:45"]]},{"name":"ai_results","pk":"result_id","cols":[["result_id","INTEGER"],["record_id","INTEGER"],["model_result","TEXT"],["confidence","REAL"]],"fk":[["record_id","processed_data.record_id"]],"rows":[[1,1,"Normal",0.95],[2,2,"Anomaly",0.87],[3,3,"Suspicious",0.78],[4,4,"Normal",0.91],[5,5,"Normal",0.88],[6,7,"Anomaly",0.82],[7,8,"Suspicious",0.74],[8,9,"Normal",0.97],[9,10,"Anomaly",0.69],[10,1,"Normal",0.93]]}],"queries":[{"label":"Källor och körningar","sql":"SELECT r.run_id, s.source_name, r.process_type, r.status FROM pipeline_runs r JOIN data_sources s ON r.source_id = s.source_id;","explain":"JOIN visar vilken källa varje körning läste. Åtta körningar. ETL och ELT blandas – valet beror på var transformationen ska ske.","cols":["run_id","source_name","process_type","status"],"rows":[[101,"Security logs","ETL","Completed"],[102,"IoT sensors","ELT","Completed"],[103,"Network events","ETL","Running"],[104,"Endpoint telemetry","ELT","Completed"],[105,"Security logs","ELT","Completed"],[106,"Network events","ETL","Failed"],[107,"IoT sensors","ETL","Completed"],[108,"Endpoint telemetry","ELT","Running"]]},{"label":"Pågående körningar","sql":"SELECT run_id, source_id, process_type FROM pipeline_runs WHERE status = 'Running';","explain":"Två körningar pågår. En misslyckad (106) syns inte här – den måste hanteras separat, annars saknas data utan att någon märker det.","cols":["run_id","source_id","process_type"],"rows":[[103,3,"ETL"],[108,4,"ELT"]]},{"label":"Data till AI","sql":"SELECT p.record_id, p.quality_status, a.model_result, a.confidence FROM processed_data p JOIN ai_results a ON p.record_id = a.record_id;","explain":"JOIN kopplar bearbetad data till AI-resultat. Tio rader. Lägg märke till att poster med Review eller Invalid också kan ha resultat – de borde granskas före användning.","cols":["record_id","quality_status","model_result","confidence"],"rows":[[1,"Valid","Normal",0.95],[2,"Valid","Anomaly",0.87],[3,"Review","Suspicious",0.78],[4,"Valid","Normal",0.91],[5,"Valid","Normal",0.88],[7,"Valid","Anomaly",0.82],[8,"Review","Suspicious",0.74],[9,"Valid","Normal",0.97],[10,"Invalid","Anomaly",0.69],[1,"Valid","Normal",0.93]]},{"label":"Medelkonfidens per resultat","sql":"SELECT model_result, AVG(confidence) AS medel FROM ai_results GROUP BY model_result;","explain":"AVG per grupp. Normal har högst medel (0,93), Anomaly lägst (0,79). Hög konfidens är inte samma sak som att modellen har rätt – den kan vara säker och fel.","cols":["model_result","medel"],"rows":[["Normal",0.93],["Anomaly",0.79],["Suspicious",0.76]]},{"label":"Datakvalitet","sql":"SELECT quality_status, COUNT(*) AS antal FROM processed_data GROUP BY quality_status;","explain":"Sju giltiga, två för granskning och en ogiltig. Ogiltig data bör stoppas innan den når modellen – annars blir felet ett AI-svar.","cols":["quality_status","antal"],"rows":[["Valid",7],["Review",2],["Invalid",1]]}],"note":"Samma kedja finns i molnet: källa → Snowflake raw → dbt → kuraterat → Databricks/ML → resultat. Här är den liten nog att granska rad för rad."};</script>
+
+<script>
+(function(){
+  var CFG=window.__DB_CFG||{};
+  function esc(s){return WS.esc(String(s))}
+  function isNum(v){return typeof v==="number"}
+  document.querySelectorAll("[data-db]").forEach(function(host){
+    var key=host.getAttribute("data-db"),db=CFG[key];
+    if(!db)return;
+    var ti=0,qi=0,filter="",sortCol=-1,sortDir=1;
+    function tab(){return db.tables[ti]}
+    function rowsNow(){
+      var t=tab(),rows=t.rows.slice();
+      if(filter){
+        var f=filter.toLowerCase();
+        rows=rows.filter(function(r){return r.join(" ").toLowerCase().indexOf(f)>=0});
+      }
+      if(sortCol>=0){
+        rows.sort(function(a,b){
+          var x=a[sortCol],y=b[sortCol];
+          if(isNum(x)&&isNum(y))return (x-y)*sortDir;
+          return String(x).localeCompare(String(y),"sv")*sortDir;
+        });
+      }
+      return rows;
+    }
+    function tableHTML(){
+      var t=tab(),rows=rowsNow();
+      var head="<tr>"+t.cols.map(function(c,i){
+        var arrow=sortCol===i?(sortDir>0?" \u2191":" \u2193"):"";
+        return '<th data-col="'+i+'" title="Sortera">'+esc(c[0])+arrow+"</th>";
+      }).join("")+"</tr>";
+      var body=rows.length?rows.map(function(r){
+        return "<tr>"+r.map(function(v){return '<td'+(isNum(v)?' class="num"':"")+">"+(v===null?"NULL":esc(v))+"</td>"}).join("")+"</tr>";
+      }).join(""):'<tr><td colspan="'+t.cols.length+'" class="db-empty">Inga rader matchar filtret.</td></tr>';
+      return '<div class="db-scroll"><table class="tbl"><thead>'+head+"</thead><tbody data-role=\"tbody\">"+body+"</tbody></table></div>"+
+        '<p class="hint" data-role="count" style="margin:6px 0 0">'+rows.length+" av "+t.rows.length+" rader \u00b7 "+t.cols.length+" kolumner</p>";
+    }
+    function paint(){
+      host.querySelector('[data-role="tablewrap"]').innerHTML=tableHTML();
+      bindSort();
+    }
+    function bindSort(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-col]"),function(th){
+        th.addEventListener("click",function(){
+          var i=+th.getAttribute("data-col");
+          if(sortCol===i)sortDir*=-1;else{sortCol=i;sortDir=1}
+          paint();
+        });
+      });
+    }
+    function schema(){
+      var t=tab();
+      return '<ul class="schema">'+t.cols.map(function(c){
+        var key=t.pk===c[0]?' <span class="key">PK</span>':"";
+        return "<li>"+esc(c[0])+" "+esc(c[1])+key+"</li>";
+      }).join("")+"</ul>"+(t.fk&&t.fk.length?'<p class="hint" style="margin:0 0 8px">Främmande nycklar: '+t.fk.map(function(f){
+        return "<code>"+esc(f[0])+"</code> \u2192 "+esc(f[1]);
+      }).join(" \u00b7 ")+"</p>":'<p class="hint" style="margin:0 0 8px">Primärnyckel: <code>'+esc(t.pk)+"</code> identifierar varje rad.</p>");
+    }
+    function timeline(){
+      if(!db.timeline)return "";
+      var t=db.tables.filter(function(x){return x.name===db.timeline.table})[0];
+      if(!t)return "";
+      return '<h5 style="margin:10px 0 0">Tidslinje</h5><ol class="timeline">'+t.rows.map(function(r){
+        return "<li><time>"+esc(r[db.timeline.time])+"</time><b>"+esc(r[db.timeline.title])+"</b> \u00b7 "+esc(r[db.timeline.level])+"</li>";
+      }).join("")+"</ol>";
+    }
+    function featureBox(){
+      var f=db.features;
+      if(!f)return "";
+      return '<div class="featurebox"><b>Features och label</b><p class="hint">'+esc(f.prompt)+"</p>"+
+        f.items.map(function(it,i){
+          return '<label class="checkline"><input type="checkbox" data-f="'+i+'"><span>'+esc(it[0])+"</span></label>";
+        }).join("")+
+        '<div class="actions"><button type="button" data-role="fcheck">Kontrollera valen</button></div><div data-role="fout" aria-live="polite"></div></div>';
+    }
+    function render(){
+      var t=tab(),q=db.queries[qi];
+      host.innerHTML='<div class="db-head"><span class="tag">Pedagogisk databas \u00b7 syntetiska data</span><h4>'+esc(db.title)+"</h4><p class=\"hint\">"+esc(db.intro)+"</p></div>"+
+        (db.timeline?timeline():"")+
+        '<div class="db-tabs" role="group" aria-label="Tabeller">'+db.tables.map(function(x,i){
+          return '<button type="button" data-t="'+i+'" aria-pressed="'+(i===ti?"true":"false")+'">'+esc(x.name)+"</button>";
+        }).join("")+"</div>"+
+        '<div class="db-grid">'+
+          '<div class="db-box"><b>Tabell: '+esc(t.name)+"</b>"+schema()+
+            '<div class="db-tools"><input type="search" data-role="filter" placeholder="Filtrera rader\u2026" value="'+esc(filter)+'" aria-label="Filtrera tabellen"><button type="button" class="ghost" data-role="reset">\u00c5terst\u00e4ll</button></div>'+
+            '<div data-role="tablewrap">'+tableHTML()+"</div></div>"+
+          '<div class="db-box"><b>SQL-fr\u00e5gor</b><div class="sqlbtns">'+db.queries.map(function(x,i){
+            return '<button type="button" data-q="'+i+'" aria-pressed="'+(i===qi?"true":"false")+'">'+esc(x.label)+"</button>";
+          }).join("")+"</div>"+
+            '<pre class="code">'+esc(q.sql)+"</pre><p>"+esc(q.explain)+"</p>"+
+            '<p class="hint" style="margin:4px 0">F\u00f6rv\u00e4ntat resultat: <b>'+q.rows.length+" rader</b></p>"+
+            '<div class="db-scroll"><table class="tbl"><thead><tr>'+q.cols.map(function(c){return "<th>"+esc(c)+"</th>"}).join("")+"</tr></thead><tbody>"+
+            q.rows.map(function(r){return "<tr>"+r.map(function(v){return "<td"+(isNum(v)?' class="num"':"")+">"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")+
+            "</tbody></table></div></div>"+
+        "</div>"+featureBox()+'<p class="hint" style="margin:10px 0 0">'+esc(db.note)+"</p>";
+      bind();
+    }
+    function bind(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-t]"),function(b){
+        b.addEventListener("click",function(){ti=+b.getAttribute("data-t");qi=0;filter="";sortCol=-1;render()});
+      });
+      Array.prototype.forEach.call(host.querySelectorAll("[data-q]"),function(b){
+        b.addEventListener("click",function(){qi=+b.getAttribute("data-q");render()});
+      });
+      var f=host.querySelector('[data-role="filter"]');
+      if(f)f.addEventListener("input",function(){filter=f.value;paint()});
+      host.querySelector('[data-role="reset"]').addEventListener("click",function(){ti=0;qi=0;filter="";sortCol=-1;render()});
+      var fc=host.querySelector('[data-role="fcheck"]');
+      if(fc)fc.addEventListener("click",function(){
+        var f=db.features,ok=0,picked=[];
+        Array.prototype.forEach.call(host.querySelectorAll("[data-f]"),function(c){
+          var i=+c.getAttribute("data-f"),good=c.checked===!!f.items[i][1];
+          if(good)ok++;else picked.push(f.items[i][0]);
+          c.parentElement.style.background=good?"#e7f4ec":"#fbe7e3";
+        });
+        var o=host.querySelector('[data-role="fout"]');
+        o.className=ok===f.items.length?"note":"warn";
+        o.innerHTML="<b>"+ok+" av "+f.items.length+" r\u00e4tt.</b> "+(picked.length?"Justera: "+picked.map(esc).join(", ")+".":"Alla val st\u00e4mmer.")+
+          "<br>"+f.items.map(function(it){return "<span class=\"hint\">"+esc(it[0])+": "+esc(it[2])+"</span>"}).join("<br>");
+      });
+      bindSort();
+    }
+    render();
+  });
+})();
+</script>
+
+</body>
+</html>

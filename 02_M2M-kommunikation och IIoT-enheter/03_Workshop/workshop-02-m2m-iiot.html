@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop 02 – M2M-kommunikation och IIoT-enheter · AI inom cybersäkerhet</title>
+<style>
+
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d1c19;--muted:#5c5a54;--line:#dcd8cf;
+--ok:#1f6b45;--bad:#a32b1c;--warn:#8a5a12;--soft:#efece4;--shadow:0 1px 2px rgba(0,0,0,.05)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.62 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+img,svg{max-width:100%}
+a{color:var(--dark);text-underline-offset:3px}
+a:hover{color:var(--acc)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:10px;z-index:99;border-radius:8px}
+header.top{background:var(--dark);color:#fff;padding:10px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+header.top a{color:#fff;text-decoration:none;font-weight:600;font-size:.92rem}
+header.top a:hover{color:#ffd9c9}
+header.top .kicker{font-size:.85rem;opacity:.9}
+main{max-width:1000px;margin:0 auto;padding:24px 18px 56px}
+.hero{margin:6px 0 18px}
+.eyebrow{font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--acc);font-weight:700;margin:0 0 4px}
+h1{font-size:clamp(1.55rem,3.2vw,2.2rem);line-height:1.18;margin:.1em 0 .35em;color:var(--dark)}
+.lead{font-size:1.06rem;max-width:70ch;color:#33312c;margin:.2em 0 1em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.86rem;color:var(--muted)}
+.chips b{color:var(--ink)}
+h2{font-size:1.35rem;margin:1.6em 0 .5em;color:var(--dark)}
+h3{font-size:1.06rem;margin:1.3em 0 .4em}
+h4{font-size:.98rem;margin:1em 0 .3em}
+p,li{max-width:74ch}
+ul,ol{padding-left:1.25em}
+li{margin:.25em 0}
+.goals{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:10px;padding:14px 18px;margin:16px 0 6px}
+.goals h2{margin:.1em 0 .4em;font-size:1.05rem}
+.goals ul{margin:0}
+.tabs{position:sticky;top:0;z-index:30;background:var(--bg);display:flex;gap:6px;align-items:center;flex-wrap:wrap;
+padding:10px 0;border-bottom:2px solid var(--line);margin:18px 0 6px}
+.tabs [role=tab]{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);
+color:var(--muted);border-radius:9px;padding:9px 15px}
+.tabs [role=tab]:hover{border-color:var(--acc);color:var(--ink)}
+.tabs [role=tab][aria-selected=true]{background:var(--dark);border-color:var(--dark);color:#fff}
+.tabs [role=tab]:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,th:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.timer{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:4px 8px}
+.timer .clock{font-variant-numeric:tabular-nums;font-weight:700;min-width:52px;text-align:center;color:var(--dark)}
+.timer.low .clock{color:var(--bad)}
+.timer.done .clock{color:var(--warn)}
+.timer button{font:inherit;font-size:.82rem;padding:4px 9px;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+.timer button:hover{border-color:var(--acc)}
+[role=tabpanel]{padding:8px 0 20px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.task{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;box-shadow:var(--shadow)}
+.task>h3{margin-top:0;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.task .no{background:var(--acc);color:#fff;border-radius:7px;font-size:.8rem;padding:2px 9px;font-weight:700}
+.brief{display:grid;gap:6px;margin:10px 0 14px;font-size:.95rem}
+.brief div{display:grid;grid-template-columns:110px 1fr;gap:10px}
+.brief dt,.brief b{color:var(--muted);font-weight:600}
+.brief span{min-width:0}
+@media(max-width:520px){.brief div{grid-template-columns:1fr;gap:0}}
+.hint{font-size:.9rem;color:var(--muted);margin:.4em 0}
+.note{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+.warn{background:#fdf2e2;border:1px solid #e6c9a2;border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--dark);background:var(--dark);color:#fff;padding:9px 16px}
+button:hover{filter:brightness(1.12)}
+button.ghost{background:transparent;color:var(--dark);border-color:var(--line)}
+button.ghost:hover{background:var(--soft)}
+button:disabled{opacity:.6;cursor:default;filter:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 4px}
+label.field{display:block;font-weight:600;font-size:.92rem;margin:10px 0 4px}
+select,input[type=number],input[type=range],input[type=search]{font:inherit}
+select,input[type=number],input[type=search]{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--dark);height:28px}
+input[type=checkbox],input[type=radio]{accent-color:var(--dark);width:18px;height:18px}
+.rangeout{font-variant-numeric:tabular-nums;font-weight:700;color:var(--dark)}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:10px 0}
+legend{font-weight:600;font-size:.92rem;padding:0 6px}
+.checkline{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.95rem}
+.checkline:last-child{border-bottom:0}
+.checkline input{margin-top:4px;flex:none}
+.checkline span{flex:1}
+.tablewrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.93rem;min-width:420px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-weight:600;white-space:nowrap}
+th[data-i]{cursor:pointer;user-select:none}
+th[data-i]:hover{background:#e6e2d8}
+th .arrow{opacity:.45;font-size:.8em}
+tbody tr:hover{background:#faf8f3}
+tbody tr.good{background:#eaf5ee}
+tbody tr.bad{background:#fbecea}
+.rownote{font-size:.84rem;color:var(--muted);margin-top:4px}
+.filter{margin-bottom:8px;width:min(340px,100%)}
+.fb{font-size:.93rem;margin:10px 0;padding:10px 12px;border-radius:8px;background:var(--soft)}
+.fb:empty{display:none}
+.fb.ok{background:#eaf5ee;border-left:4px solid var(--ok)}
+.fb.bad{background:#fbecea;border-left:4px solid var(--bad)}
+.fb b{color:var(--ink)}
+.whynot{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+.q{border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0;background:#fff}
+.qt{font-weight:600;margin:0 0 8px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--soft);border:1px solid var(--line);
+color:var(--ink);border-radius:8px;padding:9px 11px;font-weight:400}
+.opt:hover:not(:disabled){border-color:var(--acc)}
+.opt .k{font-weight:700;color:var(--muted);flex:none}
+.opt.correct{border-color:var(--ok);background:#e7f4ec}
+.opt.wrong{border-color:var(--bad);background:#fbe7e3}
+.opt .k{min-width:1em}
+.quizsum{font-size:.95rem;margin:12px 0 4px}
+.chart{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+.chart .grid{stroke:#e5e1d8;stroke-width:1}
+.chart .ax{font-size:11px;fill:#6b6862}
+.chart .lbl{font-size:12px;fill:#3a3833}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.86rem;color:var(--muted);margin:6px 0 0;padding:0;list-style:none}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.bars{margin:10px 0}
+.barrow{display:grid;grid-template-columns:minmax(110px,1.1fr) 2fr minmax(56px,auto);gap:10px;align-items:center;font-size:.9rem;margin:6px 0}
+.bl{color:var(--muted)}
+.btrack{background:var(--soft);border-radius:999px;height:12px;overflow:hidden}
+.bfill{display:block;height:100%;background:var(--dark);border-radius:999px;transition:width .18s ease}
+.barrow.ok .bfill{background:var(--ok)}
+.barrow.bad .bfill{background:var(--bad)}
+.barrow.warn .bfill{background:var(--warn)}
+.bv{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;margin:12px 0;font-size:.9rem}
+.cm .cmh{font-weight:600;color:var(--muted);padding:4px 6px;display:flex;align-items:center}
+.cm .cell{border-radius:8px;padding:10px;border:1px solid var(--line);background:#fff}
+.cm .cell b{display:block;font-size:1.3rem}
+.cm .cell span{font-size:.8rem;color:var(--muted)}
+.cm .tp{background:#e6f4ec;border-color:#b6ddc6}
+.cm .tn{background:#eef1f0;border-color:#cfd8d3}
+.cm .fp{background:#fdf1e2;border-color:#e8cfae}
+.cm .fn{background:#fbe8e5;border-color:#e8bcb4}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0}
+details[open]{box-shadow:var(--shadow)}
+summary{cursor:pointer;font-weight:600;color:var(--dark)}
+details[open] summary{margin-bottom:8px;border-bottom:1px solid var(--line);padding-bottom:8px}
+details .why{font-size:.95rem}
+details ul{margin:.4em 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--muted);vertical-align:middle}
+.tag.sim{background:#efe6f5;color:#5b3a72}
+.flow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flow li{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.85rem}
+.flow li.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.flow li b{font-weight:700}
+.stepbtns{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.stepbtns button{background:var(--card);color:var(--ink);border:1px solid var(--line);padding:6px 10px;font-size:.86rem;border-radius:8px}
+.stepbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.stepinfo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:8px;padding:12px 14px;margin:8px 0;min-height:76px}
+.stepinfo h4{margin:0 0 4px}
+.riskbadge{display:inline-block;border-radius:6px;padding:2px 9px;font-weight:700;font-size:.85rem}
+.riskbadge.low{background:#e6f4ec;color:#1f5c3e}
+.riskbadge.mid{background:#fdf1e2;color:#7a5112}
+.riskbadge.high{background:#fbe8e5;color:#8c2417}
+footer{border-top:1px solid var(--line);margin-top:26px;padding:18px;text-align:center;color:var(--muted);font-size:.83rem}
+@media(max-width:640px){main{padding:16px 12px 40px}.tabs{padding:8px 0}.timer{width:100%;justify-content:center}.brief div{grid-template-columns:1fr}th,td{padding:6px 8px}}
+@media print{header.top,.tabs,.actions,button{display:none}body{background:#fff}[role=tabpanel][hidden]{display:block!important}main{max-width:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* --- nya interaktiva komponenter --- */
+.figure-wrap{display:grid;gap:16px;grid-template-columns:minmax(240px,0.9fr) minmax(280px,1.1fr);align-items:start}
+@media(max-width:760px){.figure-wrap{grid-template-columns:1fr}}
+.human{position:relative;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:8px}
+.human svg{display:block;width:100%;height:auto}
+.hotspot{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--dark);background:#fff;color:var(--dark);border-radius:999px;font:inherit;font-size:.72rem;font-weight:700;padding:3px 7px;line-height:1.2;cursor:pointer;white-space:nowrap}
+.hotspot[aria-pressed=true]{background:var(--dark);color:#fff}
+.hotspot:hover{border-color:var(--acc)}
+.hotspot:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:150px}
+.panel h4{margin:.1em 0 .4em}
+.flows{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flows li{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:.82rem}
+.flows li.off{opacity:.45;text-decoration:line-through}
+.flows .arr{background:none;border:0;color:var(--muted);padding:0 1px}
+.code{background:#23261f;color:#eae7df;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.5;padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:pre;margin:8px 0}
+.code .k{color:#9ec9a8}
+.code .s{color:#e6c07b}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;border-radius:0;background:var(--card);color:var(--ink);padding:6px 10px;font-size:.85rem;font-weight:600}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--dark);color:#fff}
+.chips2{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;padding:0;list-style:none}
+.chips2 button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.85rem}
+.chips2 button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.metricgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin:10px 0}
+.metric{background:var(--soft);border-radius:9px;padding:8px 10px}
+.metric b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.metric span{font-size:.78rem;color:var(--muted)}
+.modelgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:10px 0}
+.modelcard{text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-weight:600;font-size:.9rem}
+.modelcard small{display:block;font-weight:400;color:var(--muted);font-size:.78rem;margin-top:3px}
+.modelcard[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
+.cards3{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:10px 0}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.88rem}
+.mini h5{margin:0 0 4px;font-size:.9rem}
+.legendline{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin:4px 0 0}
+
+/* --- databasvy --- */
+.db{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);margin:12px 0}
+.db-head h4{margin:0 0 4px}
+.db-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.db-tabs button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 10px;font-size:.85rem;font-weight:600}
+.db-tabs button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-grid{display:grid;gap:12px;grid-template-columns:minmax(280px,1fr) minmax(280px,1fr)}
+@media(max-width:820px){.db-grid{grid-template-columns:1fr}}
+.db-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.schema{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px;padding:0;list-style:none}
+.schema li{font-size:.75rem;background:var(--soft);border-radius:6px;padding:2px 6px;font-family:ui-monospace,Consolas,monospace}
+.schema .key{color:var(--dark);font-weight:700}
+.db-tools{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.db-tools input{flex:1;min-width:120px;border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;font-size:.85rem;background:var(--card);color:var(--ink)}
+.db-tools button{font-size:.8rem;padding:4px 9px}
+.db-scroll{overflow-x:auto}
+.db .tbl{font-size:.82rem;min-width:0}
+.db .tbl th{white-space:nowrap;cursor:pointer}
+.db .tbl td{white-space:nowrap}
+.db .tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.sqlbtns{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px}
+.sqlbtns button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:4px 9px;font-size:.8rem}
+.sqlbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-empty{padding:10px;color:var(--muted);font-size:.85rem}
+.timeline{list-style:none;margin:8px 0;padding:0 0 0 14px;border-left:3px solid var(--acc)}
+.timeline li{margin:0 0 6px;font-size:.85rem;position:relative}
+.timeline li:before{content:"";position:absolute;left:-20px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.timeline time{font-weight:700;margin-right:6px}
+.featurebox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px}
+.featurebox .checkline{margin:0 0 2px}
+.fitgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:10px 0}
+.fitgrid .mini svg{width:100%;height:auto;display:block}
+.facitbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.facitbar .hint{margin:0}
+
+:root{--dark:#3b1d4e;--dark2:#2b1239;--acc:#8e3b6b;--acc2:#6d2b51;--bg:#fbf3f6;--soft:#f3e5ec}
+/* ===== Extra labb med avancerad grafik (tillagt) ===== */
+.lab{margin:34px 0 8px;border-radius:16px;overflow:hidden;border:1px solid #1d2b45;
+background:radial-gradient(1200px 520px at 12% -12%,#172c50 0%,#0b1220 46%,#070c16 100%);
+color:#dbe7ff;box-shadow:0 18px 46px rgba(8,18,38,.28);padding:20px 0 0}
+.lab-eyebrow{margin:0 18px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#6ff2d9;font-weight:700}
+.lab h2{margin:.25em 18px .3em;color:#f2f7ff;font-size:clamp(1.25rem,2.4vw,1.6rem)}
+.lab-lead{margin:0 18px 16px;color:#a8bcd8;max-width:78ch;font-size:.98rem}
+.lab-shell{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.95fr);gap:14px;padding:0 18px 18px}
+@media(max-width:860px){.lab-shell{grid-template-columns:1fr}}
+.lab-stage{position:relative;border-radius:13px;border:1px solid #1e3355;background:#060b14;overflow:hidden;align-self:start}
+.lab-stage canvas{display:block;width:100%;height:auto}
+.lab-hud{display:flex;gap:8px;flex-wrap:wrap;padding:8px 10px;border-top:1px solid #16253d;background:#08111f;font-size:.74rem}
+.lab-hud span{background:rgba(10,22,40,.9);border:1px solid #23406b;border-radius:999px;padding:3px 10px;color:#a9c6ee}
+.lab-hud b{color:#7ff2d6;font-variant-numeric:tabular-nums}
+.lab-side{display:grid;gap:10px;align-content:start}
+.lab-card{background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:12px;padding:12px 13px}
+.lab-card>b{display:block;font-size:.9rem;color:#eaf2ff;margin-bottom:6px}
+.lab label{display:block;font-size:.8rem;color:#a8bcd8;margin:9px 0 2px;font-weight:600}
+.lab output{color:#7ff2d6;font-weight:700;font-variant-numeric:tabular-nums}
+.lab input[type=range]{width:100%;accent-color:#38e1c4;height:26px}
+.lab input[type=checkbox]{accent-color:#38e1c4;width:17px;height:17px;flex:none}
+.lab select{width:100%;padding:7px 9px;border-radius:8px;border:1px solid #26456f;background:#0b1524;color:#dbe7ff;font:inherit;font-size:.88rem}
+.lab button{background:linear-gradient(180deg,#1a5cc8,#123f96);border:1px solid #2f6bff;color:#eef4ff;
+padding:8px 14px;border-radius:9px;font-size:.88rem;font-weight:600}
+.lab button:hover{filter:brightness(1.15)}
+.lab button.ghost{background:transparent;border-color:#26456f;color:#a9c6ee}
+.lab .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lab .readout{font-size:.85rem;line-height:1.55;color:#c6d7f2;margin:6px 0}
+.lab .readout b{color:#fff}
+.lab .verdict{border-radius:9px;padding:8px 10px;font-size:.8rem;font-weight:700;line-height:1.4;
+background:rgba(120,150,190,.14);border:1px solid rgba(120,150,190,.3);color:#c6d7f2;margin-top:8px}
+.lab .verdict.good{background:rgba(31,140,90,.20);border-color:#2b8a5f;color:#93f2bd}
+.lab .verdict.mid{background:rgba(160,110,25,.20);border-color:#a87a2c;color:#ffd79a}
+.lab .verdict.bad{background:rgba(180,50,35,.22);border-color:#b5452f;color:#ffb3a7}
+.lab .lab-q ul{margin:4px 0 0;padding-left:1.15em;font-size:.85rem;color:#a8bcd8}
+.lab .lab-q li{margin:5px 0;max-width:none}
+.lab .lab-bar{height:11px;border-radius:999px;background:#0d1b2e;border:1px solid #1e3355;overflow:hidden;margin:8px 0}
+.lab .lab-bar>span{display:block;height:100%;width:0;background:#38e1c4;transition:width .2s ease,background .2s ease}
+.lab .metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem;color:#a8bcd8}
+.lab .metricgrid div{background:rgba(6,14,26,.85);border:1px solid #1b2f4d;border-radius:8px;padding:6px 8px}
+.lab .metricgrid b{display:block;color:#7ff2d6;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.lab .lab-how{margin:0 18px 18px;background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:10px;padding:10px 14px;color:#c6d7f2}
+.lab .lab-how summary{color:#7ff2d6;font-weight:700;font-size:.9rem}
+.lab .lab-how ol{margin:8px 0 0;padding-left:1.3em;font-size:.86rem;color:#a8bcd8}
+.lab .lab-how li{margin:4px 0;max-width:none}
+@media(max-width:600px){.lab{padding-top:14px}.lab-shell{padding:0 12px 14px}.lab h2,.lab-lead,.lab-eyebrow,.lab-how{margin-left:12px;margin-right:12px}}
+@media print{.lab{box-shadow:none;background:#fff;color:#111;border-color:#ccc}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Hoppa till innehåll</a>
+<header class="top">
+  <a href="../../index.html" title="Öppnar kursens startsida">&#8592; Alla workshoppar</a>
+  <span class="kicker">Lektion 02 · M2M och IIoT</span>
+</header>
+<main id="main">
+  <div class="hero">
+    <p class="eyebrow">AI inom cybersäkerhet · Workshop 02</p>
+    <h1>Workshop 02 – M2M-kommunikation och IIoT-enheter</h1>
+    <p class="lead">Sensorer, protokoll och moln gör fabriken mätbar – och sårbar. Här arbetar du med ett simulerat sensordygn, bygger ett datapaket och avgör när en ventil får stängas utan att någon frågar.</p>
+    <ul class="chips"><li><b>Tid:</b> ca 60 min</li><li><b>Individuellt:</b> 25 min</li><li><b>Grupp:</b> 20 min</li><li><b>Facit och quiz:</b> 15 min</li></ul>
+  </div>
+  <section class="goals" aria-labelledby="mal">
+    <h2 id="mal">Efter workshopen kan du</h2>
+    <ul><li>förklara skillnaden mellan M2M (maskin till maskin) och IIoT (industriellt IoT)</li><li>läsa av ett sensorflöde och avgöra vad som är en avvikelse med hjälp av en tröskel</li><li>välja vilken data som ska skickas vidare – och vilken som inte ska lämna enheten</li><li>bedöma risker med uppkopplade enheter och avgöra när en människa måste godkänna åtgärden</li></ul>
+  </section>
+  <nav class="tabs" role="tablist" aria-label="Workshopens tre delar">
+    <button type="button" role="tab" id="tab-ind" aria-controls="panel-ind" aria-selected="true" data-panel="ind">1. Individuellt arbete</button>
+    <button type="button" role="tab" id="tab-grp" aria-controls="panel-grp" aria-selected="false" tabindex="-1" data-panel="grp">2. Grupparbete</button>
+    <button type="button" role="tab" id="tab-fac" aria-controls="panel-fac" aria-selected="false" tabindex="-1" data-panel="fac">3. Facit</button>
+    <div class="timer" id="timer" data-minutes="60">
+      <span class="clock" id="tOut" aria-live="off">60:00</span>
+      <button type="button" id="tStart" aria-pressed="false" title="Starta eller pausa timern">Start</button>
+      <button type="button" id="tReset" title="Nollställ timern">Nollställ</button>
+    </div>
+  </nav>
+  <noscript><p class="warn">JavaScript är avstängt. Flikar, simuleringar och facit kräver JavaScript. Slå på det i webbläsaren och ladda om sidan.</p></noscript>
+  <section id="panel-ind" role="tabpanel" aria-labelledby="tab-ind" tabindex="0">
+
+
+<p>En givare mäter något. En styrenhet fattar beslut. En molntjänst jämför tusentals maskiner.
+M2M och IIoT är två sätt att koppla ihop dem – och två olika risker. Här får du ett simulerat
+sensordygn att arbeta med. Alla värden är påhittade.</p>
+
+<details class="card">
+  <summary>Begrepp du möter här</summary>
+  <ul>
+    <li><b>M2M</b> – maskin till maskin, ofta direkt mellan två enheter på samma plats.</li>
+    <li><b>IIoT</b> – industriella enheter kopplade till nät och moln, ofta många fabriker tillsammans.</li>
+    <li><b>Sensor</b> – mäter ett värde, till exempel temperatur eller tryck.</li>
+    <li><b>Tröskel</b> – gränsen där ett värde räknas som avvikelse.</li>
+    <li><b>Dataminimering</b> – skicka bara den data som behövs för uppgiften.</li>
+    <li><b>API</b> – ett avtalat gränssnitt där ett program kan hämta eller skicka data.</li>
+    <li><b>Webhook</b> – ett automatiskt meddelande som skickas när något händer.</li>
+    <li><b>JSON</b> – textformat med namn och värden som både människor och program kan läsa.</li>
+  </ul>
+</details>
+
+
+<p>Tre uppgifter, cirka 25 minuter. Alla data är simulerade och ligger i filen – inget skickas någonstans.</p>
+<article class="task" id="u1">
+  <h3><span class="no">Uppgift 1</span> M2M eller IIoT?</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Klassificera sex exempel på uppkopplade system.</span></div>
+    <div><dt>Varför?</dt><span>Begreppen liknar varandra men har olika riskbild: lokalt M2M påverkas av fysisk åtkomst, IIoT av nätverk och moln.</span></div>
+    <div><dt>Hur?</dt><span>Läs exemplet, välj typ i listan och tryck <b>Kontrollera mina svar</b>.</span></div>
+    <div><dt>Observera</dt><span>Vilka exempel handlar om direkt kommunikation mellan två enheter? Vilka kräver moln eller storskalig analys?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska få 6 av 6 rätt och kunna förklara gränsdragningen.</span></div>
+  </dl>
+  <div id="u1-klass"></div>
+</article>
+<article class="task" id="u2">
+  <h3><span class="no">Uppgift 2</span> Hitta avvikelsen</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Välj sensor och ändra tröskeln tills du ser dygnets avvikelse utan att allt annat larmar.</span></div>
+    <div><dt>Varför?</dt><span>Det är samma arbete en drifttekniker gör: ställa in känslighet och tolka vad larmen betyder.</span></div>
+    <div><dt>Hur?</dt><span>Välj sensor i listan och dra reglaget. Läs tidpunkterna under diagrammet.</span></div>
+    <div><dt>Observera</dt><span>Vid vilken tröskel börjar normal variation larma? Vid vilken försvinner den verkliga toppen?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska hitta en tröskel där avvikelsen syns och högst ett par normalvärden larmar.</span></div>
+  </dl>
+  <div id="u2-sim"></div><div class="db" data-db="02"></div>
+</article>
+<article class="task" id="u3">
+  <h3><span class="no">Uppgift 3</span> API, webhook och dataformat</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Skicka ett simulerat API-anrop, ta emot en webhook och jämför fyra dataformat.</span></div>
+    <div><dt>Varför?</dt><span>IIoT handlar lika mycket om kommunikation som om sensorer: vem frågar, vem skickar och i vilket format.</span></div>
+    <div><dt>Hur?</dt><span>Byt metod och endpoint och läs förfrågan och svaret. Utlös sedan en händelse och jämför formaten.</span></div>
+    <div><dt>Observera</dt><span>Vad skiljer GET från POST? Varför är en webhook inte ett anrop du gör? Vilket format passar stora datamängder?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna välja metod, förklara en webhook och motivera ett dataformat.</span></div>
+  </dl>
+  
+<div class="grid2">
+  <div class="card">
+    <h4 style="margin-top:0">Ett API-anrop, steg för steg</h4>
+    <label class="field" for="api-m">Metod</label>
+    <select id="api-m"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option></select>
+    <label class="field" for="api-e">Endpoint</label>
+    <select id="api-e">
+      <option value="ip">/v1/ip/203.0.113.42</option>
+      <option value="alerts">/v1/alerts</option>
+      <option value="alert">/v1/alerts/1042</option>
+    </select>
+    <label class="field" for="api-a">Autentisering</label>
+    <select id="api-a"><option value="key">API-nyckel i header</option><option value="oauth">OAuth 2.0 (Bearer-token)</option></select>
+    <div class="actions"><button type="button" id="api-send">Skicka (simulerat)</button><button type="button" class="ghost" id="api-reset">Återställ</button></div>
+    <p class="hint" id="api-methodnote"></p>
+    <pre class="code" id="api-req" aria-label="Simulerad HTTP-förfrågan"></pre>
+    <pre class="code" id="api-res" aria-label="Simulerat HTTP-svar"></pre>
+    <p class="hint" id="api-note"></p>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Webhook – när något händer</h4>
+    <p>En webhook är inte ett anrop du gör. Det är en adress du registrerar, och som tjänsten skickar till <b>när en händelse inträffar</b>.</p>
+    <div class="actions"><button type="button" id="wh-fire">Låt en säkerhetshändelse inträffa</button></div>
+    <pre class="code" id="wh-out">Ingen händelse ännu.</pre>
+    <p class="hint">Svaret måste vara snabbt (ofta under några sekunder) och tåla att samma händelse levereras igen. Kontrollera signaturen så att inte vem som helst kan skicka falska händelser.</p>
+  </div>
+</div>
+<div class="card">
+  <h4 style="margin-top:0">Dataformat – samma innehåll, olika fil</h4>
+  <ul class="chips2" id="fmt-tabs">
+    <li><button type="button" data-fmt="csv" aria-pressed="true">CSV</button></li>
+    <li><button type="button" data-fmt="json" aria-pressed="false">JSON</button></li>
+    <li><button type="button" data-fmt="db" aria-pressed="false">SQLite .db</button></li>
+    <li><button type="button" data-fmt="parquet" aria-pressed="false">Parquet</button></li>
+  </ul>
+  <div id="fmt-info"></div>
+</div>
+
+</article>
+
+    <section class="card" id="quiz">
+      <noscript><p class="warn">Quizet kräver JavaScript.</p></noscript>
+    </section>
+  </section>
+  <section id="panel-grp" role="tabpanel" aria-labelledby="tab-grp" tabindex="0" hidden>
+
+<h2>Uppgift 4 – Tryckgivaren i fabriken</h2>
+<div class="task">
+  <h3><span class="no">Gruppuppgift</span> Värdet stiger – vad gör ni?</h3>
+  <p>Kl. 03:12 stiger trycket i en ledning från 5,0 till 7,6 bar på tjugo minuter. Givaren skickar
+  data till en IIoT-plattform. Systemet har behörighet att stänga en ventil automatiskt.
+  Ni är nattens säkerhetsteam och måste fatta tre beslut tillsammans.</p>
+  <dl class="brief">
+    <div><dt>Tid</dt><span>15 minuter beslut, 5 minuter redovisning.</span></div>
+    <div><dt>Roller</dt><span>Ordförande, skeptiker, sekreterare, rapportör.</span></div>
+    <div><dt>Krav</dt><span>Ett gemensamt beslut per fråga – och en mening om varför.</span></div>
+  </dl>
+</div>
+
+<div class="card">
+  <label class="field" for="g-1">1. Vad gör ni med larmet?</label>
+  <select id="g-1">
+    <option value="wait">Väntar – ett enstaka värde kan vara en givarfel</option>
+    <option value="verify" selected>Kontrollerar en annan givare och larmar drifttekniker</option>
+    <option value="stop">Stoppar linjen direkt</option>
+  </select>
+
+  <label class="field" for="g-2">2. Vilken data skickas till molnet?</label>
+  <select id="g-2">
+    <option value="all">Allt: rådata, operatörsnamn och ljud från lokalen</option>
+    <option value="agg" selected>Mätvärden, tidsstämpel, enhets-ID och status</option>
+    <option value="min">Bara ett medelvärde per timme</option>
+  </select>
+
+  <label class="field" for="g-3">3. Får systemet stänga ventilen själv?</label>
+  <select id="g-3">
+    <option value="auto">Ja, direkt – snabbast möjliga skydd</option>
+    <option value="approve" selected>Ja, men bara efter godkännande av drifttekniker</option>
+    <option value="no">Nej, aldrig</option>
+  </select>
+
+  <div class="actions"><button type="button" id="g-run">Visa konsekvenser</button></div>
+  <div id="g-out" aria-live="polite"></div>
+</div>
+
+<h3>Redovisa på 2 minuter</h3>
+<ol>
+  <li>Vilka tre beslut tog ni – och vilket var svårast?</li>
+  <li>Vad kostar ett onödigt stopp jämfört med en läcka?</li>
+  <li>Vilken data hade ni velat ha som ni inte fick?</li>
+</ol>
+
+  </section>
+  <section id="panel-fac" role="tabpanel" aria-labelledby="tab-fac" tabindex="0" hidden>
+    <div class="facitbar">
+      <button type="button" id="facOpenAll">Öppna alla facit</button>
+      <button type="button" class="ghost" id="facCloseAll">Fäll ihop alla</button>
+      <span class="hint">Facit kan öppnas när som helst – du behöver inte svara först.</span>
+    </div>
+
+<p>Öppna en uppgift i taget. Jämför med ditt eget svar innan du läser vidare.</p>
+<div id="facit-lista"></div>
+
+<h2>Att ta med sig</h2>
+<ul>
+  <li><b>Säkerhet före produktion när människor kan skadas.</b> Ett stopp kostar pengar; en läcka kan kosta hälsa och miljö.</li>
+  <li><b>Ett värde är inte en händelse.</b> Jämför med en annan givare eller med historiken innan ni agerar.</li>
+  <li><b>Skicka inte mer data än uppgiften kräver.</b> Operatörsnamn och ljud är personuppgifter och ökar attackytan.</li>
+  <li><b>Automatik behöver en gräns.</b> Ventilen får stängas automatiskt om det skyddar, men någon ska veta varför det hände.</li>
+</ul>
+
+  </section>
+
+<script>(function(){if(!window.CanvasRenderingContext2D||!CanvasRenderingContext2D.prototype||CanvasRenderingContext2D.prototype.roundRect)return;
+CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){r=Math.min(typeof r==="number"?r:0,w/2,h/2);
+this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);
+this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this;};})();</script>
+<section class="lab" id="lab-extra-2" aria-labelledby="lab2-h">
+  <p class="lab-eyebrow">Extra labb · avancerad grafik · M2M och IIoT</p>
+  <h2 id="lab2-h">Fabriksgolvet – när maskinerna pratar för mycket</h2>
+  <p class="lab-lead">Maskinerna skickar mätvärden till en gateway. Öka antalet enheter och hur ofta de rapporterar, och se vad som händer med svarstid, kö och bortfall. Det här är samma avvägning som en riktig IIoT-installation gör varje dag.</p>
+  <div class="lab-shell">
+    <div class="lab-stage">
+      <canvas id="lab2cv" width="960" height="520" role="img" aria-label="Fabriksgolv där maskiner skickar datapaket till en gateway"></canvas>
+      <div class="lab-hud">
+        <span>Meddelanden/s <b id="lab2rate">0</b></span>
+        <span>Svarstid <b id="lab2lat">0 ms</b></span>
+        <span>Kö <b id="lab2q">0</b></span>
+        <span>Tappat <b id="lab2drop">0 %</b></span>
+      </div>
+    </div>
+    <div class="lab-side">
+      <div class="lab-card">
+        <label for="lab2dev">Antal enheter <output id="lab2devv">4</output></label>
+        <input type="range" id="lab2dev" min="2" max="10" value="4">
+        <label for="lab2freq">Rapporter per sekund och enhet <output id="lab2freqv">2</output></label>
+        <input type="range" id="lab2freq" min="1" max="12" value="2">
+        <label for="lab2delay">Nätets grundfördröjning <output id="lab2delayv">40 ms</output></label>
+        <input type="range" id="lab2delay" min="10" max="300" step="10" value="40">
+        <div class="actions">
+          <button type="button" id="lab2run">Pausa</button>
+          <button type="button" class="ghost" id="lab2clear">Nollställ</button>
+        </div>
+      </div>
+      <div class="lab-card">
+        <b>Gatewayens kö</b>
+        <div class="lab-bar"><span id="lab2bar"></span></div>
+        <div class="readout" id="lab2read"></div>
+        <div class="verdict good" id="lab2verdict">Nätet hänger med.</div>
+      </div>
+      <div class="lab-card lab-q">
+        <b>Diskutera i par</b>
+        <ul>
+          <li>Vilken faktor drev upp svarstiden mest – antal enheter eller rapporter per sekund?</li>
+          <li>Vad är rimligast i en fabrik: rapportera varje sekund eller var tionde?</li>
+          <li>Vad händer med styrningen om ett mätvärde kommer fram för sent?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <details class="lab-how">
+    <summary>Så gör du – 10 min individuellt, 15 min i grupp</summary>
+    <ol>
+      <li>Börja med 4 enheter och 2 rapporter/s. Läs av svarstid och kö.</li>
+      <li>Dubbla antalet enheter. Vad händer? Dubbla sedan frekvensen i stället.</li>
+      <li>Höj nätets fördröjning till 200 ms. Jämför med att bara ha många enheter.</li>
+      <li>Hitta den kombination där nätet börjar tappa meddelanden och skriv ner varför.</li>
+    </ol>
+  </details>
+</section>
+<script>
+(function(){
+  var cv=document.getElementById("lab2cv"),cx=cv.getContext("2d");
+  var W=960,H=520,$=function(i){return document.getElementById(i)};
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var st={n:4,freq:2,delay:40,run:true,q:0,drops:0,sent:0,got:0,pk:[],t:0,flash:0,hist:[],acc:0};
+  var GW={x:790,y:250},CAP=18,QMAX=55;
+
+  function machines(){
+    var a=[],i,n=st.n,top=70,bot=H-70;
+    for(i=0;i<n;i++){
+      var y=n===1?(top+bot)/2:top+(bot-top)*i/(n-1);
+      a.push({x:130,y:y,ph:Math.random()*6.28,hue:180+((i*37)%120)});
+    }
+    return a;
+  }
+  function spawn(m){
+    st.pk.push({x:m.x,y:m.y,t:0,dur:1.0+st.delay/620,ax:m.x,ay:m.y,hue:m.hue});
+    st.sent++;
+  }
+  function step(dt){
+    st.t+=dt;
+    if(!st.run)return;
+    var ms=machines(),i,rate=st.freq*st.n;
+    st.acc+=dt*rate;
+    while(st.acc>=1){st.acc-=1;spawn(ms[Math.floor(Math.random()*ms.length)]);}
+    // serve
+    var served=Math.min(st.q,CAP*dt);
+    st.q-=served;
+    for(i=st.pk.length-1;i>=0;i--){
+      var p=st.pk[i];p.t+=dt/p.dur;
+      if(p.t>=1){
+        st.pk.splice(i,1);
+        if(st.q<QMAX){st.q+=1;st.got++;}else{st.drops++;st.flash=0.5;}
+      }
+    }
+    if(st.q<0)st.q=0;
+    st.hist.push(st.q);if(st.hist.length>120)st.hist.shift();
+  }
+
+  function draw(){
+    var i,ms=machines(),t=st.t;
+    var g=cx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0,"#060d18");g.addColorStop(1,"#0a1626");
+    cx.fillStyle=g;cx.fillRect(0,0,W,H);
+
+    // golv
+    cx.strokeStyle="rgba(90,150,230,.10)";cx.lineWidth=1;
+    for(i=0;i<12;i++){var y=40+i*40;cx.beginPath();cx.moveTo(40,y);cx.lineTo(W-40,y);cx.stroke();}
+    for(i=0;i<22;i++){var x=40+i*40;cx.beginPath();cx.moveTo(x,40);cx.lineTo(x,H-40);cx.stroke();}
+
+    // linjer maskin -> gateway
+    for(i=0;i<ms.length;i++){
+      var m=ms[i];
+      cx.beginPath();cx.moveTo(m.x+26,m.y);
+      cx.quadraticCurveTo((m.x+GW.x)/2,m.y-40,GW.x-34,GW.y);
+      cx.strokeStyle="rgba(110,190,255,.16)";cx.lineWidth=1.6;cx.stroke();
+    }
+
+    // maskiner
+    for(i=0;i<ms.length;i++){
+      var mm=ms[i],pulse=1+Math.sin(t*3+i)*0.06;
+      cx.save();cx.translate(mm.x,mm.y);
+      cx.shadowColor="hsla("+mm.hue+",90%,60%,.85)";cx.shadowBlur=18;
+      cx.fillStyle="rgba(14,32,52,.95)";
+      cx.strokeStyle="hsla("+mm.hue+",90%,62%,.9)";cx.lineWidth=2;
+      cx.beginPath();cx.roundRect(-26* pulse,-20,52,40,7);cx.fill();cx.stroke();
+      cx.shadowBlur=0;
+      cx.fillStyle="hsla("+mm.hue+",90%,70%,.95)";
+      cx.beginPath();cx.arc(-14,0,4,0,6.284);cx.fill();
+      cx.fillStyle="rgba(190,220,255,.55)";
+      cx.fillRect(-2,-9,18,3);cx.fillRect(-2,-2,12,3);cx.fillRect(-2,5,16,3);
+      cx.restore();
+    }
+
+    // gateway
+    cx.save();cx.translate(GW.x,GW.y);
+    for(i=0;i<3;i++){
+      var rr=40+i*22+((t*26+i*20)%44);
+      cx.beginPath();cx.arc(0,0,rr,0,6.284);
+      cx.strokeStyle="rgba(90,210,255,"+(0.16*(1-((rr-40)/90)))+")";cx.lineWidth=1.4;cx.stroke();
+    }
+    cx.shadowColor="rgba(90,210,255,.95)";cx.shadowBlur=24;
+    cx.beginPath();
+    for(i=0;i<6;i++){var a=Math.PI/6+i*Math.PI/3,x=Math.cos(a)*34,y=Math.sin(a)*34;i?cx.lineTo(x,y):cx.moveTo(x,y);}
+    cx.closePath();cx.fillStyle="rgba(16,44,70,.98)";cx.fill();
+    cx.strokeStyle="#6fdcff";cx.lineWidth=2.4;cx.stroke();cx.shadowBlur=0;
+    cx.fillStyle="#a9ecff";cx.font="700 11px system-ui,Segoe UI,Arial";cx.textAlign="center";
+    cx.fillText("GATEWAY",0,4);cx.textAlign="left";
+    cx.restore();
+
+    // paket
+    for(i=0;i<st.pk.length;i++){
+      var p=st.pk[i],e=p.t,u=1-e;
+      var X=u*u*p.ax+2*u*e*((p.ax+GW.x)/2)+e*e*(GW.x-34);
+      var Y=u*u*p.ay+2*u*e*(p.ay-40)+e*e*GW.y;
+      cx.beginPath();cx.arc(X,Y,3.2,0,6.284);
+      cx.fillStyle="hsla("+p.hue+",95%,72%,.95)";
+      cx.shadowColor="hsla("+p.hue+",95%,70%,.9)";cx.shadowBlur=12;cx.fill();cx.shadowBlur=0;
+      cx.beginPath();cx.arc(X,Y,7,0,6.284);
+      cx.strokeStyle="hsla("+p.hue+",95%,70%,.20)";cx.lineWidth=1;cx.stroke();
+    }
+
+    // kö vid gateway
+    var qn=Math.min(24,Math.round(st.q));
+    for(i=0;i<qn;i++){
+      var qx=GW.x-52-((i%6)*11),qy=GW.y-58+Math.floor(i/6)*11;
+      cx.fillStyle="rgba(255,196,90,.85)";cx.fillRect(qx,qy,6,6);
+    }
+    if(st.flash>0){
+      cx.fillStyle="rgba(255,60,60,"+(st.flash*0.5)+")";cx.fillRect(0,0,W,H);st.flash-=0.03;
+    }
+
+    // minidiagram
+    cx.strokeStyle="rgba(120,220,255,.75)";cx.lineWidth=1.6;cx.beginPath();
+    for(i=0;i<st.hist.length;i++){
+      var hx=W-260+i*2,hy=H-30-st.hist[i]*(70/QMAX);
+      i?cx.lineTo(hx,hy):cx.moveTo(hx,hy);
+    }
+    cx.stroke();
+    cx.fillStyle="rgba(160,200,240,.6)";cx.font="10px system-ui,Segoe UI,Arial";
+    cx.fillText("kö över tid",W-262,H-92);
+
+    readout();
+  }
+
+  function readout(){
+    var lat=Math.round(st.delay+st.q*26);
+    var drop=st.sent?Math.min(100,Math.round(st.drops/st.sent*1000)/10):0;
+    $("lab2rate").textContent=(st.n*st.freq).toFixed(0);
+    $("lab2lat").textContent=lat+" ms";
+    $("lab2q").textContent=Math.round(st.q);
+    $("lab2drop").textContent=drop.toFixed(1).replace(".",",")+" %";
+    var pct=Math.min(100,st.q/QMAX*100);
+    $("lab2bar").style.width=pct+"%";
+    $("lab2bar").style.background=pct>80?"#ff6b6b":pct>45?"#ffc45a":"#38e1c4";
+    var v=$("lab2verdict");
+    if(drop>2||pct>80){v.className="verdict bad";v.textContent="Överbelastning: gatewayen hinner inte, meddelanden tappas.";}
+    else if(pct>45){v.className="verdict mid";v.textContent="På gränsen: kön växer och svarstiden stiger.";}
+    else{v.className="verdict good";v.textContent="Nätet hänger med – svarstiden är stabil.";}
+    $("lab2read").innerHTML="<b>"+(st.n*st.freq).toFixed(0)+"</b> meddelanden/s mot en gateway som klarar ungefär <b>18/s</b>. "+
+      "Svarstid <b>"+lat+" ms</b>, kö <b>"+Math.round(st.q)+"</b>, tappat <b>"+drop.toFixed(1).replace(".",",")+" %</b>.";
+  }
+
+  function loop(ts){
+    var now=ts||performance.now();
+    if(!loop.last)loop.last=now;
+    var dt=Math.min(0.05,(now-loop.last)/1000);loop.last=now;
+    if(!reduce)step(dt);else if(st.run){step(0.016);}
+    draw();requestAnimationFrame(loop);
+  }
+
+  $("lab2dev").addEventListener("input",function(){st.n=+this.value;$("lab2devv").textContent=this.value;});
+  $("lab2freq").addEventListener("input",function(){st.freq=+this.value;$("lab2freqv").textContent=this.value;});
+  $("lab2delay").addEventListener("input",function(){st.delay=+this.value;$("lab2delayv").textContent=this.value+" ms";});
+  $("lab2run").addEventListener("click",function(){st.run=!st.run;this.textContent=st.run?"Pausa":"Kör";});
+  $("lab2clear").addEventListener("click",function(){st.q=0;st.drops=0;st.sent=0;st.got=0;st.pk=[];st.hist=[];st.acc=0;});
+  loop();
+})();
+</script>
+
+</main>
+
+
+<script>
+var WS=(function(){
+"use strict";
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(n,d){if(!isFinite(n))return "\u2013";return n.toFixed(d==null?2:d).replace(".",",")}
+function num(v){return Number(String(v).replace(",","."))}
+
+/* ---------- flikar ---------- */
+function initTabs(){
+  var btns=$$('.tabs [role="tab"]');
+  if(!btns.length)return;
+  function show(id,setHash){
+    btns.forEach(function(b){
+      var on=b.getAttribute("data-panel")===id;
+      b.setAttribute("aria-selected",on?"true":"false");
+      b.tabIndex=on?0:-1;
+    });
+    $$('[role="tabpanel"]').forEach(function(p){p.hidden=p.id!=="panel-"+id});
+    if(setHash){try{history.replaceState(null,"","#"+id)}catch(e){}}
+  }
+  btns.forEach(function(b,i){
+    b.addEventListener("click",function(){show(b.getAttribute("data-panel"),true)});
+    b.addEventListener("keydown",function(e){
+      var n=null;
+      if(e.key==="ArrowRight")n=(i+1)%btns.length;
+      if(e.key==="ArrowLeft")n=(i-1+btns.length)%btns.length;
+      if(e.key==="Home")n=0;
+      if(e.key==="End")n=btns.length-1;
+      if(n!==null){e.preventDefault();btns[n].focus();show(btns[n].getAttribute("data-panel"),true)}
+    });
+  });
+  var h=(location.hash||"").replace("#","");
+  var ok=btns.some(function(b){return b.getAttribute("data-panel")===h});
+  show(ok?h:"ind",false);
+}
+
+/* ---------- timer ---------- */
+function initTimer(){
+  var box=$("#timer"); if(!box)return;
+  var total=(parseInt(box.getAttribute("data-minutes"),10)||60)*60;
+  var left=total,id=null;
+  var out=$("#tOut"),st=$("#tStart"),rs=$("#tReset");
+  function paint(){
+    var m=Math.floor(left/60),s=left%60;
+    out.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    box.classList.toggle("low",left>0&&left<=300);
+  }
+  function stop(){
+    if(id){clearInterval(id);id=null}
+    st.textContent=left===0?"Klar":"Forts\u00e4tt";
+    st.setAttribute("aria-pressed","false");
+  }
+  st.addEventListener("click",function(){
+    if(id){stop();return}
+    if(left===0){left=total;box.classList.remove("done");paint()}
+    id=setInterval(function(){
+      if(left>0){left--;paint()}
+      if(left===0){stop();box.classList.add("done");st.textContent="Klar"}
+    },1000);
+    st.textContent="Pausa";st.setAttribute("aria-pressed","true");
+  });
+  rs.addEventListener("click",function(){
+    stop();left=total;box.classList.remove("done");paint();st.textContent="Start";
+  });
+  paint();
+}
+
+/* ---------- quiz ---------- */
+function quiz(host,cfg){
+  if(!host)return;
+  var qs=cfg.questions||[];
+  host.innerHTML="";
+  var h=document.createElement("h3");h.textContent=cfg.title||"Avslutande kunskapskontroll";host.appendChild(h);
+  if(cfg.hint){var p=document.createElement("p");p.className="hint";p.textContent=cfg.hint;host.appendChild(p)}
+  var answered=0,right=0;
+  var status=document.createElement("p");status.className="quizsum";
+  var retry=document.createElement("button");
+  retry.type="button";retry.className="ghost";retry.textContent="G\u00f6r om quizet";retry.hidden=true;
+  retry.addEventListener("click",function(){quiz(host,cfg);host.scrollIntoView({block:"center"})});
+  qs.forEach(function(q,i){
+    var wrap=document.createElement("div");wrap.className="q";
+    var qt=document.createElement("p");qt.className="qt";qt.textContent=(i+1)+". "+q.text;wrap.appendChild(qt);
+    var opts=document.createElement("div");opts.className="opts";wrap.appendChild(opts);
+    var fb=document.createElement("p");fb.className="fb";fb.hidden=true;wrap.appendChild(fb);
+    q.options.forEach(function(o,j){
+      var b=document.createElement("button");b.type="button";b.className="opt";
+      b.innerHTML='<span class="k">'+String.fromCharCode(65+j)+'</span><span>'+esc(o)+'</span>';
+      b.addEventListener("click",function(){
+        if(wrap.getAttribute("data-done")==="1")return;
+        wrap.setAttribute("data-done","1");answered++;
+        $$(".opt",opts).forEach(function(x,k){x.disabled=true;if(k===q.answer)x.classList.add("correct")});
+        var good=j===q.answer;
+        if(good){right++}else{b.classList.add("wrong")}
+        fb.hidden=false;fb.className="fb "+(good?"ok":"bad");
+        fb.innerHTML="<b>"+(good?"R\u00e4tt.":"Fel.")+"</b> "+esc(q.why||"");
+        if(!good){var s=document.createElement("span");s.className="whynot";s.textContent="R\u00e4tt svar: "+q.options[q.answer]+".";fb.appendChild(s)}
+        status.textContent=answered+" av "+qs.length+" besvarade \u00b7 "+right+" r\u00e4tt";
+        if(answered===qs.length){
+          status.innerHTML="<b>Resultat: "+right+" av "+qs.length+" r\u00e4tt.</b> "+(right===qs.length?"Mycket bra \u2013 du kan begreppen.":"L\u00e4s f\u00f6rklaringarna och g\u00f6r om quizet om du vill.");
+          retry.hidden=false;
+        }
+      });
+      opts.appendChild(b);
+    });
+    host.appendChild(wrap);
+  });
+  status.textContent="0 av "+qs.length+" besvarade";
+  host.appendChild(status);
+  host.appendChild(retry);
+}
+
+/* ---------- klassificering med dropdown ---------- */
+function classify(host,cfg){
+  if(!host)return;
+  var rows=cfg.rows||[],opts=cfg.options||[];
+  var t=document.createElement("table");
+  t.innerHTML='<thead><tr><th scope="col">'+esc(cfg.col1||"System")+'</th><th scope="col">'+esc(cfg.col2||"Din bed\u00f6mning")+'</th></tr></thead>';
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  rows.forEach(function(r){
+    var tr=document.createElement("tr");
+    var td=document.createElement("td");td.textContent=r.text;
+    var note=document.createElement("div");note.className="rownote";note.hidden=true;td.appendChild(note);
+    var td2=document.createElement("td");
+    var sel=document.createElement("select");
+    sel.setAttribute("aria-label","Bed\u00f6mning f\u00f6r: "+r.text);
+    sel.innerHTML='<option value="">\u2013 v\u00e4lj \u2013</option>'+opts.map(function(o,i){return '<option value="'+i+'">'+esc(o)+'</option>'}).join("");
+    td2.appendChild(sel);tr.appendChild(td);tr.appendChild(td2);tb.appendChild(tr);
+  });
+  var btn=document.createElement("button");btn.type="button";btn.textContent=cfg.btn||"Kontrollera mina svar";
+  var out=document.createElement("p");out.className="fb";
+  btn.addEventListener("click",function(){
+    var ok=0,missing=0;
+    Array.prototype.forEach.call(tb.rows,function(tr,i){
+      var sel=$("select",tr),v=sel.value===""?null:Number(sel.value);
+      var good=v===rows[i].correct;if(good){ok++}if(v===null){missing++}
+      tr.classList.toggle("good",good);tr.classList.toggle("bad",!good&&v!==null);
+      var n=$(".rownote",tr);
+      if(n){n.hidden=false;n.innerHTML="<b>"+(good?"R\u00e4tt":(v===null?"Inget val":"R\u00e4tt svar: "+esc(opts[rows[i].correct])))+"</b> "+(rows[i].note||"")}
+    });
+    out.className="fb show "+(ok===rows.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+rows.length+" r\u00e4tt.</b> "+(ok===rows.length?"Bra \u2013 du ser m\u00f6nstret.":"L\u00e4s radens f\u00f6rklaring och justera"+(missing?" ("+missing+" rad(er) utan val)":"")+".");
+  });
+  host.appendChild(t);host.appendChild(btn);host.appendChild(out);
+}
+
+/* ---------- tabell med sortering och filter ---------- */
+function sortTable(host,cfg){
+  if(!host)return;
+  var cols=cfg.cols||[],rows=(cfg.rows||[]).slice();
+  var wrap=document.createElement("div");wrap.className="tablewrap";
+  var filter=null;
+  if(cfg.filter){
+    filter=document.createElement("input");filter.type="search";filter.className="filter";
+    filter.placeholder=cfg.filterPlaceholder||"Filtrera \u2026";
+    filter.setAttribute("aria-label","Filtrera tabellen");
+    wrap.appendChild(filter);
+  }
+  var t=document.createElement("table");
+  var thead=document.createElement("thead"),htr=document.createElement("tr");
+  cols.forEach(function(c,i){
+    var th=document.createElement("th");th.scope="col";th.setAttribute("data-i",i);th.tabIndex=0;
+    th.innerHTML=esc(c)+' <span class="arrow" aria-hidden="true">\u2195</span>';
+    function sort(){
+      var dir=th.getAttribute("data-dir")==="asc"?"desc":"asc";th.setAttribute("data-dir",dir);
+      rows.sort(function(a,b){
+        var x=a[i],y=b[i];
+        var nx=parseFloat(String(x).replace(/\s/g,"").replace(",",".")),ny=parseFloat(String(y).replace(/\s/g,"").replace(",","."));
+        var both=isFinite(nx)&&isFinite(ny)&&String(x).replace(/[^0-9]/g,"")!==""&&String(y).replace(/[^0-9]/g,"")!=="";
+        if(both)return dir==="asc"?nx-ny:ny-nx;
+        return dir==="asc"?String(x).localeCompare(String(y),"sv"):String(y).localeCompare(String(x),"sv");
+      });
+      render();
+    }
+    th.addEventListener("click",sort);
+    th.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();sort()}});
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr);t.appendChild(thead);
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  function render(){
+    tb.innerHTML="";
+    var q=filter?filter.value.toLowerCase():"";
+    rows.forEach(function(r){
+      if(q&&r.join(" ").toLowerCase().indexOf(q)<0)return;
+      var tr=document.createElement("tr");
+      r.forEach(function(c){var td=document.createElement("td");td.innerHTML=c;tr.appendChild(td)});
+      tb.appendChild(tr);
+    });
+  }
+  wrap.appendChild(t);host.appendChild(wrap);
+  if(filter)filter.addEventListener("input",render);
+  render();
+}
+
+/* ---------- stapeldiagram ---------- */
+function bars(host,items,opt){
+  if(!host)return;
+  opt=opt||{};host.innerHTML="";
+  var max=opt.max||Math.max.apply(null,items.map(function(i){return Math.abs(i.value)}).concat([1]));
+  var box=document.createElement("div");box.className="bars";
+  items.forEach(function(it){
+    var row=document.createElement("div");row.className="barrow"+(it.tone?" "+it.tone:"");
+    var pct=Math.max(0,Math.min(100,Math.abs(it.value)/max*100));
+    row.innerHTML='<span class="bl">'+esc(it.label)+'</span><span class="btrack"><span class="bfill" style="width:'+pct.toFixed(1)+'%"></span></span><span class="bv">'+esc(it.display!=null?it.display:it.value)+'</span>';
+    box.appendChild(row);
+  });
+  host.appendChild(box);
+  if(opt.caption){var p=document.createElement("p");p.className="hint";p.textContent=opt.caption;host.appendChild(p)}
+}
+
+/* ---------- linjediagram i ren SVG ---------- */
+function line(host,cfg){
+  if(!host)return;
+  var W=560,H=250,L=46,R=14,T=14,B=34;
+  var maxY=cfg.maxY||1,maxX=cfg.maxX||1;
+  function X(v){return L+(v/maxX)*(W-L-R)}
+  function Y(v){return H-B-(v/maxY)*(H-T-B)}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="chart" role="img" aria-label="'+esc(cfg.label||"Diagram")+'">';
+  for(var i=0;i<=4;i++){
+    var y=T+i*(H-T-B)/4;
+    s+='<line class="grid" x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'"/>';
+    s+='<text class="ax" x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+fmt(maxY*(1-i/4),maxY<=1?1:0)+'</text>';
+  }
+  (cfg.xTicks||[0,0.5,1]).forEach(function(t){
+    s+='<text class="ax" x="'+X(t*maxX)+'" y="'+(H-12)+'" text-anchor="middle">'+fmt(t*maxX,0)+'</text>';
+  });
+  (cfg.hlines||[]).forEach(function(hl){
+    s+='<line x1="'+L+'" y1="'+Y(hl.y).toFixed(1)+'" x2="'+(W-R)+'" y2="'+Y(hl.y).toFixed(1)+'" stroke="'+hl.color+'" stroke-width="1.5" stroke-dasharray="5 4"><title>'+esc(hl.label||"")+'</title></line>';
+  });
+  (cfg.series||[]).forEach(function(ser){
+    var pts=ser.points.map(function(p){return X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)}).join(" ");
+    if(!ser.onlyDots){s+='<polyline points="'+pts+'" fill="none" stroke="'+ser.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';}
+    if(ser.dots){ser.points.forEach(function(p){
+      s+='<circle cx="'+X(p[0]).toFixed(1)+'" cy="'+Y(p[1]).toFixed(1)+'" r="3.5" fill="'+ser.color+'"><title>'+esc(ser.name)+": "+fmt(p[1],2)+'</title></circle>';
+    })}
+    if(ser.fill){
+      s+='<polygon points="'+X(ser.points[0][0]).toFixed(1)+','+Y(0)+' '+pts+' '+X(ser.points[ser.points.length-1][0]).toFixed(1)+','+Y(0)+'" fill="'+ser.color+'" opacity="0.08"/>';
+    }
+  });
+  if(cfg.xLabel)s+='<text class="lbl" x="'+(L+(W-L-R)/2)+'" y="'+(H-1)+'" text-anchor="middle">'+esc(cfg.xLabel)+'</text>';
+  s+="</svg>";
+  host.innerHTML=s;
+  if((cfg.series||[]).length){
+    var ul=document.createElement("ul");ul.className="legend";
+    cfg.series.forEach(function(ser){var li=document.createElement("li");li.innerHTML='<i style="background:'+ser.color+'"></i>'+esc(ser.name);ul.appendChild(li)});
+    host.appendChild(ul);
+  }
+}
+
+/* ---------- confusion matrix ---------- */
+function cm(host,c){
+  if(!host)return;
+  host.innerHTML='<div class="cm">'+
+    '<div class="cmh"></div><div class="cmh">Modellen larmar</div><div class="cmh">Modellen \u00e4r tyst</div>'+
+    '<div class="cmh">Verkligt hot</div><div class="cell tp"><b>'+c.tp+'</b><span>TP \u2013 f\u00e5ngat hot</span></div><div class="cell fn"><b>'+c.fn+'</b><span>FN \u2013 missat hot</span></div>'+
+    '<div class="cmh">Verkligt normalt</div><div class="cell fp"><b>'+c.fp+'</b><span>FP \u2013 falsklarm</span></div><div class="cell tn"><b>'+c.tn+'</b><span>TN \u2013 korrekt tyst</span></div>'+
+    '</div>';
+}
+
+/* ---------- sm\u00e5hj\u00e4lp ---------- */
+function metric(tp,fp,fn){
+  var p=tp+fp?tp/(tp+fp):0, r=tp+fn?tp/(tp+fn):0;
+  return {precision:p,recall:r,f1:(p+r)?2*p*r/(p+r):0};
+}
+function riskLabel(v,lo,hi){
+  var t=v<lo?"low":(v<hi?"mid":"high");
+  var txt=t==="low"?"L\u00e5g risk":(t==="mid"?"Medelrisk":"H\u00f6g risk");
+  return '<span class="riskbadge '+t+'">'+txt+"</span>";
+}
+function facit(host,items){
+  if(!host)return;
+  items.forEach(function(f){
+    var d=document.createElement("details");
+    d.innerHTML="<summary>"+f[0]+"</summary>"+f[1];
+    host.appendChild(d);
+  });
+}
+function init(){initTabs();initTimer()}
+return {$,$$,esc,fmt,num,quiz,classify,sortTable,bars,line,cm,metric,riskLabel,facit,init:init};
+})();
+(function(){
+  var open=document.getElementById("facOpenAll"),close=document.getElementById("facCloseAll");
+  function all(v){Array.prototype.forEach.call(document.querySelectorAll("#panel-fac details"),function(d){d.open=v})}
+  if(open)open.addEventListener("click",function(){all(true)});
+  if(close)close.addEventListener("click",function(){all(false)});
+})();
+</script>
+
+
+<script>
+(function(){
+  WS.classify(document.getElementById("u1-klass"),{
+    col1:"Exempel",col2:"Typ",
+    options:["M2M","IIoT","Varken M2M eller IIoT"],
+    rows:[
+      {text:"Tv\u00e5 maskiner utbyter status direkt, utan m\u00e4nniska och utan moln",correct:0,note:"Direkt mellan enheter \u2013 klassiskt M2M."},
+      {text:"Sensorer fr\u00e5n m\u00e5nga fabriker skickar data till en molntj\u00e4nst",correct:1,note:"Industriella enheter \u00f6ver n\u00e4t och moln \u2013 IIoT."},
+      {text:"En tryckgivare skickar ett v\u00e4rde varje sekund till en lokal styrenhet",correct:0,note:"Lokal punkt-till-punkt-kommunikation."},
+      {text:"Underh\u00e5llsprediktion bygger p\u00e5 data fr\u00e5n tusentals uppkopplade enheter",correct:1,note:"Storskalig analys \u00e4r IIoT:s po\u00e4ng."},
+      {text:"En kontorsrouter kopplar ihop skrivare och datorer",correct:2,note:"Vanligt n\u00e4tverk \u2013 ingen maskin-till-maskin-logik i sak."},
+      {text:"Transportsystemet h\u00e4mtar material n\u00e4r lagret signalerar slut",correct:0,note:"Tv\u00e5 system som styr varandra, ofta lokalt."}
+    ]
+  });
+})();
+
+(function(){
+  var host=document.getElementById("u2-sim");
+  if(!host)return;
+  var S={
+    temp:{label:"Temperatur",unit:"\u00b0C",dec:0,
+      v:[68,69,67,68,70,69,68,67,68,69,70,69,68,68,69,70,69,68,67,68,86,91,88,72]},
+    vib:{label:"Vibration",unit:"mm/s",dec:0,
+      v:[12,11,13,12,12,14,13,12,11,12,13,12,14,13,12,12,13,12,11,12,13,14,29,18]},
+    press:{label:"Tryck",unit:"bar",dec:1,
+      v:[4.9,5.0,4.8,4.9,5.0,4.9,5.1,5.0,4.9,4.8,5.0,5.1,4.9,5.0,5.0,4.9,4.8,5.0,5.1,5.0,4.9,5.0,4.8,7.6]}
+  };
+  host.innerHTML='<div class="card">'+
+    '<label class="field" for="sens">V\u00e4lj sensor</label>'+
+    '<select id="sens"><option value="temp">Temperatur (24 timmar)</option>'+
+    '<option value="vib">Vibration (24 timmar)</option>'+
+    '<option value="press">Tryck (24 timmar)</option></select>'+
+    '<label class="field" for="dev">Tr\u00f6skel: <span class="rangeout" id="devv">10</span> % \u00f6ver normalt</label>'+
+    '<input type="range" id="dev" min="3" max="40" value="10" step="1">'+
+    '<p class="hint">Tr\u00f6skeln r\u00e4knas fr\u00e5n sensorns typv\u00e4rde (median). Dra reglaget och se vilka timmar som larmar.</p>'+
+    '<div id="s-chart"></div>'+
+    '<p class="fb" id="s-sum"></p></div>';
+  var sel=document.getElementById("sens"),dev=document.getElementById("dev");
+  function median(arr){var a=arr.slice().sort(function(x,y){return x-y});var m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2}
+  function draw(){
+    var s=S[sel.value],med=median(s.v),t=Number(dev.value),lim=med*(1+t/100);
+    document.getElementById("devv").textContent=t;
+    var alarms=[];s.v.forEach(function(v,i){
+      if(v>lim)alarms.push({x:i,y:v});
+    });
+    var maxY=Math.max.apply(null,s.v)*1.12;
+    WS.line(document.getElementById("s-chart"),{
+      maxY:maxY,maxX:23,xTicks:[0,0.25,0.5,0.75,1],xLabel:"timme p\u00e5 dygnet",
+      label:s.label+" under 24 timmar",hlines:[{y:lim,color:"#a32b1c",label:"tr\u00f6skel "+WS.fmt(lim,1)+" "+s.unit}],
+      series:[
+        {name:s.label+" ("+s.unit+")",color:"#3b1d4e",points:s.v.map(function(v,i){return [i,v]})},
+        {name:"larm",color:"#a32b1c",points:alarms,onlyDots:true,dots:true}
+      ]
+    });
+    var el=document.getElementById("s-sum");el.className="fb show";
+    el.innerHTML="<b>"+alarms.length+" av 24 m\u00e4tv\u00e4rden ligger \u00f6ver tr\u00f6skeln "+WS.fmt(lim,1)+" "+s.unit+".</b> "+
+      (alarms.length?("Tidpunkter: "+alarms.map(function(a){return "kl "+String(a.x).padStart(2,"0")+":00 ("+WS.fmt(a.y,s.dec)+")"}).join(", ")+"."):"Inga larm vid den h\u00e4r tr\u00f6skeln.")+
+      " H\u00f6gsta v\u00e4rdet \u00e4r "+WS.fmt(Math.max.apply(null,s.v),s.dec)+" "+s.unit+".";
+  }
+  sel.addEventListener("change",draw);dev.addEventListener("input",draw);draw();
+})();
+
+(function(){
+  var host=document.getElementById("u3-payload");
+  if(!host)return;
+  var fields=[
+    {id:"ts",label:"Tidsst\u00e4mpel",bytes:12,need:true},
+    {id:"id",label:"Enhets-ID",bytes:16,need:true},
+    {id:"val",label:"M\u00e4tv\u00e4rde",bytes:8,need:true},
+    {id:"st",label:"Statuskod (OK/fel)",bytes:4,need:true},
+    {id:"op",label:"Operat\u00f6rens namn",bytes:24,need:false},
+    {id:"ljud",label:"R\u00e5 ljudfil, 10 sekunder",bytes:160000,need:false},
+    {id:"fab",label:"Fabriksnamn",bytes:20,need:false},
+    {id:"ver",label:"Programvaruversion",bytes:10,need:false}
+  ];
+  host.innerHTML='<div class="card"><p>Ett paket ska skickas fr\u00e5n givaren varje minut. Kryssa f\u00f6r vad som ska ing\u00e5.</p>'+
+    '<div id="p-list"></div><div class="actions"><button type="button" id="p-run">Ber\u00e4kna paketet</button></div>'+
+    '<div id="p-out" aria-live="polite"></div></div>';
+  var list=document.getElementById("p-list");
+  fields.forEach(function(f){
+    var l=document.createElement("label");l.className="checkline";
+    l.innerHTML='<input type="checkbox" id="p-'+f.id+'"'+(f.need?" checked":"")+'><span>'+f.label+' <span class="hint">('+f.bytes+' byte)</span></span>';
+    list.appendChild(l);
+  });
+  function calc(){
+    var bytes=0,missing=[],pii=[];
+    fields.forEach(function(f){
+      var c=document.getElementById("p-"+f.id);
+      if(c.checked){bytes+=f.bytes;if(!f.need&&(f.id==="op"||f.id==="ljud"))pii.push(f.label.toLowerCase())}
+      if(f.need&&!c.checked)missing.push(f.label.toLowerCase());
+    });
+    var out=document.getElementById("p-out");
+    var ok=missing.length===0;
+    out.className="fb show "+(ok?"ok":"bad");
+    out.innerHTML="<b>Paketstorlek: "+bytes.toLocaleString("sv-SE")+" byte per minut</b> ("+
+      WS.fmt(bytes*60/1024,1)+" kB per timme). "+
+      (ok?"Paketet inneh\u00e5ller det modellen beh\u00f6ver f\u00f6r att uppt\u00e4cka en avvikelse.":"Paketet saknar: "+missing.join(", ")+". Utan det kan modellen inte tolka v\u00e4rdet.")+
+      (pii.length?" <b>Varning:</b> du skickar "+pii.join(" och ")+" \u2013 personuppgifter som inte beh\u00f6vs f\u00f6r uppgiften.":"");
+  }
+  document.getElementById("p-run").addEventListener("click",calc);
+  calc();
+})();
+
+(function(){
+  var det=document.getElementById("g-1");
+  if(!det)return;
+  var o2=document.getElementById("g-2"),o3=document.getElementById("g-3"),out=document.getElementById("g-out");
+  function calc(){
+    var v1=det.value,v2=o2.value,v3=o3.value;
+    var mins=0,risk=1,notes=[];
+    if(v1==="wait"){risk=2;mins+=20;notes.push("Att v\u00e4nta \u00f6kar risken: trycket forts\u00e4tter stiga medan ni v\u00e4ntar.")}
+    if(v1==="verify"){risk=1;mins+=6;notes.push("Att j\u00e4mf\u00f6ra med en annan givare skiljer givarfel fr\u00e5n en verklig tryck\u00f6kning.")}
+    if(v1==="stop"){risk=0;mins+=45;notes.push("Ett direkt stopp \u00e4r s\u00e4kert men kostar produktionstid \u2013 rimligt om trycket \u00e4r farligt.")}
+    if(v2==="all"){risk=Math.max(risk,2);notes.push("R\u00e5data med operat\u00f6rsnamn och ljud \u00e4r personuppgifter och on\u00f6dig bandbredd.")}
+    if(v2==="agg"){notes.push("M\u00e4tv\u00e4rden med tidsst\u00e4mpel, enhets-ID och status r\u00e4cker f\u00f6r analys och sp\u00e5rbarhet.")}
+    if(v2==="min"){risk=Math.max(risk,1);notes.push("Ett medelv\u00e4rde per timme sl\u00e4ter ut just den korta topp ni beh\u00f6ver se.")}
+    if(v3==="auto"){risk=Math.max(risk,1);notes.push("Automatisk st\u00e4ngning skyddar snabbt, men ett falsklarm stannar linjen utan att n\u00e5gon hunnit se varf\u00f6r.")}
+    if(v3==="approve"){notes.push("Godk\u00e4nnande beh\u00e5ller skyddet och ger en m\u00e4nniska ansvaret \u2013 bra n\u00e4r sekunderna inte \u00e4r avg\u00f6rande.")}
+    if(v3==="no"){notes.push("Utan automatisk ventil blir reaktionstiden l\u00e5ng vid en snabb tryck\u00f6kning.");risk=Math.max(risk,1)}
+    out.innerHTML='<div class="note"><b>Simulerat utfall</b> '+WS.riskLabel(risk,1,2)+
+      '<ul style="margin:8px 0 0">'+notes.map(function(n){return "<li>"+n+"</li>"}).join("")+"</ul>"+
+      '<p class="hint">Uppskattad f\u00f6rsening innan \u00e5tg\u00e4rd: <b>'+mins+' min</b>. Siffrorna \u00e4r pedagogiska, inte m\u00e4tningar.</p></div>';
+    document.getElementById("g-run");
+  }
+  [det,o2,o3].forEach(function(el){el.addEventListener("change",calc)});
+  document.getElementById("g-run").addEventListener("click",calc);
+  calc();
+})();
+
+(function(){
+  var wrap=document.getElementById("facit-lista");
+  if(!wrap)return;
+  [
+    ["Uppgift 1 \u2013 M2M eller IIoT?",'<p>M2M: direkta utbyten mellan tv\u00e5 enheter (status, tryck till lokal styrenhet, materialp\u00e5fyllning). IIoT: industriella enheter kopplade till n\u00e4t och moln d\u00e4r m\u00e5nga anl\u00e4ggningar analyseras tillsammans. Kontorsroutern \u00e4r varken eller \u2013 den \u00e4r ett vanligt n\u00e4tverk.</p><p>Vanligt fel: att kalla allt med en sensor f\u00f6r IIoT. Det avg\u00f6rande \u00e4r om enheterna kopplas till n\u00e4t/moln och analyseras storskaligt.</p>'],
+    ["Uppgift 2 \u2013 Sensordygnen",'<p>Temperaturen toppar kl. 20\u201322, vibrationen kl. 22 och trycket kl. 23. Vid l\u00e5g tr\u00f6skel larmar \u00e4ven normal variation; vid h\u00f6g tr\u00f6skel f\u00f6rsvinner den verkliga avvikelsen.</p><p>Po\u00e4ngen \u00e4r att tr\u00f6skeln \u00e4r ett <b>beslut</b>, inte en sanning: en k\u00e4nslig tr\u00f6skel ger m\u00e5nga larm som ingen hinner titta p\u00e5. I L4 m\u00e4ts samma avv\u00e4gning med precision och recall.</p><p><b>Databasen:</b> <code>iot_devices</code> har åtta enheter och <code>sensor_readings</code> tolv mätvärden. <code>device_id</code> är främmande nyckel. Sensor A visar 72, 74 och 81 °C; JOIN ger tolv rader med enhetsnamn; AVG per enhet ger 75,67 för Sensor A; filtret <code>value &gt; 75</code> ger bara 81 °C. Tolkning: en mätning måste kopplas till rätt enhet och enhet – 5,35 bar och 3,95 mm/s går inte att jämföra. Ett larm är en regel över data, inte en modell.</p>'],["Uppgift 3 – API, webhook och format",'<p><b>API:</b> du anropar en adress och får svar. GET läser, POST skapar, PUT ersätter helt, PATCH ändrar delar och DELETE tar bort. Statuskoden berättar utfallet: 2xx lyckat, 4xx fel hos anroparen, 405 att metoden inte passar. Autentisering sker med API-nyckel eller OAuth-token – aldrig i klartext i en logg.</p><p><b>Webhook:</b> ett händelsemönster där tjänsten skickar till din URL när något inträffar. Du frågar inte; du tar emot. Verifiera signaturen och tål omsändningar.</p><p><b>Format:</b> CSV är enkelt men typfritt, JSON är strukturerat och vanligt i API:er, SQLite (.db) är en databas i en fil – inte ett universellt format – och Parquet är kolumnlagrat och snabbt för stora datamängder. Vanligt fel: att tro att en webhook är något man anropar, eller att .db automatiskt kan öppnas i vilket program som helst.</p>'],
+    ["Uppgift 4 \u2013 Tryckgivaren",'<p>Rekommendationen: kontrollera en annan givare, larma drifttekniker, skicka m\u00e4tv\u00e4rden med metadata och l\u00e5t ventilen st\u00e4ngas efter godk\u00e4nnande \u2013 eller automatiskt om trycket n\u00e5r en niv\u00e5 d\u00e4r m\u00e4nniskor kan skadas.</p><p>Varf\u00f6r inte v\u00e4nta? Trycket stiger snabbt. Varf\u00f6r inte skicka allt? Personuppgifter och bandbredd utan nytta. Varf\u00f6r inte alltid automatiskt? Ett falsklarm stannar en linje \u2013 men vid fara g\u00e5r s\u00e4kerheten f\u00f6re produktionen.</p>']
+  ].forEach(function(f){
+    var d=document.createElement("details");
+    d.innerHTML="<summary>"+f[0]+"</summary>"+f[1];
+    wrap.appendChild(d);
+  });
+})();
+
+WS.quiz(document.getElementById("quiz"),{
+  title:"Avslutande kunskapskontroll",
+  hint:"Fyra fr\u00e5gor om M2M, sensorer och dataminimering.",
+  questions:[{"text": "Vad kännetecknar M2M jämfört med IIoT?", "options": ["M2M kräver alltid molnet", "M2M är direkt kommunikation mellan maskiner, ofta lokalt", "IIoT används bara i hemmet", "Det finns ingen skillnad"], "answer": 1, "why": "M2M kopplar ihop enheter direkt. IIoT kopplar industriella enheter till nät och moln, ofta över många anläggningar."}, {"text": "Ett sensorvärde ligger strax över tröskeln en enda gång. Vad är klokast?", "options": ["Stäng av produktionslinjen direkt", "Jämför med en annan givare eller historiken innan du agerar", "Ignorera alla larm", "Stäng av givaren"], "answer": 1, "why": "Enstaka toppar kan vara givarfel eller störningar. Ett andra mätvärde skiljer avvikelse från brus."}, {"text": "Varför ska en IIoT-lösning inte skicka operatörsnamn och ljudinspelningar i onödan?", "options": ["Det tar för mycket lagringsplats", "Det är personuppgifter som ökar risken och saknar syfte för uppgiften", "Det går inte att skicka", "Det är förbjudet att mäta ljud"], "answer": 1, "why": "Dataminimering: bara det som behövs. Personuppgifter i molnet kräver rättslig grund och skyddas sämre."}, {"text": "När är automatisk stängning av en ventil rimlig?", "options": ["Aldrig", "När åtgärden skyddar människor eller miljö och beslutet loggas", "Alltid, utan logg", "Bara när chefen är på plats"], "answer": 1, "why": "Automatik får agera när felet är farligt och tiden kort – men åtgärden ska gå att följa upp i efterhand."}]
+});
+WS.init();
+</script>
+
+<script>
+(function(){
+  var m=document.getElementById("api-m");
+  if(!m)return;
+  var e=document.getElementById("api-e"),a=document.getElementById("api-a"),
+      req=document.getElementById("api-req"),res=document.getElementById("api-res"),
+      note=document.getElementById("api-note"),mnote=document.getElementById("api-methodnote");
+  var MEAN={
+    GET:"GET hämtar data och ska inte ändra något.",
+    POST:"POST skapar en ny resurs, till exempel ett ärende.",
+    PUT:"PUT ersätter hela resursen med det du skickar.",
+    PATCH:"PATCH ändrar bara de fält du skickar.",
+    DELETE:"DELETE tar bort resursen."
+  };
+  var BODY={
+    alerts:{title:"Misstänkt inloggning",severity:"high",source:"edr"},
+    alert:{status:"closed",assignee:"analytiker-2"}
+  };
+  function request(){
+    var method=m.value,ep=e.value;
+    var path=ep==="ip"?"/v1/ip/203.0.113.42":(ep==="alerts"?"/v1/alerts":"/v1/alerts/1042");
+    var lines=[method+" "+path+" HTTP/1.1","Host: api.example-sec.test","Accept: application/json"];
+    lines.push(a.value==="key"?"X-API-Key: ••••••••":"Authorization: Bearer ••••••••");
+    var body=null;
+    if(method==="POST"&&ep==="alerts")body=BODY.alerts;
+    if((method==="PATCH"||method==="PUT")&&ep==="alert")body=BODY.alert;
+    if(body){lines.push("Content-Type: application/json");lines.push("");lines.push(JSON.stringify(body,null,2))}
+    return {text:lines.join("\n"),body:body};
+  }
+  function respond(){
+    var method=m.value,ep=e.value,status=200,out={};
+    if(ep==="ip"){
+      if(method!=="GET"){status=405;out={error:"method_not_allowed",allow:"GET"}}
+      else out={ip:"203.0.113.42",reputation:"misstänkt",country:"NL",last_seen:"2026-05-25T02:14:00Z",source:"hotintel-sim"};
+    }else if(ep==="alerts"){
+      if(method==="GET")out={items:[{id:1042,title:"Misstänkt inloggning",severity:"high"},{id:1043,title:"Ny enhet i OT-nät",severity:"medium"}],total:2};
+      else if(method==="POST"){status=201;out={id:1044,title:"Misstänkt inloggning",severity:"high",created:"2026-05-25T02:20:00Z"}}
+      else {status=405;out={error:"method_not_allowed",allow:"GET, POST"}}
+    }else{
+      if(method==="GET")out={id:1042,title:"Misstänkt inloggning",severity:"high",status:"open",assignee:null};
+      else if(method==="PATCH")out={id:1042,title:"Misstänkt inloggning",severity:"high",status:"closed",assignee:"analytiker-2"};
+      else if(method==="PUT")out={id:1042,title:"Misstänkt inloggning",severity:"high",status:"closed",assignee:"analytiker-2",note:"ersatt helt"};
+      else if(method==="DELETE"){status=204;out=null}
+    }
+    res.textContent=(out===null?"HTTP/1.1 204 No Content":"HTTP/1.1 "+status+" "+({"200":"OK","201":"Created","204":"No Content","405":"Method Not Allowed"}[status]||"OK"))+
+      (out===null?"":"\nContent-Type: application/json\n\n"+JSON.stringify(out,null,2));
+    note.textContent=status===405?"Metoden passar inte på den här adressen. API:et svarar med en förklaring i stället för att göra något oväntat.":
+      (status===204?"204 betyder att det gick bra men att det inte finns något att skicka tillbaka.":"Statuskoden berättar vad som hände. 2xx = lyckat, 4xx = felet ligger hos anroparen.");
+  }
+  function draw(){
+    mnote.textContent=MEAN[m.value];
+    req.textContent=request().text;respond();
+  }
+  [m,e,a].forEach(function(el){el.addEventListener("change",draw)});
+  document.getElementById("api-send").addEventListener("click",draw);
+  document.getElementById("api-reset").addEventListener("click",function(){m.value="GET";e.value="ip";a.value="key";draw()});
+
+  var wh=document.getElementById("wh-out"),n=0;
+  document.getElementById("wh-fire").addEventListener("click",function(){
+    n++;
+    wh.textContent="POST /din-webhook HTTP/1.1\nContent-Type: application/json\nX-Signature: ••••••••\n\n"+
+      JSON.stringify({event:"alert.created",id:1042+n,severity:"high",detected_at:"2026-05-25T02:2"+n+":00Z",summary:"15 misslyckade inloggningar, ett lyckat försök"},null,2)+
+      "\n\n← 200 OK (mottaget)";
+  });
+
+  var F={
+    csv:{t:"CSV – text med kommatecken",s:"id,user,failures,country\n1042,bjorn,15,NL\n1043,anna,3,SE",
+      plus:"Enkelt, mänskligt läsbart, fungerar överallt.",minus:"Ingen typinformation, ingen struktur för nästlade data, stora filer blir långsamma.",use:"Små exporter, snabb granskning, enklare utbyte."},
+    json:{t:"JSON – strukturerad text",s:'{\n  "id": 1042,\n  "user": "bjorn",\n  "failures": 15,\n  "tags": ["spray", "external"]\n}',
+      plus:"Nästlade värden, tydliga fält, standard i API:er.",minus:"Skrymmande och dyrare att läsa i stora volymer.",use:"API-svar, konfiguration, händelser."},
+    db:{t:"SQLite .db – en hel databas i en fil",s:"SELECT user, failures FROM logins\nWHERE failures > 10;\n\n→ bjorn | 15",
+      plus:"Frågor med SQL, index, transaktioner – bra för analys.",minus:".db är inte ett universellt format; det är oftast SQLite och kräver rätt program.",use:"Lokala analyser, små labbar, enkel lagring."},
+    parquet:{t:"Parquet – kolumnlagrat för stora data",s:"schema: id INT, user STRING, failures INT\nrow groups: 1 000 000 rader\ncompression: snappy",
+      plus:"Kompakt, snabbt att läsa kolumnvis, bevarar datatyper.",minus:"Inte mänskligt läsbart utan verktyg; sämre för små filer.",use:"Datasjöar, Databricks, analys av stora mängder."}
+  };
+  var info=document.getElementById("fmt-info");
+  function fmt(k){
+    var f=F[k];
+    info.innerHTML="<h4>"+WS.esc(f.t)+"</h4><pre class=\"code\">"+WS.esc(f.s)+"</pre>"+
+      '<div class="cards3"><div class="mini"><h5>Styrkor</h5>'+WS.esc(f.plus)+'</div><div class="mini"><h5>Svagheter</h5>'+WS.esc(f.minus)+'</div><div class="mini"><h5>Passar</h5>'+WS.esc(f.use)+"</div></div>";
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("[data-fmt]"),function(b){
+    b.addEventListener("click",function(){
+      Array.prototype.forEach.call(document.querySelectorAll("[data-fmt]"),function(x){x.setAttribute("aria-pressed","false")});
+      b.setAttribute("aria-pressed","true");fmt(b.getAttribute("data-fmt"));
+    });
+  });
+  fmt("csv");draw();
+})();
+</script>
+<script>window.__DB_CFG=window.__DB_CFG||{};window.__DB_CFG['02']={"title":"iot_devices och sensor_readings","intro":"Två tabeller hänger ihop: varje mätvärde pekar på en enhet via en främmande nyckel. Det är därför vi kan se vilken sensor som mätte 81 °C.","tables":[{"name":"iot_devices","pk":"device_id","cols":[["device_id","INTEGER"],["device_name","TEXT"],["location","TEXT"],["device_type","TEXT"]],"fk":[],"rows":[[1,"Sensor A","Factory 1","Temperature"],[2,"Sensor B","Factory 1","Pressure"],[3,"Sensor C","Factory 2","Vibration"],[4,"Sensor D","Factory 2","Temperature"],[5,"Pump X","Factory 1","Pressure"],[6,"Motor Y","Factory 2","Vibration"],[7,"Tank Z","Factory 1","Level"],[8,"Gateway G1","Factory 1","Gateway"]]},{"name":"sensor_readings","pk":"reading_id","cols":[["reading_id","INTEGER"],["device_id","INTEGER"],["timestamp","TEXT"],["value","REAL"],["unit","TEXT"]],"fk":[["device_id","iot_devices.device_id"]],"rows":[[1,1,"09:00",72.0,"°C"],[2,1,"09:05",74.0,"°C"],[3,1,"09:10",81.0,"°C"],[4,2,"09:05",5.2,"bar"],[5,2,"09:10",5.5,"bar"],[6,3,"09:10",3.8,"mm/s"],[7,3,"09:15",4.1,"mm/s"],[8,4,"09:00",22.0,"°C"],[9,5,"09:10",4.9,"bar"],[10,6,"09:15",2.7,"mm/s"],[11,7,"09:00",68.0,"%"],[12,8,"09:20",12.0,"Mbit/s"]]}],"queries":[{"label":"Alla mätvärden","sql":"SELECT * FROM sensor_readings;","explain":"Tolv mätvärden. device_id är främmande nyckel: 1 betyder Sensor A i den andra tabellen.","cols":["reading_id","device_id","timestamp","value","unit"],"rows":[[1,1,"09:00",72.0,"°C"],[2,1,"09:05",74.0,"°C"],[3,1,"09:10",81.0,"°C"],[4,2,"09:05",5.2,"bar"],[5,2,"09:10",5.5,"bar"],[6,3,"09:10",3.8,"mm/s"],[7,3,"09:15",4.1,"mm/s"],[8,4,"09:00",22.0,"°C"],[9,5,"09:10",4.9,"bar"],[10,6,"09:15",2.7,"mm/s"],[11,7,"09:00",68.0,"%"],[12,8,"09:20",12.0,"Mbit/s"]]},{"label":"Sensor A över tid","sql":"SELECT timestamp, value FROM sensor_readings WHERE device_id = 1 ORDER BY timestamp;","explain":"Filtrerar på enheten och sorterar på tid. Tre rader: 72, 74 och 81 °C. Det är samma serie som linjediagrammet ovan visar.","cols":["timestamp","value"],"rows":[["09:00",72.0],["09:05",74.0],["09:10",81.0]]},{"label":"Enhetsnamn via JOIN","sql":"SELECT d.device_name, r.timestamp, r.value, r.unit FROM sensor_readings r JOIN iot_devices d ON r.device_id = d.device_id;","explain":"JOIN kopplar ihop tabellerna på nyckeln. Nu syns namnet i stället för ett ID. Tolv rader – en per mätvärde.","cols":["device_name","timestamp","value","unit"],"rows":[["Sensor A","09:00",72.0,"°C"],["Sensor A","09:05",74.0,"°C"],["Sensor A","09:10",81.0,"°C"],["Sensor B","09:05",5.2,"bar"],["Sensor B","09:10",5.5,"bar"],["Sensor C","09:10",3.8,"mm/s"],["Sensor C","09:15",4.1,"mm/s"],["Sensor D","09:00",22.0,"°C"],["Pump X","09:10",4.9,"bar"],["Motor Y","09:15",2.7,"mm/s"],["Tank Z","09:00",68.0,"%"],["Gateway G1","09:20",12.0,"Mbit/s"]]},{"label":"Medel per enhet","sql":"SELECT device_id, AVG(value) AS medel FROM sensor_readings GROUP BY device_id;","explain":"AVG räknar medelvärde per grupp. Jämför bara värden med samma enhet och enhet – 5,35 bar och 3,95 mm/s betyder olika saker.","cols":["device_id","medel"],"rows":[[1,75.67],[2,5.35],[3,3.95],[4,22.0],[5,4.9],[6,2.7],[7,68.0],[8,12.0]]},{"label":"Över 75 °C","sql":"SELECT * FROM sensor_readings WHERE value > 75;","explain":"Ett tröskelvärde i SQL. Bara ett värde passerar: 81 °C på Sensor A. Ett larm är alltså en regel över data – inte en modell.","cols":["reading_id","device_id","timestamp","value","unit"],"rows":[[3,1,"09:10",81.0,"°C"]]}],"note":"Flödet är Sensor → Gateway → MQTT/OPC UA → databas → dashboard. SQL hämtar det som dashboarden visar."};</script>
+
+<script>
+(function(){
+  var CFG=window.__DB_CFG||{};
+  function esc(s){return WS.esc(String(s))}
+  function isNum(v){return typeof v==="number"}
+  document.querySelectorAll("[data-db]").forEach(function(host){
+    var key=host.getAttribute("data-db"),db=CFG[key];
+    if(!db)return;
+    var ti=0,qi=0,filter="",sortCol=-1,sortDir=1;
+    function tab(){return db.tables[ti]}
+    function rowsNow(){
+      var t=tab(),rows=t.rows.slice();
+      if(filter){
+        var f=filter.toLowerCase();
+        rows=rows.filter(function(r){return r.join(" ").toLowerCase().indexOf(f)>=0});
+      }
+      if(sortCol>=0){
+        rows.sort(function(a,b){
+          var x=a[sortCol],y=b[sortCol];
+          if(isNum(x)&&isNum(y))return (x-y)*sortDir;
+          return String(x).localeCompare(String(y),"sv")*sortDir;
+        });
+      }
+      return rows;
+    }
+    function tableHTML(){
+      var t=tab(),rows=rowsNow();
+      var head="<tr>"+t.cols.map(function(c,i){
+        var arrow=sortCol===i?(sortDir>0?" \u2191":" \u2193"):"";
+        return '<th data-col="'+i+'" title="Sortera">'+esc(c[0])+arrow+"</th>";
+      }).join("")+"</tr>";
+      var body=rows.length?rows.map(function(r){
+        return "<tr>"+r.map(function(v){return '<td'+(isNum(v)?' class="num"':"")+">"+(v===null?"NULL":esc(v))+"</td>"}).join("")+"</tr>";
+      }).join(""):'<tr><td colspan="'+t.cols.length+'" class="db-empty">Inga rader matchar filtret.</td></tr>';
+      return '<div class="db-scroll"><table class="tbl"><thead>'+head+"</thead><tbody data-role=\"tbody\">"+body+"</tbody></table></div>"+
+        '<p class="hint" data-role="count" style="margin:6px 0 0">'+rows.length+" av "+t.rows.length+" rader \u00b7 "+t.cols.length+" kolumner</p>";
+    }
+    function paint(){
+      host.querySelector('[data-role="tablewrap"]').innerHTML=tableHTML();
+      bindSort();
+    }
+    function bindSort(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-col]"),function(th){
+        th.addEventListener("click",function(){
+          var i=+th.getAttribute("data-col");
+          if(sortCol===i)sortDir*=-1;else{sortCol=i;sortDir=1}
+          paint();
+        });
+      });
+    }
+    function schema(){
+      var t=tab();
+      return '<ul class="schema">'+t.cols.map(function(c){
+        var key=t.pk===c[0]?' <span class="key">PK</span>':"";
+        return "<li>"+esc(c[0])+" "+esc(c[1])+key+"</li>";
+      }).join("")+"</ul>"+(t.fk&&t.fk.length?'<p class="hint" style="margin:0 0 8px">Främmande nycklar: '+t.fk.map(function(f){
+        return "<code>"+esc(f[0])+"</code> \u2192 "+esc(f[1]);
+      }).join(" \u00b7 ")+"</p>":'<p class="hint" style="margin:0 0 8px">Primärnyckel: <code>'+esc(t.pk)+"</code> identifierar varje rad.</p>");
+    }
+    function timeline(){
+      if(!db.timeline)return "";
+      var t=db.tables.filter(function(x){return x.name===db.timeline.table})[0];
+      if(!t)return "";
+      return '<h5 style="margin:10px 0 0">Tidslinje</h5><ol class="timeline">'+t.rows.map(function(r){
+        return "<li><time>"+esc(r[db.timeline.time])+"</time><b>"+esc(r[db.timeline.title])+"</b> \u00b7 "+esc(r[db.timeline.level])+"</li>";
+      }).join("")+"</ol>";
+    }
+    function featureBox(){
+      var f=db.features;
+      if(!f)return "";
+      return '<div class="featurebox"><b>Features och label</b><p class="hint">'+esc(f.prompt)+"</p>"+
+        f.items.map(function(it,i){
+          return '<label class="checkline"><input type="checkbox" data-f="'+i+'"><span>'+esc(it[0])+"</span></label>";
+        }).join("")+
+        '<div class="actions"><button type="button" data-role="fcheck">Kontrollera valen</button></div><div data-role="fout" aria-live="polite"></div></div>';
+    }
+    function render(){
+      var t=tab(),q=db.queries[qi];
+      host.innerHTML='<div class="db-head"><span class="tag">Pedagogisk databas \u00b7 syntetiska data</span><h4>'+esc(db.title)+"</h4><p class=\"hint\">"+esc(db.intro)+"</p></div>"+
+        (db.timeline?timeline():"")+
+        '<div class="db-tabs" role="group" aria-label="Tabeller">'+db.tables.map(function(x,i){
+          return '<button type="button" data-t="'+i+'" aria-pressed="'+(i===ti?"true":"false")+'">'+esc(x.name)+"</button>";
+        }).join("")+"</div>"+
+        '<div class="db-grid">'+
+          '<div class="db-box"><b>Tabell: '+esc(t.name)+"</b>"+schema()+
+            '<div class="db-tools"><input type="search" data-role="filter" placeholder="Filtrera rader\u2026" value="'+esc(filter)+'" aria-label="Filtrera tabellen"><button type="button" class="ghost" data-role="reset">\u00c5terst\u00e4ll</button></div>'+
+            '<div data-role="tablewrap">'+tableHTML()+"</div></div>"+
+          '<div class="db-box"><b>SQL-fr\u00e5gor</b><div class="sqlbtns">'+db.queries.map(function(x,i){
+            return '<button type="button" data-q="'+i+'" aria-pressed="'+(i===qi?"true":"false")+'">'+esc(x.label)+"</button>";
+          }).join("")+"</div>"+
+            '<pre class="code">'+esc(q.sql)+"</pre><p>"+esc(q.explain)+"</p>"+
+            '<p class="hint" style="margin:4px 0">F\u00f6rv\u00e4ntat resultat: <b>'+q.rows.length+" rader</b></p>"+
+            '<div class="db-scroll"><table class="tbl"><thead><tr>'+q.cols.map(function(c){return "<th>"+esc(c)+"</th>"}).join("")+"</tr></thead><tbody>"+
+            q.rows.map(function(r){return "<tr>"+r.map(function(v){return "<td"+(isNum(v)?' class="num"':"")+">"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")+
+            "</tbody></table></div></div>"+
+        "</div>"+featureBox()+'<p class="hint" style="margin:10px 0 0">'+esc(db.note)+"</p>";
+      bind();
+    }
+    function bind(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-t]"),function(b){
+        b.addEventListener("click",function(){ti=+b.getAttribute("data-t");qi=0;filter="";sortCol=-1;render()});
+      });
+      Array.prototype.forEach.call(host.querySelectorAll("[data-q]"),function(b){
+        b.addEventListener("click",function(){qi=+b.getAttribute("data-q");render()});
+      });
+      var f=host.querySelector('[data-role="filter"]');
+      if(f)f.addEventListener("input",function(){filter=f.value;paint()});
+      host.querySelector('[data-role="reset"]').addEventListener("click",function(){ti=0;qi=0;filter="";sortCol=-1;render()});
+      var fc=host.querySelector('[data-role="fcheck"]');
+      if(fc)fc.addEventListener("click",function(){
+        var f=db.features,ok=0,picked=[];
+        Array.prototype.forEach.call(host.querySelectorAll("[data-f]"),function(c){
+          var i=+c.getAttribute("data-f"),good=c.checked===!!f.items[i][1];
+          if(good)ok++;else picked.push(f.items[i][0]);
+          c.parentElement.style.background=good?"#e7f4ec":"#fbe7e3";
+        });
+        var o=host.querySelector('[data-role="fout"]');
+        o.className=ok===f.items.length?"note":"warn";
+        o.innerHTML="<b>"+ok+" av "+f.items.length+" r\u00e4tt.</b> "+(picked.length?"Justera: "+picked.map(esc).join(", ")+".":"Alla val st\u00e4mmer.")+
+          "<br>"+f.items.map(function(it){return "<span class=\"hint\">"+esc(it[0])+": "+esc(it[2])+"</span>"}).join("<br>");
+      });
+      bindSort();
+    }
+    render();
+  });
+})();
+</script>
+
+</body>
+</html>

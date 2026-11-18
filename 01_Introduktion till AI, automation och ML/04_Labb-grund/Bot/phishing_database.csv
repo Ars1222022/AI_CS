@@ -1,0 +1,257 @@
+Indicator,Type,Example,Explanation,Severity,Recommended_Action,Source,Category
+"@fs-handelsinstitut.com",Fake Domain,"From: admin@fs-handelsinstitut.com","Official domain is @fs-handelsinstitut.de (note the missing 'e')",High,"Forward to IT security",FS IT Policy,Domain Spoofing
+"@fs-händelsinstitut.de",Fake Domain,"From: support@fs-händelsinstitut.de","Umlaut character makes domain look authentic",Critical,"Report to abuse@fs-handelsinstitut.de",ICANN IDN Guidelines,IDN Homograph
+"@fs-institute.de",Fake Domain,"From: careers@fs-institute.de","Close spelling variation",High,"Verify sender in campus directory",FS Career Center,Impersonation
+"Urgent fee payment",Subject Line,"Subject: URGENT: Your tuition payment is overdue",Creates false urgency to bypass scrutiny,High,"Verify in student portal",CISA Alert,Financial Scam
+"Last chance to pay",Subject Line,"Subject: FINAL NOTICE: Payment required today",Pressure tactic to prevent verification,Critical,"Contact finance office directly",FS Finance Dept,Invoice Fraud
+"Account suspension",Subject Line,"Subject: Immediate action required: Account suspension",IT never suspends accounts without warning,High,"Log in via VPN to check",FS IT Policy,Account Scam
+"http://fs-login.xyz",Fake URL,"Click here: http://fs-login.xyz","Official portal: https://campus.fs-handelsinstitut.de",Critical,"Do not click; report immediately",OpenPhish,Credential Theft
+"https://fs-handelsinstitut.secureform.com",Fake URL,"Submit documents: https://fs-handelsinstitut.secureform.com","Third-party domain impersonating institution",High,"Only use approved document portals",FS Registrar,Data Harvesting
+"Scholarship award",Body Text,"Congratulations! You won €5000 scholarship","Unsolicited awards are always suspicious",Medium,"Contact financial aid office",FS Student Handbook,Scholarship Scam
+"Research grant",Body Text,"You qualify for €8500 research funding","Real grants require formal applications",Medium,"Verify with academic affairs",FS Research Office,Grant Fraud
+"Microsoft Teams link",Fake Service,"Join class: teams-fs-handelsinstitut.org","Official Teams links come through edu email",High,"Verify with professor",Microsoft Security,Impersonation
+"Zoom meeting",Fake Service,"Class moved to: zoom-fs-handelsinstitut.com","Fake video conferencing links",High,"Check Moodle for official links",FS Remote Learning,Meeting Hijack
+"Grade change alert",Subject Line,"IMPORTANT: Your grade has been updated","Grades only appear in official LMS",Medium,"Check Moodle directly",FS Academic Policy,Academic Fraud
+"Transcript ready",Subject Line,"Your official transcript is attached","Transcripts require identity verification",High,"Request via registrar portal",FS Registrar,Data Theft
+"Password expiry",Body Text,"Your password expires in 24 hours","IT never forces urgent password changes",High,"Change password via VPN portal",NIST Guidelines,Account Security
+"VPN update",Body Text,"Install new VPN client immediately","IT pushes updates through managed devices",Critical,"Contact helpdesk",FS IT Policy,Malware Distribution
+"Internship offer",Attachment,"Attached: Internship_Contract_2023.pdf","Malicious PDFs may contain malware",Critical,"Delete and report to career center",FS Career Services,Malware Delivery
+"Course materials",Attachment,"Lecture_Notes_Finance_101.zip","Compressed files often contain viruses",High,"Download only from Moodle",FS Faculty Guidelines,Malware Vector
+"Library fine",Sender,"From: library@fs-handelsinstitut.icu",".icu is not an official TLD",High,"Ignore and report",ICANN TLD List,Fake Institution
+"Parking permit",Sender,"From: transport@fs-handelsinstitut.space",".space domains are rarely legitimate",High,"Verify via facilities office",FS Campus Services,Payment Scam
+"COVID policy update",Subject Line,"New campus COVID rules - action required","Exploits current events for credibility",Medium,"Check official announcements",FS Communications,Crisis Exploitation
+"Strike disruption",Subject Line,"Campus closure tomorrow - check attached","Creates false urgency around labor issues",Medium,"Monitor official channels",FS Emergency Alerts,Disinformation
+"sehr geehrte/r student/in",Body Text,"Sehr geehrte/r student/in, ihr konto wurde gesperrt","Generic German greeting + account threats",High,"Ignore non-personalized demands",FS Language Center,Multilingual Phish
+"cher étudiant",Body Text,"Cher étudiant, votre bourse est prête","French-language scholarship lure",Medium,"French emails come from int'l office",FS International Dept,Language Attack
+"Bafög-Antrag",Subject Line,"Dringend: Ihr Bafög-Antrag ist unvollständig","Fake German financial aid notices",High,"Contact BAföG-Amt directly",FS Financial Aid,Government Impersonation
+"Erasmus+ placement",Body Text,"Your Erasmus+ application needs verification","Real placements involve lengthy processes",High,"Consult int'l office coordinator",FS Erasmus Office,EU Program Fraud
+"Alumni donation",Sender,"From: alumni@fs-handelsinstitut.foundation","Fake alumni relations domain",Medium,"Donate only through official site",FS Advancement Office,Fundraising Scam
+"WiFi password reset",Body Text,"Your eduroam password needs renewal","Eduroam updates are self-service",High,"Use wifi.fs-handelsinstitut.de",FS IT Services,Network Compromise
+"Exam timetable",Attachment,"Winter_Exams_2023.xlsm","Macro-enabled Excel files are dangerous",Critical,"Get schedules from exam office",FS Academic Registry,Macro Malware
+"Turnitin alert",Subject Line,"URGENT: Your paper has 90% similarity","Turnitin notifications come through LMS",High,"Check Moodle plagiarism reports",FS Academic Integrity,Faculty Impersonation
+"LinkedIn recruiter",Sender,"From: hr@fs-careers.com","Fake career services domain",Medium,"Verify opportunities in Handshake",FS Career Center,Job Scam
+"Google Drive link",Fake Service,"View syllabus: drive-fs-handelsinstitut.com","Fake cloud storage links",High,"Access files only through Moodle",FS E-Learning,Cloud Phishing
+"Microsoft 365 alert",Body Text,"Your student email quota is full","O365 notifications appear in Outlook",High,"Check directly in Outlook",Microsoft Edu,Service Impersonation
+"Bank transfer request",Body Text,"Send internship deposit to IBAN DE12...","Real institutions never request direct transfers",Critical,"Report to financial fraud unit",FS Legal Dept,Wire Fraud
+"Accommodation offer",Body Text,"Campus apartment available - reply now","Housing offers go through official portals",Medium,"Use student housing platform",FS Housing Office,Rental Scam
+"IT support call",Body Text,"Call +49 123 456789 for account help","IT never initiates unsolicited calls",Critical,"Hang up and report",FS Helpdesk,Vishing Attempt
+"Event registration",Fake URL,"Register here: events.fs-handelsinstitut.live","Fake event pages steal credentials",High,"Use official event calendar",FS Student Affairs,Data Harvesting
+"Library book return",Subject Line,"OVERDUE: Return 'Finance 101' immediately","Library notices come from integrated system",Low,"Check your library account",FS Library,System Impersonation
+"Password reset",Fake URL,"Reset password: account.fs-handelsinstitut.xyz","Password resets use Okta/SAML portals",Critical,"Use password.fs-handelsinstitut.de",FS IT Policy,Credential Theft
+"Dean's list",Body Text,"You made the dean's list - click for details","Academic honors are published officially",Medium,"Check bulletin boards",FS Dean's Office,Prestige Scam
+"COVID test result",Subject Line,"POSITIVE: Campus testing results","Health data is never emailed",Critical,"Contact university health center",FS Health Services,Medical Phish
+"Print quota",Body Text,"Your printing balance is exhausted","Print systems show notifications on login",Low,"Add funds at campus kiosks",FS Facilities,System Alert Scam
+"Survey incentive",Body Text,"Complete survey for €20 Amazon voucher","Fake surveys steal personal data",Medium,"Only do approved research surveys",FS Ethics Committee,Data Mining
+"Professor email",Sender,"From: prof.mueller@fs-handelsinstitut.email","Faculty use official .de domains",High,"Verify sender in directory",FS Faculty List,Authority Fraud
+"Password change",Subject Line,"ACTION REQUIRED: Change your password","IT never forces password changes via email",Critical,"Report as phishing attempt",NIST SP 800-63B,Account Takeover
+"Security alert",Body Text,"Malware detected on your device","Creates false sense of emergency",High,"Run only approved antivirus",FS Cybersecurity,Scareware
+"Certificate ready",Body Text,"Download your course certificate here","Certificates require in-person pickup",High,"Contact examinations office",FS Certifications,Document Fraud
+"Alumni network",Fake URL,"Join: alumni.fs-handelsinstitut.club","Official alumni portal is different",Medium,"Use community.fs-handelsinstitut.de",FS Alumni Relations,Community Scam
+"Software update",Body Text,"Install new SPSS version immediately","Software is deployed through IT portals",Critical,"Get apps from software.fs-handelsinstitut.de",FS IT Services,Malware Delivery
+"Bank details",Body Text,"Update your payment information now","Payment info changes require 2FA",Critical,"Use only SEPA direct debit portal",FS Finance,Payment Fraud
+"Scholarship fee",Body Text,"Pay €50 processing fee to claim award","Legitimate scholarships never charge fees",High,"Forward to financial aid office",DAAD Guidelines,Fee Scam
+"Job interview",Subject Line,"Invitation: Interview with FS Partners","Career services coordinate all interviews",Medium,"Verify in Handshake system",FS Career Center,Recruiter Scam
+"Lecture canceled",Body Text,"FIN-301 canceled today - see Zoom link","Course changes announced via LMS",High,"Check Moodle announcements",FS Faculty Comms,Class Disruption
+"Password manager",Fake URL,"Setup LastPass: security.fs-handelsinstitut.tech","IT provides approved password tools",High,"Use only IT-recommended solutions",FS IT Policy,Credential Harvesting
+"Two-factor reset",Body Text,"Disable 2FA temporarily for maintenance","2FA is never disabled remotely",Critical,"Report to cybersecurity team",FS CISO Office,Auth Bypass
+"Data consent",Subject Line,"Mandatory GDPR compliance form","Real consent forms use Qualtrics",Medium,"Check with data protection officer",FS Legal,Regulatory Phish
+"Guest lecture",Fake URL,"Register: guest-lecture.fs-handelsinstitut.website","Events require uni login",High,"Use official event management system",FS Events,Speaker Scam
+"Exam leak",Body Text,"Get FIN-402 exam answers here","Sharing exam content is illegal",Critical,"Report to academic integrity office",FS Disciplinary Board,Cheating Scam
+"LinkedIn connect",Body Text,"Connect with FS Hiring Manager","Verified recruiters use Handshake",Medium,"Forward profile to career center",FS Employer Relations,Social Engineering
+"Calendar invite",Attachment,"Invite.ics","Malicious calendar files",High,"Delete and report",FS Cybersecurity,ICS Malware
+"IT newsletter",Sender,"From: newsletter@fs-handelsinstitut.news","Fake IT communications",Low,"Subscribe to official channels",FS Comms,Newsletter Phish
+"Ransomware warning",Body Text,"Your files are encrypted - pay 0.5 BTC","Fake ransomware demands",Critical,"Disconnect from network and call IT",FS Incident Response,Extortion
+"Database access",Body Text,"Your library database account is locked","Database access is IP-based",Low,"Try on-campus access",FS Library,System Alert
+"Stipendium",Subject Line,"Stipendienbewerbung - Frist heute!","Fake German scholarship deadline",High,"Check stipendium.fs-handelsinstitut.de",FS Scholarships,Funding Scam
+"VPN outage",Body Text,"Emergency VPN update required","IT communicates outages via Statuspage",High,"Check status.fs-handelsinstitut.de",FS Network Ops,System Alert
+"HR onboarding",Fake URL,"Complete hiring paperwork: hr.fs-handelsinstitut.work","Student jobs use internal portals",Critical,"Use jobs.fs-handelsinstitut.de",FS HR,Employment Scam
+"Password hint",Body Text,"Your password hint: 'Berlin123'","Password hints are never emailed",High,"Change password immediately",FS IT Policy,Credential Leak
+"eBay Kleinanzeigen",Body Text,"Ihr Kauf bei eBay Kleinanzeigen ist bereit","Fake second-hand marketplace alerts",Medium,"Login directly to eBay account",FS Consumer Protection,Marketplace Scam
+"Cloud storage",Fake URL,"Access OneDrive: onedrive-fs-handelsinstitut.com","Official cloud links come from IT",High,"Use provided SharePoint sites",FS IT Services,Cloud Phish
+"Windows update",Body Text,"Critical Windows security patch","Updates pushed via WSUS/SCCM",Critical,"Contact helpdesk for patches",FS Endpoint Management,Malware Alert
+"Password reuse",Body Text,"We detected your password on dark web","IT never monitors external breaches",High,"Check HaveIBeenPwned yourself",FS Cybersecurity,Scareware
+"Exam proxy",Body Text,"Pay €200 for remote exam taking","Facilitation of cheating is illegal",Critical,"Report to examination board",FS Disciplinary,Cheating Service
+"Font download",Fake URL,"Install thesis fonts: fonts.fs-handelsinstitut.design","Malicious font installers",High,"Get fonts from IT software portal",FS Design Dept,Malware Vector
+"Browser update",Body Text,"Update Chrome to access Moodle","Browser updates come automatically",High,"Update only via browser settings",FS E-Learning,Malware Alert
+"Tax refund",Subject Line,"€289 education tax refund available","German tax offices don't email refunds",High,"Consult Finanzamt directly",FS Legal,Government Scam
+"Password strength",Body Text,"Your password is too weak: 'abc123'","IT doesn't monitor individual passwords",Medium,"Use password manager",FS IT Policy,Security Scare
+"LinkedIn profile",Body Text,"Your profile matches FS graduate jobs","Verified jobs are in Handshake",Low,"Check career portal",FS Alumni Careers,Social Engineering
+"Exam location",Body Text,"FIN-301 moved to Building Z room 404","Room changes announced by faculty",Medium,"Check Moodle announcements",FS Examinations,Location Scam
+"Security check",Fake URL,"Verify your identity: login.fs-handelsinstitut.secure","Identity verification is in-person",Critical,"Report to IT security",FS CISO,Auth Bypass
+"Password recovery",Body Text,"Click to recover forgotten password","Password recovery uses security questions",High,"Use official recovery portal",FS IT Policy,Credential Theft
+"Course evaluation",Fake URL,"Evaluate your professor: eval.fs-handelsinstitut.feedback","Evaluations are LMS-integrated",Medium,"Use Moodle evaluation system",FS Quality Assurance,Survey Scam
+"Bank connection",Body Text,"Your bank connection failed","Payment systems show errors on login",Low,"Check in payment portal",FS Finance,System Alert
+"Password reset",Subject Line,"Your password was reset 2 mins ago","Unsolicited reset notifications",Critical,"Secure account immediately",FS Incident Response,Account Takeover
+"Exam results",Body Text,"Your exam results are attached","Results published in transcript system",High,"Check official transcript",FS Examinations,Grade Scam
+"Password expiry",Subject Line,"WARNING: Password expires in 1 hour","Password policies give 7+ day notice",High,"Change via VPN portal",FS IT Policy,Account Scam
+"IT survey",Fake URL,"Win AirPods: survey.fs-handelsinstitut.review","IT never offers incentive surveys",Low,"Delete unsolicited surveys",FS Comms,Data Mining
+"Password hint",Subject Line,"Recall your password: 'campus2023'","Password hints are self-set",High,"Change password and hint",FS IT Policy,Credential Leak
+"Microsoft alert",Body Text,"Unusual login from Nigeria","Microsoft alerts appear in Azure portal",High,"Check account.microsoft.com",FS IT Services,Cloud Alert
+"Password change",Body Text,"Your password was changed successfully","Unsolicited change confirmation",Critical,"Lock account and call IT",FS Incident Response,Account Takeover
+"Library access",Subject Line,"Your library account is blocked","Blocks show at login, not via email",Low,"Try logging in to library system",FS Library,System Alert
+"Password policy",Body Text,"New requirement: 20-character passwords","Policies are announced officially",Medium,"Check IT policy page",FS IT Policy,Policy Scam
+"Exam script",Fake URL,"View exam script: scripts.fs-handelsinstitut.guru","Exam reviews are in-person",High,"Request via examinations office",FS Examinations,Document Scam
+"Password leak",Subject Line,"Your password appeared in a breach","IT doesn't monitor external breaches",Medium,"Check HaveIBeenPwned yourself",FS Cybersecurity,Scareware
+"Password reset",Body Text,"We reset your password to 'Temp1234'","IT never sets temporary passwords",Critical,"Report as security incident",FS CISO,Account Takeover
+"IT maintenance",Subject Line,"System downtime tonight 8-10PM","Maintenance scheduled on status page",Low,"Check status.fs-handelsinstitut.de",FS IT Ops,System Alert
+"Password recovery",Subject Line,"Password recovery initiated for your account","Unsolicited recovery attempts",Critical,"Secure account immediately",FS Incident Response,Account Takeover
+"Exam answers",Body Text,"Sell: FIN-301 final exam answers","Selling exam content is illegal",Critical,"Report to disciplinary board",FS Examinations,Cheating Service
+"Password change",Subject Line,"CONFIRMATION: Your password was changed","Didn't request change? Account compromised",Critical,"Lock account and call IT",FS Incident Response,Account Takeover
+Indicator,Type,Example,Explanation,Severity,Recommended_Action,Source,Category
+"Case competition",Fake URL,"Register: casecomp.fs-handelsinstitut.live","Official competitions use Moodle integration",High,"Verify with business faculty",FS Case Center,Competition Scam
+"Bloomberg terminal",Body Text,"Your Bloomberg account needs verification","Terminal access managed by finance lab",Critical,"Contact trading room staff",FS Finance Lab,Service Impersonation
+"Stock pitch event",Subject Line,"Submit pitch deck: investor-day.fs-handelsinstitut.tech","Events require faculty approval",High,"Check with department head",FS Investment Club,Data Theft
+"Alumni mentorship",Fake URL,"Join: mentor.fs-handelsinstitut.careers","Mentor programs use LinkedIn Learning",Medium,"Access through alumni portal",FS Alumni Relations,Network Scam
+"Excel certification",Body Text,"Get certified - pay €99 for exam voucher","Certifications are free for students",High,"Report to program director",FS Skills Lab,Certification Fraud
+"Consulting project",Subject Line,"URGENT: Client project documents attached","Class projects use secured platforms",Critical,"Verify with professor",FS Consulting Practicum,Data Leak
+"CFA scholarship",Body Text,"FS Handelsinstitut CFA fee waiver available","Real waivers require formal application",Medium,"Contact CFA program coordinator",FS Certifications,Exam Fraud
+"Startup funding",Fake URL,"Apply: venture.fs-handelsinstitut.capital","Funding opportunities announced in class",High,"Pitch to entrepreneurship center",FS Incubator,Investment Scam
+"Guest speaker",Body Text,"Join exclusive talk by McKinsey partner","Verified events on official calendar",Medium,"Check bulletin boards",FS Speaker Series,Impersonation
+"Python course",Subject Line,"FREE Python cert for business students","IT courses have .de domain registration",High,"Enroll through skills portal",FS Digital Lab,Training Scam
+"LinkedIn Premium",Body Text,"Claim your free LinkedIn Premium account","Institution doesn't provide Premium",Low,"Ignore unsolicited offers",FS Career Center,Social Media Scam
+"Case study answer",Fake URL,"Download: HBR-Case-Solutions.zip","Sharing case answers violates honor code",Critical,"Report to academic integrity office",FS Ethics Board,Cheating Service
+"Simulation game",Body Text,"Install Capsim business simulator now","Simulators distributed in computer labs",High,"Get from lab assistants",FS Simulation Lab,Malware Vector
+"Financial modeling",Subject Line,"Updated DCF template attached","Templates only on faculty portals",High,"Download from course page",FS Finance Dept,Malware Delivery
+"Exchange program",Fake URL,"Apply: exchange.fs-handelsinstitut.abroad","Exchange applications use Mobility Online",Critical,"Contact international office",FS Study Abroad,Program Fraud
+"Research assistant",Body Text,"€25/h RA position - quick apply","RA hires go through formal processes",Medium,"Check job portal",FS Research Office,Employment Scam
+"Stata license",Subject Line,"Your Stata license expires tomorrow","Software licenses auto-renew",High,"Contact computer lab",FS IT Services,License Scam
+"Deutsche Bank event",Body Text,"Exclusive trading workshop invitation","Verified events have @db.com emails",High,"Forward to corporate relations",FS Employer Relations,Recruiter Scam
+"Tableau cert",Body Text,"Free Tableau Desktop license for students","IT provides only Tableau Public",Medium,"Request through software portal",FS Analytics Lab,License Fraud
+"Alumni database",Fake URL,"Access: alumni-connect.fs-handelsinstitut.network","Official network uses Graduway",High,"Use community portal",FS Alumni Office,Data Harvesting
+"Case interview",Subject Line,"BCG mock interviews this weekend","Verified events have @bcg.com contacts",High,"Check career center calendar",FS Consulting Prep,Impersonation
+"Term paper",Body Text,"We write finance papers - 24h service","Academic misconduct",Critical,"Report to honor council",FS Disciplinary,Cheating Service
+"Stock challenge",Fake URL,"Join: trading.fs-handelsinstitut.finance","Real competitions use Investopedia",High,"Verify with finance club",FS Trading Club,Data Theft
+"Power BI cert",Body Text,"Microsoft Power BI certification offer","Certifications require proctored exams",Medium,"Check Microsoft Learn",FS Business Intelligence,Certification Fraud
+"Consulting resume",Subject Line,"Your Bain resume review is ready","Bain uses @bain.com emails",High,"Forward to career services",FS Employer Relations,Recruiter Scam
+"Python certificate",Fake URL,"Claim: python.fs-handelsinstitut.academy","IT offers only verified certifications",High,"Enroll through DataCamp",FS Skills Lab,Certificate Scam
+"Case book",Body Text,"Download: 100 Consulting Cases.pdf","Copyright violation",Critical,"Use library resources",FS Library,Copyright Violation
+"Startup incubator",Subject Line,"Apply to FS Accelerator by Friday","Incubator uses application portal",High,"Check entrepreneurship center",FS Startup Hub,Program Fraud
+"Model UN",Body Text,"Register: mun.fs-handelsinstitut.events","Official events use .de domains",Medium,"Contact student organizations",FS Student Life,Event Scam
+"GMAT waiver",Subject Line,"Your GMAT waiver is approved","Waivers require faculty approval",High,"Contact admissions office",FS Admissions,Application Fraud
+"FRM materials",Body Text,"Free FRM Part 1 question bank","Sharing copyrighted materials illegal",Critical,"Purchase from GARP",FS Certifications,Copyright Violation
+"Case competition",Body Text,"Submit solution: consulting-case-2023.doc","Submissions via competition portal",High,"Verify submission process",FS Case Center,Data Theft
+"Python workshop",Fake URL,"Register: python.fs-handelsinstitut.tech","Workshops announced through LMS",Medium,"Check Moodle calendar",FS Digital Skills,Training Scam
+"Investment fund",Subject Line,"Apply to manage €50k student fund","Applications through finance department",Critical,"Verify with program director",FS Student Fund,Financial Scam
+"Resume book",Body Text,"Add your resume to corporate book","Official resume books use Handshake",Medium,"Submit through career portal",FS Career Center,Data Harvesting
+"SQL course",Subject Line,"FREE SQL certification for students","IT courses have specific enrollment",High,"Check skills.fs-handelsinstitut.de",FS Data Lab,Certification Fraud
+"Consulting club",Fake URL,"Join: consulting.fs-handelsinstitut.club","Official clubs use campus groups",Medium,"Verify at student activities",FS Student Orgs,Membership Scam
+"Case interview",Body Text,"Buy 100 real McKinsey cases","Sharing proprietary cases illegal",Critical,"Report to career services",FS Employer Relations,Copyright Violation
+"Visa extension",Subject Line,"Your student visa needs renewal","International office handles visas",High,"Contact intl.students@fs-handelsinstitut.de",FS International Office,Immigration Scam
+"CFA materials",Body Text,"Download CFA Level 1 secret sauce","Copyrighted materials distribution",Critical,"Purchase from CFA Institute",FS Certifications,Copyright Violation
+"Alumni survey",Fake URL,"Complete: survey.fs-handelsinstitut.feedback","Official surveys use Qualtrics",Low,"Check alumni newsletter",FS Alumni Relations,Data Mining
+"Stock pitch",Subject Line,"Submit pitch: value-investing.fs-handelsinstitut.finance","Submissions via faculty email",High,"Verify with professor",FS Investment Club,Data Theft
+"Excel test",Body Text,"Take mandatory Excel proficiency test","No unsolicited skill tests",Medium,"Check with program office",FS Skills Assessment,Testing Scam
+"Consulting offer",Subject Line,"Congratulations! Bain offer attached","Offers come through official channels",Critical,"Verify with career center",FS Employer Relations,Job Scam
+"Case study",Fake URL,"Download: Tesla-Strategy-2023.pdf","Copyrighted material distribution",High,"Access through HBR portal",FS Library,Copyright Violation
+"Startup funding",Body Text,"€10k grant for your business idea","Grants require formal pitches",Medium,"Apply through innovation hub",FS Entrepreneurship,Funding Scam
+"GMAT prep",Subject Line,"Free official GMAT prep materials","GMAC materials cost money",High,"Purchase from mba.com",FS Test Prep,Certification Fraud
+"Python cert",Fake URL,"Certificate: python.fs-handelsinstitut.academy","IT offers only verified certs",High,"Enroll through DataCamp",FS Digital Skills,Certificate Scam
+"Case competition",Body Text,"Submit: BCG-case-solution.pptx","Submissions via competition portal",High,"Verify submission process",FS Case Center,Data Theft
+"Investment club",Subject Line,"Join exclusive investor network","Official clubs use campus groups",Medium,"Verify at student activities",FS Student Orgs,Membership Scam
+"Resume service",Body Text,"Professional resume editing €50","Career center offers free services",Low,"Use career.fs-handelsinstitut.de",FS Career Center,Service Scam
+"Modeling test",Fake URL,"Take: financial-modeling.fs-handelsinstitut.exam","No unsolicited skill tests",High,"Verify with professor",FS Skills Assessment,Testing Scam
+"Consulting offer",Body Text,"McKinsey offer letter attached","Offers come through official channels",Critical,"Verify with career center",FS Employer Relations,Job Scam
+Indicator,Type,Example,Explanation,Severity,Recommended_Action,Source,Category
+"AI ethics waiver",Subject Line,"Opt out of AI detection: ethics-waiver.fs-handelsinstitut.tech","No legitimate opt-out for plagiarism checks",Critical,"Report to academic integrity office",FS Ethics Committee,AI Policy Scam
+"Blockchain lab",Fake URL,"Access: blockchain.fs-handelsinstitut.io","Official crypto labs use .de domains",High,"Verify with fintech department",FS FinTech Lab,Crypto Scam
+"Patent filing",Body Text,"Urgent: File your research patent today","University handles all IP filings",Critical,"Contact tech transfer office",FS Intellectual Property,Research Fraud
+"Accreditation",Subject Line,"ALERT: Program accreditation at risk","Accreditation notices come from deans",High,"Check official bulletin",FS Quality Assurance,Institutional Scam
+"Thesis database",Fake URL,"Upload: thesis.fs-handelsinstitut.press","Theses submitted to library portal",Critical,"Use publications.fs-handelsinstitut.de",FS Library,Academic Theft
+"TA position",Body Text,"€35/h teaching assistant role available","TA hiring requires interviews",Medium,"Apply through department",FS Human Resources,Employment Scam
+"Lab access",Subject Line,"Your bio lab credentials expired","Lab access managed by faculty",High,"Contact lab coordinator",FS Bioscience Lab,Facility Scam
+"Disciplinary notice",Body Text,"Academic misconduct case #2023-456","Disciplinary emails come from registrar",Critical,"Forward to student affairs",FS Disciplinary Board,Authority Fraud
+"Guest wifi",Fake URL,"Connect: fs-guest-wifi.com","Official guest network requires portal",High,"Use only campus hotspots",FS IT Services,Network Trap
+"Honor society",Subject Line,"Invitation: Beta Gamma Sigma membership","Verification through official chapter",Medium,"Check business honor society",FS Student Affairs,Honors Scam
+"Data request",Body Text,"Share research data for €1000 compensation","Ethical reviews required for data sharing",High,"Contact research integrity office",FS Data Governance,Research Scam
+"Deans list",Fake URL,"Claim prize: deanslist.fs-handelsinstitut.news","Dean's list is published officially",Medium,"Check bulletin boards",FS Dean's Office,Prestige Scam
+"Lab equipment",Subject Line,"Reserve mass spectrometer time slot","Equipment booking through faculty",High,"Verify with lab manager",FS Research Core,Facility Scam
+"Peer review",Body Text,"Review paper for Journal of Business Ethics","Legitimate reviews come through ORCID",Medium,"Check with advisor",FS Research Office,Journal Scam
+"Emergency grant",Fake URL,"Apply: emergency-grant.fs-handelsinstitut.fund","Grants require financial aid office",High,"Contact student support",FS Financial Aid,Crisis Scam
+"Room booking",Subject Line,"Your classroom booking is confirmed","Room reservations use official system",Medium,"Check space.fs-handelsinstitut.de",FS Facilities,Logistics Scam
+"Open access",Body Text,"Pay €890 for journal publication fee","Legitimate fees are institutionally paid",High,"Contact library OA team",FS Open Access,Publication Scam
+"Faculty email",Sender,"From: dr.meyer@fs-handelsinstitut.prof","Faculty emails use .de domain",High,"Verify in campus directory",FS Faculty Affairs,Authority Fraud
+"Disability services",Subject Line,"Accommodation approval attached","Accommodations require meetings",Medium,"Contact accessibility office",FS Student Services,Support Scam
+"Chemicals order",Body Text,"Approve €1200 lab supply purchase","Purchases require PO system",Critical,"Forward to procurement",FS Procurement,Financial Scam
+"Visiting scholar",Fake URL,"Host application: visiting.fs-handelsinstitut.scholar","Scholar programs use portal",High,"Check international office",FS Global Engagement,Academic Scam
+"Copyright claim",Subject Line,"Your thesis violates copyright","Claims come from legal department",High,"Forward to general counsel",FS Legal Affairs,Legal Scam
+"Alumni survey",Body Text,"Win MacBook: alumni-survey.fs-handelsinstitut.rewards","No incentive surveys from institution",Low,"Delete and report",FS Alumni Relations,Data Mining
+"Grant payment",Fake URL,"Receive funds: grant.fs-handelsinstitut.pay","Grants disbursed through finance",Critical,"Contact research office",FS Grants Office,Financial Scam
+"Diploma pickup",Subject Line,"Your diploma is ready for collection","Diplomas mailed automatically",Medium,"Check graduation office",FS Registrar,Document Scam
+"Lab safety",Body Text,"Complete mandatory safety training","Training through LMS only",High,"Access via Moodle",FS EHS,Compliance Scam
+"Patent royalty",Subject Line,"Claim €3250 patent earnings","Royalties processed by tech transfer",Critical,"Contact IP office",FS Technology Transfer,Financial Scam
+"Visiting hours",Fake URL,"Schedule: office-hours.fs-handelsinstitut.help","Faculty hours posted officially",Medium,"Check department site",FS Faculty Services,Logistics Scam
+"Journal invite",Body Text,"Publish in Journal of Business Research","Predatory journal solicitation",Medium,"Consult library team",FS Scholarly Comms,Publication Scam
+"Emergency loan",Subject Line,"Approved: €5000 emergency loan","No unsolicited loan offers",High,"Contact financial aid",FS Student Support,Financial Scam
+"Building access",Body Text,"Your card access is suspended","Access issues show at readers",Low,"Check with security",FS Campus Security,Facility Scam
+"Data deletion",Subject Line,"Request to delete research data","Data requests require forms",High,"Contact data steward",FS Research Integrity,Data Scam
+"Key pickup",Fake URL,"Schedule: keys.fs-handelsinstitut.access","Key distribution in-person only",Medium,"Contact facilities",FS Building Operations,Physical Security
+"Publisher invoice",Body Text,"Pay €2100 open access invoice","Invoices go to library",High,"Forward to OA team",FS Library,Financial Scam
+"Exam proctor",Subject Line,"Remote proctoring setup required","Proctoring arranged by faculty",High,"Verify with professor",FS Examinations,Testing Scam
+"Lab shutdown",Body Text,"Your lab will be locked tomorrow","Lab notices from department",Medium,"Check with admin",FS Department Office,Facility Scam
+"Royalty payment",Fake URL,"Claim: royalty.fs-handelsinstitut.money","Payments through finance system",Critical,"Contact tech transfer",FS Technology Transfer,Financial Scam
+"Visiting hours",Body Text,"Prof. Schmidt extra office hours","Faculty hours announced in class",Medium,"Verify via syllabus",FS Faculty Services,Logistics Scam
+"Journal fee",Subject Line,"Urgent: €1500 publication fee","APCs handled by library",High,"Contact scholarly comms",FS Library,Financial Scam
+"Emergency drill",Fake URL,"Details: emergency.fs-handelsinstitut.drill","Drills announced via PA/sms",High,"Verify with campus safety",FS Emergency Mgmt,Safety Scam
+"Data backup",Body Text,"Your research data will be deleted","Backups managed by IT",Medium,"Contact helpdesk",FS Research Computing,Data Scam
+"Key return",Subject Line,"Return lab key by Friday","Key returns to facilities office",Low,"Check key policy",FS Facilities,Physical Security
+"Publisher offer",Body Text,"Fast-track publication for €3200","Predatory publisher offer",Medium,"Consult librarian",FS Scholarly Comms,Publication Scam
+"Exam software",Fake URL,"Download: examsoft.fs-handelsinstitut.test","Software from IT only",High,"Get from helpdesk",FS IT Services,Malware Vector
+"Lab inspection",Subject Line,"Safety inspection tomorrow","Inspections scheduled via EHS",Medium,"Check safety portal",FS EHS,Compliance Scam
+"Patent license",Body Text,"Sign patent license agreement","Licenses through tech transfer",Critical,"Contact IP office",FS Technology Transfer,Legal Scam
+"Building entry",Fake URL,"Register: entry.fs-handelsinstitut.checkin","Entry via security desk only",Medium,"Check campus policy",FS Campus Security,Physical Access
+"Article charge",Subject Line,"Pay €1890 article processing charge","APCs through library",High,"Forward to OA team",FS Library,Financial Scam
+"Emergency alert",Body Text,"Campus evacuation drill","Alerts via official channels only",High,"Verify with public safety",FS Emergency Mgmt,Safety Scam
+"Data request",Fake URL,"Submit: data-request.fs-handelsinstitut.share","Requests require ethics approval",High,"Contact research office",FS Data Governance,Research Scam
+"Key deposit",Body Text,"Pay €50 key deposit refundable","Deposits handled in-person",Low,"Visit facilities office",FS Facilities,Financial Scam
+"Journal proof",Subject Line,"Approve your article proof","Proofs come from publisher",Medium,"Verify DOI",FS Scholarly Comms,Publication Scam
+"Exam location",Fake URL,"Check: exams.fs-handelsinstitut.location","Locations in student portal",High,"Verify in LMS",FS Examinations,Logistics Scam
+"Lab closure",Body Text,"Chemistry lab closed for repairs","Closures announced by department",Medium,"Check lab website",FS Chemistry Dept,Facility Scam
+"Patent filing",Fake URL,"File: patent.fs-handelsinstitut.legal","Filings through tech transfer",Critical,"Contact IP office",FS Technology Transfer,Legal Scam
+"Building access",Subject Line,"Your after-hours access approved","Approvals via security office",Medium,"Verify with ID card office",FS Campus Security,Physical Access
+"APC invoice",Body Text,"Pay €2300 open access fee","Invoices to library only",High,"Contact OA team",FS Library,Financial Scam
+"Emergency test",Fake URL,"Prepare: emergency.fs-handelsinstitut.test","Tests announced officially",High,"Verify with public safety",FS Emergency Mgmt,Safety Scam
+"Data sharing",Subject Line,"Request to share your dataset","Requests require MTA",High,"Contact data office",FS Research Integrity,Data Scam
+"Key renewal",Body Text,"Renew lab key access €25","Key fees in-person only",Low,"Visit facilities",FS Facilities,Financial Scam
+"Journal contract",Fake URL,"Sign: publishing.fs-handelsinstitut.contract","Contracts reviewed by library",High,"Contact scholarly comms",FS Scholarly Comms,Publication Scam
+"Förskoleavgift",Subject Line,"Betalningspåminnelse: Förskoleavgift 3,245 kr","Official invoices come via Kivra/Myndighetspost",Critical,"Logga in på Mina sidor Stockholm",Stockholms stad,Financial Scam
+"Bostadskö",Fake URL,"Din bostad är redo: bostad.stockholm-q.com","Bostadsförmedlingen använder stockholm.se",High,"Kontrollera på bostad.stockholm.se",Bostadsförmedlingen,Housing Scam
+"Kulturpass",Body Text,"Klicka för att ladda ner ditt digitala kulturpass: kulturpass.sthlm.city","Giltiga kulturpass hanteras via bibliotek",Medium,"Besök kultur.stockholm.se",Kulturförvaltningen,Identity Theft
+"Parkering",Subject Line,"OBETALD PARKERINGSBOT: 850 kr","Parkering Stockholm skickar brev, inte mejl",High,"Kontrollera bot via parkering.stockholm.se",Parkering Stockholm,Financial Scam
+"Skolmat",Fake URL,"Ändra din skolmatspreferens: skolmaten-stockholm.com","Endast skolmaten.stockholm.se är giltig",Medium,"Logga in på Skolplattformen",Skoladministrationen,Data Scam
+"Vuxenutbildning",Body Text,"Din kursplats är redo: betala 500 kr deposition","All utbildning är kostnadsfri",Critical,"Kontrollera på vuxenutbildning.stockholm.se",Utbildningsförvaltningen,Education Scam
+"Barnomsorg",Subject Line,"Bekräfta plats i förskola","Platser meddelas via Mina sidor",High,"Logga in på stockholm.se/mina-sidor",Barn- och utbildningsförvaltningen,Authority Fraud
+"Elpris",Fake URL,"Särskilt elpris för Stockholmsbor: el.stockholm-energi.com","Stockholm stad erbjuder inte elavtal",Critical,"Rapportera till konsumentverket",Miljöförvaltningen,Energy Scam
+"Bibliotekslån",Subject Line,"ÅTERKALLAD: Lämna tillbaka böcker direkt","Bibliotek meddelar via Kivra/Brev",Low,"Kontrollera på bibliotek.stockholm.se",Stadsbiblioteket,Library Scam
+"Kommunalskatt",Body Text,"Betala restskatt 5,320 kr innan 15/6","Skatter meddelas via Skatteverket",Critical,"Kontrollera på skatteverket.se",Stockholms stad,Financial Scam
+"Stadsbyggnad",Fake URL,"Ge din åsikt om nytt område: stadsplan.stockholm-survey.com","Officiella enkäter på stockholm.se",Medium,"Besök dialog.stockholm.se",Stadsbyggnadskontoret,Data Mining
+"Seniorrabatt",Subject Line,"Ansök om 65+ rabattkort här","Rabatter hanteras via SL/Konsumentverket",Low,"Besök sl.se/senior",Socialförvaltningen,Identity Theft
+"Renovering",Body Text,"Din lägenhet renoveras - godkänn schemat","Renoveringar meddelas via hyresvärd",High,"Kontrollera med bostadsbolaget",Fastighetskontoret,Housing Scam
+"Förskoleavgift",Subject Line,"Betalningspåminnelse: Förskoleavgift 3,245 kr","Official invoices come via Kivra/Myndighetspost",Critical,"Logga in på Mina sidor Stockholm",Stockholms stad,Financial Scam
+"Bostadskö",Fake URL,"Din bostad är redo: bostad.stockholm-q.com","Bostadsförmedlingen använder stockholm.se",High,"Kontrollera på bostad.stockholm.se",Bostadsförmedlingen,Housing Scam
+"Kulturpass",Body Text,"Klicka för att ladda ner ditt digitala kulturpass: kulturpass.sthlm.city","Giltiga kulturpass hanteras via bibliotek",Medium,"Besök kultur.stockholm.se",Kulturförvaltningen,Identity Theft
+"Parkering",Subject Line,"OBETALD PARKERINGSBOT: 850 kr","Parkering Stockholm skickar brev, inte mejl",High,"Kontrollera bot via parkering.stockholm.se",Parkering Stockholm,Financial Scam
+"Skolmat",Fake URL,"Ändra din skolmatspreferens: skolmaten-stockholm.com","Endast skolmaten.stockholm.se är giltig",Medium,"Logga in på Skolplattformen",Skoladministrationen,Data Scam
+"Vuxenutbildning",Body Text,"Din kursplats är redo: betala 500 kr deposition","All utbildning är kostnadsfri",Critical,"Kontrollera på vuxenutbildning.stockholm.se",Utbildningsförvaltningen,Education Scam
+"Barnomsorg",Subject Line,"Bekräfta plats i förskola","Platser meddelas via Mina sidor",High,"Logga in på stockholm.se/mina-sidor",Barn- och utbildningsförvaltningen,Authority Fraud
+"Elpris",Fake URL,"Särskilt elpris för Stockholmsbor: el.stockholm-energi.com","Stockholm stad erbjuder inte elavtal",Critical,"Rapportera till konsumentverket",Miljöförvaltningen,Energy Scam
+"Bibliotekslån",Subject Line,"ÅTERKALLAD: Lämna tillbaka böcker direkt","Bibliotek meddelar via Kivra/Brev",Low,"Kontrollera på bibliotek.stockholm.se",Stadsbiblioteket,Library Scam
+"Kommunalskatt",Body Text,"Betala restskatt 5,320 kr innan 15/6","Skatter meddelas via Skatteverket",Critical,"Kontrollera på skatteverket.se",Stockholms stad,Financial Scam
+"Stadsbyggnad",Fake URL,"Ge din åsikt om nytt område: stadsplan.stockholm-survey.com","Officiella enkäter på stockholm.se",Medium,"Besök dialog.stockholm.se",Stadsbyggnadskontoret,Data Mining
+"Seniorrabatt",Subject Line,"Ansök om 65+ rabattkort här","Rabatter hanteras via SL/Konsumentverket",Low,"Besök sl.se/senior",Socialförvaltningen,Identity Theft
+"Renovering",Body Text,"Din lägenhet renoveras - godkänn schemat","Renoveringar meddelas via hyresvärd",High,"Kontrollera med bostadsbolaget",Fastighetskontoret,Housing Scam
+"Vattenavstängning",Fake URL,"Schemalagd avstängning: vatten.stockholm-service.com","Meddelas via vatten.stockholm.se",High,"Verifiera på vatten.stockholm.se",Stockholm Vatten och Avfall,Utility Scam
+"Sommarjobb",Subject Line,"Ansök om sommarjobb hos Stockholms stad: jobb.stockholm-hr.com","Officiella jobbannonser på stockholm.se/jobb",High,"Sök via Arbetsförmedlingen",Stockholms stad,Employment Scam
+"Vinterdäck",Fake URL,"Beställ billiga vinterdäck via stadens avtal: dack.stockholm-trafik.org","Stockholm stad erbjuder inga däckavtal",Critical,"Köp via legitima återförsäljare",Trafikkontoret,Financial Scam
+"Energistöd",Body Text,"Ansök om 2,000 kr energistöd: energibidrag.stockholm-ekonomi.se","Stöd meddelas via Skatteverket",High,"Kontrollera på skatteverket.se",Socialförvaltningen,Financial Scam
+"Förlossning",Subject Line,"Boka förlossningsplats: maternitet.stockholm-sjukvård.com","Platser bokas via 1177/SLL",Critical,"Ring din mottagning",Sjukvårdsförvaltningen,Health Scam
+"Idrottsanläggning",Fake URL,"Boka tennisbana: idrott.stockholm-sport.net","Bokning endast via fritid.stockholm.se",Medium,"Använd officiell bokningsportal",Idrottsförvaltningen,Facility Scam
+"Studiebidrag",Body Text,"Din CSN-utbetalning är klar: csn.stockholm-studier.com","CSN hanteras via csn.se",Critical,"Logga in på csn.se",Utbildningsförvaltningen,Financial Scam
+"Krisstöd",Subject Line,"Ansök om krisstöd 5,000 kr","Krisstöd hanteras av socialtjänsten",High,"Kontakta din stadsdelsförvaltning",Socialförvaltningen,Financial Scam
+"Ljudklassning",Fake URL,"Godkänn ljudklassning för din lägenhet: buller.stockholm-miljo.com","Endast fastighetsägare får godkänna",Medium,"Kontakta din hyresvärd",Miljöförvaltningen,Housing Scam
+"Vårdhund",Subject Line,"Registrera din vårdhund: vardhund.stockholm-djur.se","Registrering sker via Jordbruksverket",Low,"Besök jordbruksverket.se",Djurförvaltningen,Identity Theft
+"Renhållning",Body Text,"Ny sophämtningstid: godkänn här","Tider ändras inte via mejl",Low,"Kontrollera på avfall.stockholm.se",Avfallsförvaltningen,Utility Scam
+"Bostadsbidrag",Fake URL,"Ansök om bostadsbidrag: bostadsbidrag.stockholm-ekonomi.com","Hanteras via Försäkringskassan",Critical,"Ansök via fk.se",Socialförvaltningen,Financial Scam
+"Vattenpropp",Subject Line,"Akut: Betala 1,200 kr för rörläggare","VA-verket tar inte betalt via mejl",High,"Ring 08-508 285 00",VA-verket,Financial Scam
+"Föräldrapenning",Body Text,"Bekräfta dina bankuppgifter för utbetalning","Hanteras endast via Försäkringskassan",Critical,"Logga in på fk.se",Socialförvaltningen,Identity Theft
+"Parkeringstillstånd",Fake URL,"Förnya parkeringstillstånd: parkering.stockholm-tillstand.se","Endast via parkering.stockholm.se",High,"Använd officiell webbplats",Parkering Stockholm,Financial Scam
+"Elcykelbidrag",Subject Line,"Ansök om 15,000 kr i elcykelbidrag","Stockholm stad erbjuder inga sådana bidrag",Critical,"Rapportera till Konsumentverket",Miljöförvaltningen,Financial Scam

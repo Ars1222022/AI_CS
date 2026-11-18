@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop 06 – Falsk information och deepfakes · AI inom cybersäkerhet</title>
+<style>
+
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d1c19;--muted:#5c5a54;--line:#dcd8cf;
+--ok:#1f6b45;--bad:#a32b1c;--warn:#8a5a12;--soft:#efece4;--shadow:0 1px 2px rgba(0,0,0,.05)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.62 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+img,svg{max-width:100%}
+a{color:var(--dark);text-underline-offset:3px}
+a:hover{color:var(--acc)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:10px;z-index:99;border-radius:8px}
+header.top{background:var(--dark);color:#fff;padding:10px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+header.top a{color:#fff;text-decoration:none;font-weight:600;font-size:.92rem}
+header.top a:hover{color:#ffd9c9}
+header.top .kicker{font-size:.85rem;opacity:.9}
+main{max-width:1000px;margin:0 auto;padding:24px 18px 56px}
+.hero{margin:6px 0 18px}
+.eyebrow{font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--acc);font-weight:700;margin:0 0 4px}
+h1{font-size:clamp(1.55rem,3.2vw,2.2rem);line-height:1.18;margin:.1em 0 .35em;color:var(--dark)}
+.lead{font-size:1.06rem;max-width:70ch;color:#33312c;margin:.2em 0 1em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.86rem;color:var(--muted)}
+.chips b{color:var(--ink)}
+h2{font-size:1.35rem;margin:1.6em 0 .5em;color:var(--dark)}
+h3{font-size:1.06rem;margin:1.3em 0 .4em}
+h4{font-size:.98rem;margin:1em 0 .3em}
+p,li{max-width:74ch}
+ul,ol{padding-left:1.25em}
+li{margin:.25em 0}
+.goals{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:10px;padding:14px 18px;margin:16px 0 6px}
+.goals h2{margin:.1em 0 .4em;font-size:1.05rem}
+.goals ul{margin:0}
+.tabs{position:sticky;top:0;z-index:30;background:var(--bg);display:flex;gap:6px;align-items:center;flex-wrap:wrap;
+padding:10px 0;border-bottom:2px solid var(--line);margin:18px 0 6px}
+.tabs [role=tab]{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);
+color:var(--muted);border-radius:9px;padding:9px 15px}
+.tabs [role=tab]:hover{border-color:var(--acc);color:var(--ink)}
+.tabs [role=tab][aria-selected=true]{background:var(--dark);border-color:var(--dark);color:#fff}
+.tabs [role=tab]:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,th:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.timer{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:4px 8px}
+.timer .clock{font-variant-numeric:tabular-nums;font-weight:700;min-width:52px;text-align:center;color:var(--dark)}
+.timer.low .clock{color:var(--bad)}
+.timer.done .clock{color:var(--warn)}
+.timer button{font:inherit;font-size:.82rem;padding:4px 9px;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+.timer button:hover{border-color:var(--acc)}
+[role=tabpanel]{padding:8px 0 20px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.task{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;box-shadow:var(--shadow)}
+.task>h3{margin-top:0;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.task .no{background:var(--acc);color:#fff;border-radius:7px;font-size:.8rem;padding:2px 9px;font-weight:700}
+.brief{display:grid;gap:6px;margin:10px 0 14px;font-size:.95rem}
+.brief div{display:grid;grid-template-columns:110px 1fr;gap:10px}
+.brief dt,.brief b{color:var(--muted);font-weight:600}
+.brief span{min-width:0}
+@media(max-width:520px){.brief div{grid-template-columns:1fr;gap:0}}
+.hint{font-size:.9rem;color:var(--muted);margin:.4em 0}
+.note{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+.warn{background:#fdf2e2;border:1px solid #e6c9a2;border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--dark);background:var(--dark);color:#fff;padding:9px 16px}
+button:hover{filter:brightness(1.12)}
+button.ghost{background:transparent;color:var(--dark);border-color:var(--line)}
+button.ghost:hover{background:var(--soft)}
+button:disabled{opacity:.6;cursor:default;filter:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 4px}
+label.field{display:block;font-weight:600;font-size:.92rem;margin:10px 0 4px}
+select,input[type=number],input[type=range],input[type=search]{font:inherit}
+select,input[type=number],input[type=search]{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--dark);height:28px}
+input[type=checkbox],input[type=radio]{accent-color:var(--dark);width:18px;height:18px}
+.rangeout{font-variant-numeric:tabular-nums;font-weight:700;color:var(--dark)}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:10px 0}
+legend{font-weight:600;font-size:.92rem;padding:0 6px}
+.checkline{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.95rem}
+.checkline:last-child{border-bottom:0}
+.checkline input{margin-top:4px;flex:none}
+.checkline span{flex:1}
+.tablewrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.93rem;min-width:420px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-weight:600;white-space:nowrap}
+th[data-i]{cursor:pointer;user-select:none}
+th[data-i]:hover{background:#e6e2d8}
+th .arrow{opacity:.45;font-size:.8em}
+tbody tr:hover{background:#faf8f3}
+tbody tr.good{background:#eaf5ee}
+tbody tr.bad{background:#fbecea}
+.rownote{font-size:.84rem;color:var(--muted);margin-top:4px}
+.filter{margin-bottom:8px;width:min(340px,100%)}
+.fb{font-size:.93rem;margin:10px 0;padding:10px 12px;border-radius:8px;background:var(--soft)}
+.fb:empty{display:none}
+.fb.ok{background:#eaf5ee;border-left:4px solid var(--ok)}
+.fb.bad{background:#fbecea;border-left:4px solid var(--bad)}
+.fb b{color:var(--ink)}
+.whynot{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+.q{border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0;background:#fff}
+.qt{font-weight:600;margin:0 0 8px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--soft);border:1px solid var(--line);
+color:var(--ink);border-radius:8px;padding:9px 11px;font-weight:400}
+.opt:hover:not(:disabled){border-color:var(--acc)}
+.opt .k{font-weight:700;color:var(--muted);flex:none}
+.opt.correct{border-color:var(--ok);background:#e7f4ec}
+.opt.wrong{border-color:var(--bad);background:#fbe7e3}
+.opt .k{min-width:1em}
+.quizsum{font-size:.95rem;margin:12px 0 4px}
+.chart{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+.chart .grid{stroke:#e5e1d8;stroke-width:1}
+.chart .ax{font-size:11px;fill:#6b6862}
+.chart .lbl{font-size:12px;fill:#3a3833}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.86rem;color:var(--muted);margin:6px 0 0;padding:0;list-style:none}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.bars{margin:10px 0}
+.barrow{display:grid;grid-template-columns:minmax(110px,1.1fr) 2fr minmax(56px,auto);gap:10px;align-items:center;font-size:.9rem;margin:6px 0}
+.bl{color:var(--muted)}
+.btrack{background:var(--soft);border-radius:999px;height:12px;overflow:hidden}
+.bfill{display:block;height:100%;background:var(--dark);border-radius:999px;transition:width .18s ease}
+.barrow.ok .bfill{background:var(--ok)}
+.barrow.bad .bfill{background:var(--bad)}
+.barrow.warn .bfill{background:var(--warn)}
+.bv{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;margin:12px 0;font-size:.9rem}
+.cm .cmh{font-weight:600;color:var(--muted);padding:4px 6px;display:flex;align-items:center}
+.cm .cell{border-radius:8px;padding:10px;border:1px solid var(--line);background:#fff}
+.cm .cell b{display:block;font-size:1.3rem}
+.cm .cell span{font-size:.8rem;color:var(--muted)}
+.cm .tp{background:#e6f4ec;border-color:#b6ddc6}
+.cm .tn{background:#eef1f0;border-color:#cfd8d3}
+.cm .fp{background:#fdf1e2;border-color:#e8cfae}
+.cm .fn{background:#fbe8e5;border-color:#e8bcb4}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0}
+details[open]{box-shadow:var(--shadow)}
+summary{cursor:pointer;font-weight:600;color:var(--dark)}
+details[open] summary{margin-bottom:8px;border-bottom:1px solid var(--line);padding-bottom:8px}
+details .why{font-size:.95rem}
+details ul{margin:.4em 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--muted);vertical-align:middle}
+.tag.sim{background:#efe6f5;color:#5b3a72}
+.flow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flow li{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.85rem}
+.flow li.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.flow li b{font-weight:700}
+.stepbtns{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.stepbtns button{background:var(--card);color:var(--ink);border:1px solid var(--line);padding:6px 10px;font-size:.86rem;border-radius:8px}
+.stepbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.stepinfo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:8px;padding:12px 14px;margin:8px 0;min-height:76px}
+.stepinfo h4{margin:0 0 4px}
+.riskbadge{display:inline-block;border-radius:6px;padding:2px 9px;font-weight:700;font-size:.85rem}
+.riskbadge.low{background:#e6f4ec;color:#1f5c3e}
+.riskbadge.mid{background:#fdf1e2;color:#7a5112}
+.riskbadge.high{background:#fbe8e5;color:#8c2417}
+footer{border-top:1px solid var(--line);margin-top:26px;padding:18px;text-align:center;color:var(--muted);font-size:.83rem}
+@media(max-width:640px){main{padding:16px 12px 40px}.tabs{padding:8px 0}.timer{width:100%;justify-content:center}.brief div{grid-template-columns:1fr}th,td{padding:6px 8px}}
+@media print{header.top,.tabs,.actions,button{display:none}body{background:#fff}[role=tabpanel][hidden]{display:block!important}main{max-width:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* --- nya interaktiva komponenter --- */
+.figure-wrap{display:grid;gap:16px;grid-template-columns:minmax(240px,0.9fr) minmax(280px,1.1fr);align-items:start}
+@media(max-width:760px){.figure-wrap{grid-template-columns:1fr}}
+.human{position:relative;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:8px}
+.human svg{display:block;width:100%;height:auto}
+.hotspot{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--dark);background:#fff;color:var(--dark);border-radius:999px;font:inherit;font-size:.72rem;font-weight:700;padding:3px 7px;line-height:1.2;cursor:pointer;white-space:nowrap}
+.hotspot[aria-pressed=true]{background:var(--dark);color:#fff}
+.hotspot:hover{border-color:var(--acc)}
+.hotspot:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:150px}
+.panel h4{margin:.1em 0 .4em}
+.flows{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flows li{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:.82rem}
+.flows li.off{opacity:.45;text-decoration:line-through}
+.flows .arr{background:none;border:0;color:var(--muted);padding:0 1px}
+.code{background:#23261f;color:#eae7df;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.5;padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:pre;margin:8px 0}
+.code .k{color:#9ec9a8}
+.code .s{color:#e6c07b}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;border-radius:0;background:var(--card);color:var(--ink);padding:6px 10px;font-size:.85rem;font-weight:600}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--dark);color:#fff}
+.chips2{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;padding:0;list-style:none}
+.chips2 button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.85rem}
+.chips2 button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.metricgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin:10px 0}
+.metric{background:var(--soft);border-radius:9px;padding:8px 10px}
+.metric b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.metric span{font-size:.78rem;color:var(--muted)}
+.modelgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:10px 0}
+.modelcard{text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-weight:600;font-size:.9rem}
+.modelcard small{display:block;font-weight:400;color:var(--muted);font-size:.78rem;margin-top:3px}
+.modelcard[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
+.cards3{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:10px 0}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.88rem}
+.mini h5{margin:0 0 4px;font-size:.9rem}
+.legendline{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin:4px 0 0}
+
+/* --- databasvy --- */
+.db{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);margin:12px 0}
+.db-head h4{margin:0 0 4px}
+.db-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.db-tabs button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 10px;font-size:.85rem;font-weight:600}
+.db-tabs button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-grid{display:grid;gap:12px;grid-template-columns:minmax(280px,1fr) minmax(280px,1fr)}
+@media(max-width:820px){.db-grid{grid-template-columns:1fr}}
+.db-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.schema{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px;padding:0;list-style:none}
+.schema li{font-size:.75rem;background:var(--soft);border-radius:6px;padding:2px 6px;font-family:ui-monospace,Consolas,monospace}
+.schema .key{color:var(--dark);font-weight:700}
+.db-tools{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.db-tools input{flex:1;min-width:120px;border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;font-size:.85rem;background:var(--card);color:var(--ink)}
+.db-tools button{font-size:.8rem;padding:4px 9px}
+.db-scroll{overflow-x:auto}
+.db .tbl{font-size:.82rem;min-width:0}
+.db .tbl th{white-space:nowrap;cursor:pointer}
+.db .tbl td{white-space:nowrap}
+.db .tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.sqlbtns{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px}
+.sqlbtns button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:4px 9px;font-size:.8rem}
+.sqlbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-empty{padding:10px;color:var(--muted);font-size:.85rem}
+.timeline{list-style:none;margin:8px 0;padding:0 0 0 14px;border-left:3px solid var(--acc)}
+.timeline li{margin:0 0 6px;font-size:.85rem;position:relative}
+.timeline li:before{content:"";position:absolute;left:-20px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.timeline time{font-weight:700;margin-right:6px}
+.featurebox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px}
+.featurebox .checkline{margin:0 0 2px}
+.fitgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:10px 0}
+.fitgrid .mini svg{width:100%;height:auto;display:block}
+.facitbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.facitbar .hint{margin:0}
+
+:root{--dark:#33302c;--dark2:#252320;--acc:#c1611f;--acc2:#9b4c16;--bg:#fbf6ef;--soft:#f1e7d9}
+/* ===== Extra labb med avancerad grafik (tillagt) ===== */
+.lab{margin:34px 0 8px;border-radius:16px;overflow:hidden;border:1px solid #1d2b45;
+background:radial-gradient(1200px 520px at 12% -12%,#172c50 0%,#0b1220 46%,#070c16 100%);
+color:#dbe7ff;box-shadow:0 18px 46px rgba(8,18,38,.28);padding:20px 0 0}
+.lab-eyebrow{margin:0 18px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#6ff2d9;font-weight:700}
+.lab h2{margin:.25em 18px .3em;color:#f2f7ff;font-size:clamp(1.25rem,2.4vw,1.6rem)}
+.lab-lead{margin:0 18px 16px;color:#a8bcd8;max-width:78ch;font-size:.98rem}
+.lab-shell{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.95fr);gap:14px;padding:0 18px 18px}
+@media(max-width:860px){.lab-shell{grid-template-columns:1fr}}
+.lab-stage{position:relative;border-radius:13px;border:1px solid #1e3355;background:#060b14;overflow:hidden;align-self:start}
+.lab-stage canvas{display:block;width:100%;height:auto}
+.lab-hud{display:flex;gap:8px;flex-wrap:wrap;padding:8px 10px;border-top:1px solid #16253d;background:#08111f;font-size:.74rem}
+.lab-hud span{background:rgba(10,22,40,.9);border:1px solid #23406b;border-radius:999px;padding:3px 10px;color:#a9c6ee}
+.lab-hud b{color:#7ff2d6;font-variant-numeric:tabular-nums}
+.lab-side{display:grid;gap:10px;align-content:start}
+.lab-card{background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:12px;padding:12px 13px}
+.lab-card>b{display:block;font-size:.9rem;color:#eaf2ff;margin-bottom:6px}
+.lab label{display:block;font-size:.8rem;color:#a8bcd8;margin:9px 0 2px;font-weight:600}
+.lab output{color:#7ff2d6;font-weight:700;font-variant-numeric:tabular-nums}
+.lab input[type=range]{width:100%;accent-color:#38e1c4;height:26px}
+.lab input[type=checkbox]{accent-color:#38e1c4;width:17px;height:17px;flex:none}
+.lab select{width:100%;padding:7px 9px;border-radius:8px;border:1px solid #26456f;background:#0b1524;color:#dbe7ff;font:inherit;font-size:.88rem}
+.lab button{background:linear-gradient(180deg,#1a5cc8,#123f96);border:1px solid #2f6bff;color:#eef4ff;
+padding:8px 14px;border-radius:9px;font-size:.88rem;font-weight:600}
+.lab button:hover{filter:brightness(1.15)}
+.lab button.ghost{background:transparent;border-color:#26456f;color:#a9c6ee}
+.lab .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lab .readout{font-size:.85rem;line-height:1.55;color:#c6d7f2;margin:6px 0}
+.lab .readout b{color:#fff}
+.lab .verdict{border-radius:9px;padding:8px 10px;font-size:.8rem;font-weight:700;line-height:1.4;
+background:rgba(120,150,190,.14);border:1px solid rgba(120,150,190,.3);color:#c6d7f2;margin-top:8px}
+.lab .verdict.good{background:rgba(31,140,90,.20);border-color:#2b8a5f;color:#93f2bd}
+.lab .verdict.mid{background:rgba(160,110,25,.20);border-color:#a87a2c;color:#ffd79a}
+.lab .verdict.bad{background:rgba(180,50,35,.22);border-color:#b5452f;color:#ffb3a7}
+.lab .lab-q ul{margin:4px 0 0;padding-left:1.15em;font-size:.85rem;color:#a8bcd8}
+.lab .lab-q li{margin:5px 0;max-width:none}
+.lab .lab-bar{height:11px;border-radius:999px;background:#0d1b2e;border:1px solid #1e3355;overflow:hidden;margin:8px 0}
+.lab .lab-bar>span{display:block;height:100%;width:0;background:#38e1c4;transition:width .2s ease,background .2s ease}
+.lab .metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem;color:#a8bcd8}
+.lab .metricgrid div{background:rgba(6,14,26,.85);border:1px solid #1b2f4d;border-radius:8px;padding:6px 8px}
+.lab .metricgrid b{display:block;color:#7ff2d6;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.lab .lab-how{margin:0 18px 18px;background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:10px;padding:10px 14px;color:#c6d7f2}
+.lab .lab-how summary{color:#7ff2d6;font-weight:700;font-size:.9rem}
+.lab .lab-how ol{margin:8px 0 0;padding-left:1.3em;font-size:.86rem;color:#a8bcd8}
+.lab .lab-how li{margin:4px 0;max-width:none}
+@media(max-width:600px){.lab{padding-top:14px}.lab-shell{padding:0 12px 14px}.lab h2,.lab-lead,.lab-eyebrow,.lab-how{margin-left:12px;margin-right:12px}}
+@media print{.lab{box-shadow:none;background:#fff;color:#111;border-color:#ccc}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Hoppa till innehåll</a>
+<header class="top">
+  <a href="../../index.html" title="Öppnar kursens startsida">&#8592; Alla workshoppar</a>
+  <span class="kicker">Lektion 06 · Falsk information</span>
+</header>
+<main id="main">
+  <div class="hero">
+    <p class="eyebrow">AI inom cybersäkerhet · Workshop 06</p>
+    <h1>Workshop 06 – Falsk information och deepfakes</h1>
+    <p class="lead">Deepfakes och falsk information är byggda för att kännas trovärdiga. Här tränar du på att granska avsändare, hitta varningstecken och använda verifiering i stället för magkänsla.</p>
+    <ul class="chips"><li><b>Tid:</b> ca 50 min (halvdag)</li><li><b>Individuellt:</b> 23 min</li><li><b>Grupp:</b> 15 min</li><li><b>Facit och quiz:</b> 12 min</li></ul>
+  </div>
+  <section class="goals" aria-labelledby="mal">
+    <h2 id="mal">Efter workshopen kan du</h2>
+    <ul><li>bedöma risken i ett påstående eller ett klipp utifrån avsändare, källa och sammanhang</li><li>känna igen typiska tecken på manipulerat innehåll och påverkan</li><li>förklara varför ett AI-verktyg för detektion inte kan avgöra sanningen åt dig</li><li>välja en verifieringsrutin som fungerar även när tekniken ser övertygande ut</li></ul>
+  </section>
+  <nav class="tabs" role="tablist" aria-label="Workshopens tre delar">
+    <button type="button" role="tab" id="tab-ind" aria-controls="panel-ind" aria-selected="true" data-panel="ind">1. Individuellt arbete</button>
+    <button type="button" role="tab" id="tab-grp" aria-controls="panel-grp" aria-selected="false" tabindex="-1" data-panel="grp">2. Grupparbete</button>
+    <button type="button" role="tab" id="tab-fac" aria-controls="panel-fac" aria-selected="false" tabindex="-1" data-panel="fac">3. Facit</button>
+    <div class="timer" id="timer" data-minutes="50">
+      <span class="clock" id="tOut" aria-live="off">50:00</span>
+      <button type="button" id="tStart" aria-pressed="false" title="Starta eller pausa timern">Start</button>
+      <button type="button" id="tReset" title="Nollställ timern">Nollställ</button>
+    </div>
+  </nav>
+  <noscript><p class="warn">JavaScript är avstängt. Flikar, simuleringar och facit kräver JavaScript. Slå på det i webbläsaren och ladda om sidan.</p></noscript>
+  <section id="panel-ind" role="tabpanel" aria-labelledby="tab-ind" tabindex="0">
+
+
+<p>Ett klipp kan vara äkta och ändå vilseleda. En bild kan vara manipulerad och ändå vara sann i sak.
+Frågan är inte bara "är det fejk?" utan "vem säger det, varför nu, och vad skulle jag behöva
+kontrollera?". Här granskar du påhittade exempel – inga riktiga personer eller händelser.</p>
+
+<details class="card">
+  <summary>Begrepp du möter här</summary>
+  <ul>
+    <li><b>Desinformation</b> – falskt innehåll som sprids med avsikt.</li>
+    <li><b>Misinformation</b> – falskt innehåll som sprids utan avsikt.</li>
+    <li><b>Deepfake</b> – bild, ljud eller video som skapats eller förändrats med AI.</li>
+    <li><b>Källa</b> – den som först publicerade uppgiften, inte den som delade den.</li>
+    <li><b>Källkritik</b> – att kontrollera avsändare, syfte, tidpunkt och andra källor.</li>
+  </ul>
+</details>
+
+
+<p>Tre uppgifter, cirka 23 minuter. Workshopen är kortare än de andra eftersom lektionen är en halvdag.</p>
+<article class="task" id="u1">
+  <h3><span class="no">Uppgift 1</span> Riskbedömning</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Bedöm fem exempel som låg, medel eller hög risk.</span></div>
+    <div><dt>Varför?</dt><span>Källkritik är en vana: avsändare, syfte och möjlighet att kontrollera.</span></div>
+    <div><dt>Hur?</dt><span>Läs exemplet, välj risknivå och tryck <b>Kontrollera mina svar</b>.</span></div>
+    <div><dt>Observera</dt><span>Vilka exempel kan du kontrollera direkt? Vilka är byggda för att du ska hoppa över kontrollen?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska få 5 av 5 rätt och kunna säga vilket tecken som vägde tyngst.</span></div>
+  </dl>
+  <div id="u1-class"></div>
+</article>
+<article class="task" id="u2">
+  <h3><span class="no">Uppgift 2</span> Indikatorer och AI-genererad text</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Skilj varningstecken från stil i ett misstänkt klipp. Verifiera sedan påståenden i en AI-genererad sammanfattning.</span></div>
+    <div><dt>Varför?</dt><span>Ett flytande svar är inte samma sak som ett sant svar. Du måste kunna peka på vad underlaget faktiskt stöder.</span></div>
+    <div><dt>Hur?</dt><span>Kryssa varningstecken och kontrollera. Läs den genererade texten, jämför med underlaget och markera varje påstående.</span></div>
+    <div><dt>Observera</dt><span>Vilka påståenden stöds av loggen? Vilket är påhittat? Vad händer med detaljerna vid hög variation?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna skilja på styrkt, inte styrkt och påhittad detalj.</span></div>
+  </dl>
+  <div id="u2-ind"></div>
+<div class="grid2">
+  <div class="card">
+    <h4 style="margin-top:0">AI-genererad sammanfattning (simulerad)</h4>
+    <div class="seg" role="group" aria-label="Temperatur">
+      <button type="button" id="gn-low" aria-pressed="true">Låg variation</button>
+      <button type="button" id="gn-high" aria-pressed="false">Hög variation</button>
+    </div>
+    <pre class="code" id="gn-text" style="margin-top:10px"></pre>
+    <p class="hint">Texten är ett fast exempel, inte ett resultat från en riktig modell. Den visar hur en LLM kan formulera sig – och varför ett flytande svar inte är samma sak som ett sant svar.</p>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Verifiera påståendena</h4>
+    <p class="hint">Underlag: logg från 2026-05-25. Kl. 02:14–02:19 misslyckades 15 inloggningar mot kontot <i>bjorn</i> från källa NL. Ett försök lyckades. Ingen åtgärd har utförts.</p>
+    <div id="gn-claims"></div>
+    <div class="actions"><button type="button" id="gn-check">Kontrollera</button><button type="button" class="ghost" id="gn-reset">Börja om</button></div>
+    <div id="gn-out" aria-live="polite"></div>
+  </div>
+</div>
+
+</article>
+<article class="task" id="u3">
+  <h3><span class="no">Uppgift 3</span> Källor, påståenden och verifiering</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Koppla åtta påståenden till sex källor och tio verifieringsresultat. Kör SQL och jämför stöd, motstridighet och osäkerhet.</span></div>
+    <div><dt>Varför?</dt><span>Ett påstående blir inte sant för att en källa säger det. Flera oberoende källor och tydlig osäkerhet är starkare än en enskild träff.</span></div>
+    <div><dt>Hur?</dt><span>Byt tabell, kör frågorna och läs vilka källor som stöder respektive motsäger ett påstående. Jämför reliability med result.</span></div>
+    <div><dt>Observera</dt><span>Vilka påståenden har flera källor? Vilket är motsagt? Vad betyder Supported respektive Unverified?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna förklara varför en enskild indikator inte bevisar att något är falskt eller sant.</span></div>
+  </dl>
+  <div class="db" data-db="06"></div>
+</article>
+
+    <section class="card" id="quiz">
+      <noscript><p class="warn">Quizet kräver JavaScript.</p></noscript>
+    </section>
+  </section>
+  <section id="panel-grp" role="tabpanel" aria-labelledby="tab-grp" tabindex="0" hidden>
+
+<h2>Uppgift 4 – Rösterna från "ekonomichefen"</h2>
+<div class="task">
+  <h3><span class="no">Gruppuppgift</span> 480 000 kronor och 20 minuter</h3>
+  <p>Kl. 16:30 får ekonomiavdelningen ett videosamtal. Personen ser ut och låter som ekonomichefen,
+  bakgrunden är kontoret, och ärendet är brådskande: en betalning på 480 000 kr till ett nytt konto
+  innan banken stänger. Gruppen ska fatta tre beslut.</p>
+  <dl class="brief">
+    <div><dt>Tid</dt><span>12 minuter beslut, 4 minuter redovisning.</span></div>
+    <div><dt>Roller</dt><span>Ordförande, skeptiker, sekreterare, rapportör.</span></div>
+    <div><dt>Krav</dt><span>Ett beslut per fråga och en mening om varför.</span></div>
+  </dl>
+</div>
+<div class="card">
+  <label class="field" for="g-1">1. Vad gör ni med betalningen?</label>
+  <select id="g-1">
+    <option value="pay">Betalar – det är ju chefen</option>
+    <option value="hold" selected>Stoppar betalningen till den är verifierad</option>
+    <option value="half">Betalar hälften för att vara snäll</option>
+  </select>
+  <label class="field" for="g-2">2. Hur verifierar ni?</label>
+  <select id="g-2">
+    <option value="known" selected>Ringer upp chefen på ett nummer ni redan har</option>
+    <option value="same">Frågar i samma videosamtal</option>
+    <option value="mail">Mejlar adressen som står i fakturan</option>
+  </select>
+  <label class="field" for="g-3">3. Vad gör ni efteråt?</label>
+  <select id="g-3">
+    <option value="report" selected>Rapporterar till säkerhetsansvarig och polisanmäler försöket</option>
+    <option value="intern">Skriver internt och går vidare</option>
+    <option value="nothing">Inget – inget hände</option>
+  </select>
+  <div class="actions"><button type="button" id="g-run">Visa konsekvenser</button></div>
+  <div id="g-out" aria-live="polite"></div>
+</div>
+<h3>Redovisa på 2 minuter</h3>
+<ol><li>Vilka tre beslut tog ni?</li><li>Vilket tecken var starkast?</li><li>Vad gör ni nästa gång någon ringer?</li></ol>
+
+  </section>
+  <section id="panel-fac" role="tabpanel" aria-labelledby="tab-fac" tabindex="0" hidden>
+    <div class="facitbar">
+      <button type="button" id="facOpenAll">Öppna alla facit</button>
+      <button type="button" class="ghost" id="facCloseAll">Fäll ihop alla</button>
+      <span class="hint">Facit kan öppnas när som helst – du behöver inte svara först.</span>
+    </div>
+
+<p>Öppna en uppgift i taget. Exemplen är påhittade och avser inga verkliga personer.</p>
+<div id="facit-lista"></div>
+<h2>Kom ihåg</h2>
+<ul>
+  <li>Tekniken kan vara övertygande och ändå falsk. Verifiera via en kanal du själv valt.</li>
+  <li>Ett detektionsverktyg ger en sannolikhet, inte ett svar. Det ska stödja en människa, inte ersätta en.</li>
+  <li>Brådska är ett verktyg i sig: den som stressar dig vill att du hoppar över kontrollen.</li>
+  <li>Rapportera även försök som misslyckades – annars lär sig ingen.</li>
+</ul>
+
+  </section>
+
+<script>(function(){if(!window.CanvasRenderingContext2D||!CanvasRenderingContext2D.prototype||CanvasRenderingContext2D.prototype.roundRect)return;
+CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){r=Math.min(typeof r==="number"?r:0,w/2,h/2);
+this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);
+this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this;};})();</script>
+<section class="lab" id="lab-extra-6" aria-labelledby="lab6-h">
+  <p class="lab-eyebrow">Extra labb · avancerad grafik · deepfakes och källkritik</p>
+  <h2 id="lab6-h">Deepfake-skannern – konstgjort ansikte, mänskligt omdöme</h2>
+  <p class="lab-lead">Ansiktet ritas av kod. Dra i manipuleringsgraden och se vilka spår som uppstår: flimmer vid ögonen, utsmetade kanter och spökbilder. Sedan sätter du detektorns tröskel – och upptäcker att varje nivå kostar något.</p>
+  <div class="lab-shell">
+    <div class="lab-stage">
+      <canvas id="lab6cv" width="960" height="520" role="img" aria-label="Konstgjort ansikte med synliga manipulationsartefakter och en skanningslinje"></canvas>
+      <div class="lab-hud">
+        <span>Manipulering <b id="lab6lvl">30 %</b></span>
+        <span>Detektor <b id="lab6p">–</b></span>
+        <span>Tröskel <b id="lab6tv">50 %</b></span>
+      </div>
+    </div>
+    <div class="lab-side">
+      <div class="lab-card">
+        <label for="lab6man">Manipuleringsgrad <output id="lab6manv">30 %</output></label>
+        <input type="range" id="lab6man" min="0" max="100" value="30">
+        <label for="lab6th">Detektorns tröskel <output id="lab6thv">50 %</output></label>
+        <input type="range" id="lab6th" min="5" max="95" value="50">
+        <div class="actions">
+          <button type="button" id="lab6new">Nytt ansikte</button>
+          <button type="button" class="ghost" id="lab6auto">Autoskanna</button>
+        </div>
+      </div>
+      <div class="lab-card">
+        <b>Sannolikhet deepfake</b>
+        <div class="lab-bar"><span id="lab6bar"></span></div>
+        <div class="verdict mid" id="lab6verdict">Justera tröskeln.</div>
+        <canvas id="lab6roc" width="300" height="180" style="width:100%;height:auto;margin-top:8px;border-radius:8px;background:#060c15"></canvas>
+        <div class="readout" id="lab6read"></div>
+      </div>
+      <div class="lab-card lab-q">
+        <b>Diskutera i par</b>
+        <ul>
+          <li>Varför går det inte att få både noll falska larm och noll missade deepfakes?</li>
+          <li>Vad gör du som människa innan du sprider en video som ”bevis”?</li>
+          <li>Vem bär ansvaret när ett automatiskt verktyg bedömer fel?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <details class="lab-how">
+    <summary>Så gör du – 10 min individuellt, 15 min i grupp</summary>
+    <ol>
+      <li>Sätt manipuleringsgraden på 10 % och tröskeln på 50 %. Larmar detektorn?</li>
+      <li>Höj manipuleringsgraden till 90 %. Vilka artefakter syns tydligast i bilden?</li>
+      <li>Sänk tröskeln till 20 %. Läs av risken för falska larm i ROC-rutan.</li>
+      <li>Skriv en slutsats: vad kan ett verktyg avgöra, och vad måste en människa avgöra?</li>
+    </ol>
+  </details>
+</section>
+<script>
+(function(){
+  var cv=document.getElementById("lab6cv"),cx=cv.getContext("2d");
+  var rcv=document.getElementById("lab6roc"),rx=rcv.getContext("2d");
+  var W=960,H=520,$=function(i){return document.getElementById(i)};
+  var st={lvl:30,th:50,t:0,auto:false,noise:0.06,seed:Math.random()*10};
+
+  function drawFace(){
+    var lvl=st.lvl/100,t=st.t,cxp=W/2-150,cyp=H/2-10;
+    var g=cx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0,"#070d18");g.addColorStop(1,"#0a1526");
+    cx.fillStyle=g;cx.fillRect(0,0,W,H);
+
+    // rutnät
+    cx.strokeStyle="rgba(90,150,230,.07)";cx.lineWidth=1;
+    for(var i=0;i<14;i++){cx.beginPath();cx.moveTo(0,i*40);cx.lineTo(W,i*40);cx.stroke();}
+
+    // spökbilder (frekvensspöken)
+    for(var gI=1;gI<=3;gI++){
+      var off=lvl*22*gI,a=0.14*lvl/gI;
+      if(a>0.01)drawHead(cxp+off,cyp-off*0.25,a,lvl,t,true);
+    }
+    drawHead(cxp,cyp,1,lvl,t,false);
+
+    // svepande skanningslinje
+    var sy=60+((t*90)%(H-120));
+    var sg=cx.createLinearGradient(0,sy-40,0,sy+40);
+    sg.addColorStop(0,"rgba(120,230,255,0)");sg.addColorStop(.5,"rgba(120,230,255,.16)");sg.addColorStop(1,"rgba(120,230,255,0)");
+    cx.fillStyle=sg;cx.fillRect(0,sy-40,W,80);
+    cx.beginPath();cx.moveTo(0,sy);cx.lineTo(W,sy);
+    cx.strokeStyle="rgba(150,240,255,.75)";cx.lineWidth=1.6;
+    cx.shadowColor="rgba(120,230,255,.9)";cx.shadowBlur=14;cx.stroke();cx.shadowBlur=0;
+
+    // etiketter
+    cx.fillStyle="rgba(170,205,245,.6)";cx.font="11px system-ui,Segoe UI,Arial";cx.textAlign="left";
+    cx.fillText("konstgjort ansikte · kodritad modell",30,H-28);
+    cx.textAlign="right";
+    cx.fillText(lvl>0.55?"tydliga artefakter":lvl>0.25?"svaga artefakter":"nästan inga artefakter",W-30,H-28);
+    cx.textAlign="left";
+  }
+
+  function drawHead(x,y,alpha,lvl,t,ghost){
+    var R=118,jit=Math.sin(t*11)*lvl*5;
+    cx.save();cx.globalAlpha=alpha;
+    // huvud
+    var hg=cx.createRadialGradient(x-30,y-40,10,x,y,R*1.15);
+    hg.addColorStop(0,ghost?"rgba(120,230,255,.5)":"#e8ecf5");
+    hg.addColorStop(.7,ghost?"rgba(120,230,255,.25)":"#c9d3e4");
+    hg.addColorStop(1,ghost?"rgba(120,230,255,0)":"rgba(120,140,170,.15)");
+    cx.beginPath();cx.ellipse(x,y,R*0.82,R,0,0,6.284);cx.fillStyle=hg;cx.fill();
+    cx.strokeStyle=ghost?"rgba(120,230,255,.4)":"rgba(160,200,240,.35)";cx.lineWidth=1.4;cx.stroke();
+    if(ghost){cx.restore();return;}
+
+    // ögon
+    var ey=y-26+jit,ex=52;
+    cx.beginPath();cx.ellipse(x-ex,ey,26,15,0,0,6.284);cx.fillStyle="#f7f9ff";cx.fill();
+    cx.beginPath();cx.ellipse(x+ex,ey,26,15,0,0,6.284);cx.fill();
+    cx.beginPath();cx.arc(x-ex+3,ey,10,0,6.284);cx.fillStyle="#26303f";cx.fill();
+    cx.beginPath();cx.arc(x+ex-3,ey,10,0,6.284);cx.fill();
+    // ögonflimmer
+    if(lvl>0.05){
+      for(var i=0;i<3;i++){
+        var a=(Math.sin(t*7+i*2)+1)/2*lvl;
+        cx.beginPath();cx.arc(x-ex+3,ey,13+i*3+a*4,0,6.284);
+        cx.strokeStyle="rgba(255,90,140,"+(a*0.25)+")";cx.lineWidth=1.2;cx.stroke();
+        cx.beginPath();cx.arc(x+ex-3,ey,13+i*3+a*4,0,6.284);cx.stroke();
+      }
+    }
+    // bryn
+    cx.beginPath();cx.moveTo(x-ex-26,ey-26);cx.quadraticCurveTo(x-ex,ey-38,x-ex+24,ey-24);
+    cx.moveTo(x+ex-24,ey-24);cx.quadraticCurveTo(x+ex,ey-38,x+ex+26,ey-26);
+    cx.strokeStyle="#4a566b";cx.lineWidth=5;cx.stroke();
+    // näsa
+    cx.beginPath();cx.moveTo(x,y-12+jit);cx.quadraticCurveTo(x-10,y+26,x+8,y+34);
+    cx.strokeStyle="rgba(90,105,130,.55)";cx.lineWidth=3;cx.stroke();
+    // mun
+    cx.beginPath();cx.moveTo(x-34,y+66);cx.quadraticCurveTo(x,y+66+34*lvl+Math.sin(t*2)*2,x+34,y+66);
+    cx.strokeStyle="rgba(120,70,80,.75)";cx.lineWidth=5;cx.stroke();
+
+    // hudutjämning: horisontella band
+    if(lvl>0.1){
+      for(var b=0;b<6;b++){
+        var by=y-60+b*26;
+        cx.beginPath();cx.moveTo(x-70,by);cx.quadraticCurveTo(x,by-4,x+70,by);
+        cx.strokeStyle="rgba(255,255,255,"+(lvl*0.06)+")";cx.lineWidth=7;cx.stroke();
+      }
+    }
+    // kantbrus
+    if(lvl>0.2){
+      for(var k=0;k<Math.round(lvl*26);k++){
+        var ang=Math.random()*6.284,rr=R*(0.82+Math.random()*0.22);
+        var px=x+Math.cos(ang)*rr,py=y+Math.sin(ang)*rr;
+        cx.beginPath();cx.moveTo(px,py);cx.lineTo(px+Math.random()*12-6,py+Math.random()*12-6);
+        cx.strokeStyle="rgba(120,230,255,"+(lvl*0.35)+")";cx.lineWidth=1;cx.stroke();
+      }
+    }
+    cx.restore();
+  }
+
+  function roc(th){
+    rx.clearRect(0,0,300,180);
+    rx.fillStyle="#060c15";rx.fillRect(0,0,300,180);
+    var ox=42,oy=150,w=230,h=110;
+    rx.strokeStyle="rgba(120,170,255,.25)";rx.lineWidth=1;
+    rx.beginPath();rx.moveTo(ox,oy);rx.lineTo(ox+w,oy);rx.moveTo(ox,oy);rx.lineTo(ox,oy-h);rx.stroke();
+    rx.fillStyle="rgba(170,205,245,.55)";rx.font="9px system-ui,Segoe UI,Arial";
+    rx.fillText("falska larm →",ox+w-70,oy+14);
+    rx.save();rx.translate(ox-8,oy-30);rx.rotate(-Math.PI/2);rx.fillText("träffade →",-60,0);rx.restore();
+    // kurva
+    var i,fpr,tpr;
+    rx.beginPath();
+    for(i=0;i<=40;i++){
+      fpr=i/40;tpr=1-(1-fpr)*(1-fpr)*(1-fpr*0.4);
+      var X=ox+fpr*w,Y=oy-tpr*h;
+      i?rx.lineTo(X,Y):rx.moveTo(X,Y);
+    }
+    rx.strokeStyle="rgba(120,230,255,.85)";rx.lineWidth=2;
+    rx.shadowColor="rgba(120,230,255,.6)";rx.shadowBlur=8;rx.stroke();rx.shadowBlur=0;
+    // punkt
+    var f=(100-th)/100*0.95,tp=1-(1-f)*(1-f)*(1-f*0.4);
+    var pX=ox+f*w,pY=oy-tp*h;
+    rx.beginPath();rx.arc(pX,pY,6,0,6.284);rx.fillStyle="#ffc45a";
+    rx.shadowColor="#ffc45a";rx.shadowBlur=14;rx.fill();rx.shadowBlur=0;
+    rx.beginPath();rx.arc(pX,pY,11,0,6.284);rx.strokeStyle="rgba(255,196,90,.45)";rx.lineWidth=1.5;rx.stroke();
+    rx.fillStyle="rgba(200,225,255,.8)";rx.font="700 10px system-ui,Segoe UI,Arial";
+    rx.fillText("din tröskel",pX+9,pY-8);
+  }
+
+  function prob(){
+    var base=st.lvl/100*0.98;
+    var n=(Math.sin(st.t*3.1)+Math.sin(st.t*1.7))*0.02;
+    return Math.max(0.01,Math.min(0.99,base+0.03+n));
+  }
+
+  function readout(){
+    var p=prob(),v=$("lab6verdict");
+    var fake=p*100>=st.th;
+    $("lab6p").textContent=Math.round(p*100)+" %";
+    $("lab6bar").style.width=Math.round(p*100)+"%";
+    $("lab6bar").style.background=fake?"#ff6b6b":"#38e1c4";
+    v.className=fake?"verdict bad":"verdict good";
+    v.textContent=fake?"DETEKTORN SÄGER: DEEPFAKE":"DETEKTORN SÄGER: TROLIGEN ÄKTA";
+    var fpr=(100-st.th)/100*0.95,tpr=1-(1-fpr)*(1-fpr)*(1-fpr*0.4);
+    $("lab6read").innerHTML="Manipulering <b>"+st.lvl+" %</b>. Tröskel <b>"+st.th+" %</b>. "+
+      "Falsklarm-risk <b>"+Math.round(fpr*100)+" %</b>, risk att missa en deepfake <b>"+Math.round((1-tpr)*100)+" %</b>."+
+      "<br>Ett verktyg ger en sannolikhet – inte ett bevis.";
+    roc(st.th);
+  }
+
+  function loop(ts){
+    var now=ts||performance.now();
+    if(!loop.last)loop.last=now;
+    st.t+=(now-loop.last)/1000;loop.last=now;
+    if(st.auto){
+      st.th=Math.round(25+((Math.sin(st.t*0.5)+1)/2)*60);
+      $("lab6th").value=st.th;$("lab6thv").textContent=st.th+" %";$("lab6tv").textContent=st.th+" %";
+    }
+    drawFace();readout();requestAnimationFrame(loop);
+  }
+
+  $("lab6man").addEventListener("input",function(){st.lvl=+this.value;$("lab6manv").textContent=this.value+" %";$("lab6lvl").textContent=this.value+" %";});
+  $("lab6th").addEventListener("input",function(){st.th=+this.value;$("lab6thv").textContent=this.value+" %";$("lab6tv").textContent=this.value+" %";st.auto=false;});
+  $("lab6new").addEventListener("click",function(){
+    var v=Math.round(Math.random()*100);
+    st.lvl=v;$("lab6man").value=v;$("lab6manv").textContent=v+" %";$("lab6lvl").textContent=v+" %";
+  });
+  $("lab6auto").addEventListener("click",function(){st.auto=!st.auto;this.textContent=st.auto?"Stoppa svep":"Autoskanna";});
+  loop();
+})();
+</script>
+
+</main>
+
+
+<script>
+var WS=(function(){
+"use strict";
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(n,d){if(!isFinite(n))return "\u2013";return n.toFixed(d==null?2:d).replace(".",",")}
+function num(v){return Number(String(v).replace(",","."))}
+
+/* ---------- flikar ---------- */
+function initTabs(){
+  var btns=$$('.tabs [role="tab"]');
+  if(!btns.length)return;
+  function show(id,setHash){
+    btns.forEach(function(b){
+      var on=b.getAttribute("data-panel")===id;
+      b.setAttribute("aria-selected",on?"true":"false");
+      b.tabIndex=on?0:-1;
+    });
+    $$('[role="tabpanel"]').forEach(function(p){p.hidden=p.id!=="panel-"+id});
+    if(setHash){try{history.replaceState(null,"","#"+id)}catch(e){}}
+  }
+  btns.forEach(function(b,i){
+    b.addEventListener("click",function(){show(b.getAttribute("data-panel"),true)});
+    b.addEventListener("keydown",function(e){
+      var n=null;
+      if(e.key==="ArrowRight")n=(i+1)%btns.length;
+      if(e.key==="ArrowLeft")n=(i-1+btns.length)%btns.length;
+      if(e.key==="Home")n=0;
+      if(e.key==="End")n=btns.length-1;
+      if(n!==null){e.preventDefault();btns[n].focus();show(btns[n].getAttribute("data-panel"),true)}
+    });
+  });
+  var h=(location.hash||"").replace("#","");
+  var ok=btns.some(function(b){return b.getAttribute("data-panel")===h});
+  show(ok?h:"ind",false);
+}
+
+/* ---------- timer ---------- */
+function initTimer(){
+  var box=$("#timer"); if(!box)return;
+  var total=(parseInt(box.getAttribute("data-minutes"),10)||60)*60;
+  var left=total,id=null;
+  var out=$("#tOut"),st=$("#tStart"),rs=$("#tReset");
+  function paint(){
+    var m=Math.floor(left/60),s=left%60;
+    out.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    box.classList.toggle("low",left>0&&left<=300);
+  }
+  function stop(){
+    if(id){clearInterval(id);id=null}
+    st.textContent=left===0?"Klar":"Forts\u00e4tt";
+    st.setAttribute("aria-pressed","false");
+  }
+  st.addEventListener("click",function(){
+    if(id){stop();return}
+    if(left===0){left=total;box.classList.remove("done");paint()}
+    id=setInterval(function(){
+      if(left>0){left--;paint()}
+      if(left===0){stop();box.classList.add("done");st.textContent="Klar"}
+    },1000);
+    st.textContent="Pausa";st.setAttribute("aria-pressed","true");
+  });
+  rs.addEventListener("click",function(){
+    stop();left=total;box.classList.remove("done");paint();st.textContent="Start";
+  });
+  paint();
+}
+
+/* ---------- quiz ---------- */
+function quiz(host,cfg){
+  if(!host)return;
+  var qs=cfg.questions||[];
+  host.innerHTML="";
+  var h=document.createElement("h3");h.textContent=cfg.title||"Avslutande kunskapskontroll";host.appendChild(h);
+  if(cfg.hint){var p=document.createElement("p");p.className="hint";p.textContent=cfg.hint;host.appendChild(p)}
+  var answered=0,right=0;
+  var status=document.createElement("p");status.className="quizsum";
+  var retry=document.createElement("button");
+  retry.type="button";retry.className="ghost";retry.textContent="G\u00f6r om quizet";retry.hidden=true;
+  retry.addEventListener("click",function(){quiz(host,cfg);host.scrollIntoView({block:"center"})});
+  qs.forEach(function(q,i){
+    var wrap=document.createElement("div");wrap.className="q";
+    var qt=document.createElement("p");qt.className="qt";qt.textContent=(i+1)+". "+q.text;wrap.appendChild(qt);
+    var opts=document.createElement("div");opts.className="opts";wrap.appendChild(opts);
+    var fb=document.createElement("p");fb.className="fb";fb.hidden=true;wrap.appendChild(fb);
+    q.options.forEach(function(o,j){
+      var b=document.createElement("button");b.type="button";b.className="opt";
+      b.innerHTML='<span class="k">'+String.fromCharCode(65+j)+'</span><span>'+esc(o)+'</span>';
+      b.addEventListener("click",function(){
+        if(wrap.getAttribute("data-done")==="1")return;
+        wrap.setAttribute("data-done","1");answered++;
+        $$(".opt",opts).forEach(function(x,k){x.disabled=true;if(k===q.answer)x.classList.add("correct")});
+        var good=j===q.answer;
+        if(good){right++}else{b.classList.add("wrong")}
+        fb.hidden=false;fb.className="fb "+(good?"ok":"bad");
+        fb.innerHTML="<b>"+(good?"R\u00e4tt.":"Fel.")+"</b> "+esc(q.why||"");
+        if(!good){var s=document.createElement("span");s.className="whynot";s.textContent="R\u00e4tt svar: "+q.options[q.answer]+".";fb.appendChild(s)}
+        status.textContent=answered+" av "+qs.length+" besvarade \u00b7 "+right+" r\u00e4tt";
+        if(answered===qs.length){
+          status.innerHTML="<b>Resultat: "+right+" av "+qs.length+" r\u00e4tt.</b> "+(right===qs.length?"Mycket bra \u2013 du kan begreppen.":"L\u00e4s f\u00f6rklaringarna och g\u00f6r om quizet om du vill.");
+          retry.hidden=false;
+        }
+      });
+      opts.appendChild(b);
+    });
+    host.appendChild(wrap);
+  });
+  status.textContent="0 av "+qs.length+" besvarade";
+  host.appendChild(status);
+  host.appendChild(retry);
+}
+
+/* ---------- klassificering med dropdown ---------- */
+function classify(host,cfg){
+  if(!host)return;
+  var rows=cfg.rows||[],opts=cfg.options||[];
+  var t=document.createElement("table");
+  t.innerHTML='<thead><tr><th scope="col">'+esc(cfg.col1||"System")+'</th><th scope="col">'+esc(cfg.col2||"Din bed\u00f6mning")+'</th></tr></thead>';
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  rows.forEach(function(r){
+    var tr=document.createElement("tr");
+    var td=document.createElement("td");td.textContent=r.text;
+    var note=document.createElement("div");note.className="rownote";note.hidden=true;td.appendChild(note);
+    var td2=document.createElement("td");
+    var sel=document.createElement("select");
+    sel.setAttribute("aria-label","Bed\u00f6mning f\u00f6r: "+r.text);
+    sel.innerHTML='<option value="">\u2013 v\u00e4lj \u2013</option>'+opts.map(function(o,i){return '<option value="'+i+'">'+esc(o)+'</option>'}).join("");
+    td2.appendChild(sel);tr.appendChild(td);tr.appendChild(td2);tb.appendChild(tr);
+  });
+  var btn=document.createElement("button");btn.type="button";btn.textContent=cfg.btn||"Kontrollera mina svar";
+  var out=document.createElement("p");out.className="fb";
+  btn.addEventListener("click",function(){
+    var ok=0,missing=0;
+    Array.prototype.forEach.call(tb.rows,function(tr,i){
+      var sel=$("select",tr),v=sel.value===""?null:Number(sel.value);
+      var good=v===rows[i].correct;if(good){ok++}if(v===null){missing++}
+      tr.classList.toggle("good",good);tr.classList.toggle("bad",!good&&v!==null);
+      var n=$(".rownote",tr);
+      if(n){n.hidden=false;n.innerHTML="<b>"+(good?"R\u00e4tt":(v===null?"Inget val":"R\u00e4tt svar: "+esc(opts[rows[i].correct])))+"</b> "+(rows[i].note||"")}
+    });
+    out.className="fb show "+(ok===rows.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+rows.length+" r\u00e4tt.</b> "+(ok===rows.length?"Bra \u2013 du ser m\u00f6nstret.":"L\u00e4s radens f\u00f6rklaring och justera"+(missing?" ("+missing+" rad(er) utan val)":"")+".");
+  });
+  host.appendChild(t);host.appendChild(btn);host.appendChild(out);
+}
+
+/* ---------- tabell med sortering och filter ---------- */
+function sortTable(host,cfg){
+  if(!host)return;
+  var cols=cfg.cols||[],rows=(cfg.rows||[]).slice();
+  var wrap=document.createElement("div");wrap.className="tablewrap";
+  var filter=null;
+  if(cfg.filter){
+    filter=document.createElement("input");filter.type="search";filter.className="filter";
+    filter.placeholder=cfg.filterPlaceholder||"Filtrera \u2026";
+    filter.setAttribute("aria-label","Filtrera tabellen");
+    wrap.appendChild(filter);
+  }
+  var t=document.createElement("table");
+  var thead=document.createElement("thead"),htr=document.createElement("tr");
+  cols.forEach(function(c,i){
+    var th=document.createElement("th");th.scope="col";th.setAttribute("data-i",i);th.tabIndex=0;
+    th.innerHTML=esc(c)+' <span class="arrow" aria-hidden="true">\u2195</span>';
+    function sort(){
+      var dir=th.getAttribute("data-dir")==="asc"?"desc":"asc";th.setAttribute("data-dir",dir);
+      rows.sort(function(a,b){
+        var x=a[i],y=b[i];
+        var nx=parseFloat(String(x).replace(/\s/g,"").replace(",",".")),ny=parseFloat(String(y).replace(/\s/g,"").replace(",","."));
+        var both=isFinite(nx)&&isFinite(ny)&&String(x).replace(/[^0-9]/g,"")!==""&&String(y).replace(/[^0-9]/g,"")!=="";
+        if(both)return dir==="asc"?nx-ny:ny-nx;
+        return dir==="asc"?String(x).localeCompare(String(y),"sv"):String(y).localeCompare(String(x),"sv");
+      });
+      render();
+    }
+    th.addEventListener("click",sort);
+    th.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();sort()}});
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr);t.appendChild(thead);
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  function render(){
+    tb.innerHTML="";
+    var q=filter?filter.value.toLowerCase():"";
+    rows.forEach(function(r){
+      if(q&&r.join(" ").toLowerCase().indexOf(q)<0)return;
+      var tr=document.createElement("tr");
+      r.forEach(function(c){var td=document.createElement("td");td.innerHTML=c;tr.appendChild(td)});
+      tb.appendChild(tr);
+    });
+  }
+  wrap.appendChild(t);host.appendChild(wrap);
+  if(filter)filter.addEventListener("input",render);
+  render();
+}
+
+/* ---------- stapeldiagram ---------- */
+function bars(host,items,opt){
+  if(!host)return;
+  opt=opt||{};host.innerHTML="";
+  var max=opt.max||Math.max.apply(null,items.map(function(i){return Math.abs(i.value)}).concat([1]));
+  var box=document.createElement("div");box.className="bars";
+  items.forEach(function(it){
+    var row=document.createElement("div");row.className="barrow"+(it.tone?" "+it.tone:"");
+    var pct=Math.max(0,Math.min(100,Math.abs(it.value)/max*100));
+    row.innerHTML='<span class="bl">'+esc(it.label)+'</span><span class="btrack"><span class="bfill" style="width:'+pct.toFixed(1)+'%"></span></span><span class="bv">'+esc(it.display!=null?it.display:it.value)+'</span>';
+    box.appendChild(row);
+  });
+  host.appendChild(box);
+  if(opt.caption){var p=document.createElement("p");p.className="hint";p.textContent=opt.caption;host.appendChild(p)}
+}
+
+/* ---------- linjediagram i ren SVG ---------- */
+function line(host,cfg){
+  if(!host)return;
+  var W=560,H=250,L=46,R=14,T=14,B=34;
+  var maxY=cfg.maxY||1,maxX=cfg.maxX||1;
+  function X(v){return L+(v/maxX)*(W-L-R)}
+  function Y(v){return H-B-(v/maxY)*(H-T-B)}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="chart" role="img" aria-label="'+esc(cfg.label||"Diagram")+'">';
+  for(var i=0;i<=4;i++){
+    var y=T+i*(H-T-B)/4;
+    s+='<line class="grid" x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'"/>';
+    s+='<text class="ax" x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+fmt(maxY*(1-i/4),maxY<=1?1:0)+'</text>';
+  }
+  (cfg.xTicks||[0,0.5,1]).forEach(function(t){
+    s+='<text class="ax" x="'+X(t*maxX)+'" y="'+(H-12)+'" text-anchor="middle">'+fmt(t*maxX,0)+'</text>';
+  });
+  (cfg.hlines||[]).forEach(function(hl){
+    s+='<line x1="'+L+'" y1="'+Y(hl.y).toFixed(1)+'" x2="'+(W-R)+'" y2="'+Y(hl.y).toFixed(1)+'" stroke="'+hl.color+'" stroke-width="1.5" stroke-dasharray="5 4"><title>'+esc(hl.label||"")+'</title></line>';
+  });
+  (cfg.series||[]).forEach(function(ser){
+    var pts=ser.points.map(function(p){return X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)}).join(" ");
+    if(!ser.onlyDots){s+='<polyline points="'+pts+'" fill="none" stroke="'+ser.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';}
+    if(ser.dots){ser.points.forEach(function(p){
+      s+='<circle cx="'+X(p[0]).toFixed(1)+'" cy="'+Y(p[1]).toFixed(1)+'" r="3.5" fill="'+ser.color+'"><title>'+esc(ser.name)+": "+fmt(p[1],2)+'</title></circle>';
+    })}
+    if(ser.fill){
+      s+='<polygon points="'+X(ser.points[0][0]).toFixed(1)+','+Y(0)+' '+pts+' '+X(ser.points[ser.points.length-1][0]).toFixed(1)+','+Y(0)+'" fill="'+ser.color+'" opacity="0.08"/>';
+    }
+  });
+  if(cfg.xLabel)s+='<text class="lbl" x="'+(L+(W-L-R)/2)+'" y="'+(H-1)+'" text-anchor="middle">'+esc(cfg.xLabel)+'</text>';
+  s+="</svg>";
+  host.innerHTML=s;
+  if((cfg.series||[]).length){
+    var ul=document.createElement("ul");ul.className="legend";
+    cfg.series.forEach(function(ser){var li=document.createElement("li");li.innerHTML='<i style="background:'+ser.color+'"></i>'+esc(ser.name);ul.appendChild(li)});
+    host.appendChild(ul);
+  }
+}
+
+/* ---------- confusion matrix ---------- */
+function cm(host,c){
+  if(!host)return;
+  host.innerHTML='<div class="cm">'+
+    '<div class="cmh"></div><div class="cmh">Modellen larmar</div><div class="cmh">Modellen \u00e4r tyst</div>'+
+    '<div class="cmh">Verkligt hot</div><div class="cell tp"><b>'+c.tp+'</b><span>TP \u2013 f\u00e5ngat hot</span></div><div class="cell fn"><b>'+c.fn+'</b><span>FN \u2013 missat hot</span></div>'+
+    '<div class="cmh">Verkligt normalt</div><div class="cell fp"><b>'+c.fp+'</b><span>FP \u2013 falsklarm</span></div><div class="cell tn"><b>'+c.tn+'</b><span>TN \u2013 korrekt tyst</span></div>'+
+    '</div>';
+}
+
+/* ---------- sm\u00e5hj\u00e4lp ---------- */
+function metric(tp,fp,fn){
+  var p=tp+fp?tp/(tp+fp):0, r=tp+fn?tp/(tp+fn):0;
+  return {precision:p,recall:r,f1:(p+r)?2*p*r/(p+r):0};
+}
+function riskLabel(v,lo,hi){
+  var t=v<lo?"low":(v<hi?"mid":"high");
+  var txt=t==="low"?"L\u00e5g risk":(t==="mid"?"Medelrisk":"H\u00f6g risk");
+  return '<span class="riskbadge '+t+'">'+txt+"</span>";
+}
+function facit(host,items){
+  if(!host)return;
+  items.forEach(function(f){
+    var d=document.createElement("details");
+    d.innerHTML="<summary>"+f[0]+"</summary>"+f[1];
+    host.appendChild(d);
+  });
+}
+function init(){initTabs();initTimer()}
+return {$,$$,esc,fmt,num,quiz,classify,sortTable,bars,line,cm,metric,riskLabel,facit,init:init};
+})();
+(function(){
+  var open=document.getElementById("facOpenAll"),close=document.getElementById("facCloseAll");
+  function all(v){Array.prototype.forEach.call(document.querySelectorAll("#panel-fac details"),function(d){d.open=v})}
+  if(open)open.addEventListener("click",function(){all(true)});
+  if(close)close.addEventListener("click",function(){all(false)});
+})();
+</script>
+
+
+<script>
+(function(){
+  WS.classify(document.getElementById("u1-class"),{
+    col1:"Exempel",col2:"Riskbed\u00f6mning",
+    options:["L\u00e5g risk","Medelrisk","H\u00f6g risk"],
+    rows:[
+      {text:"Klipp d\u00e4r en k\u00e4nd politiker s\u00e4ger n\u00e5got kontroversiellt. K\u00e4lla saknas, l\u00e4ppsynken st\u00e4mmer n\u00e4stan, kontot \u00e4r en vecka gammalt.",correct:2,note:"Nytt konto, ingen k\u00e4lla och n\u00e4stan perfekt l\u00e4ppsynk \u2013 typiskt f\u00f6r manipulerad video."},
+      {text:"Mejl fr\u00e5n vd@foretag-se.com med krav p\u00e5 betalning inom en timme till nytt konto.",correct:2,note:"Dom\u00e4nen \u00e4r felstavad och br\u00e5dskan \u00e4r konstruerad."},
+      {text:"Nyhet om uteg\u00e5ngsf\u00f6rbud, delad i en chatt. L\u00e4nken g\u00e5r till sverigesradio.se och artikeln har datum och reporter.",correct:0,note:"K\u00e4llan \u00e4r den riktiga och artikeln g\u00e5r att kontrollera."},
+      {text:"Bild d\u00e4r en k\u00e4nd person g\u00f6r n\u00e5got osannolikt. Handen har sex fingrar och bakgrunden \u00e4r suddig.",correct:2,note:"Sex fingrar \u00e4r ett klassiskt tecken p\u00e5 genererad bild."},
+      {text:"Inl\u00e4gg s\u00e4ger att en vaccinstudie \u00e4r fabricerad. Ingen f\u00f6rfattare, men studien har DOI.",correct:1,note:"P\u00e5st\u00e5endet kan kontrolleras mot studien \u2013 g\u00f6r det innan du delar."}
+    ]
+  });
+})();
+
+(function(){
+  var host=document.getElementById("u2-ind");
+  if(!host)return;
+  var claims=[
+    {t:"Ansiktet har onaturliga skuggor vid k\u00e4ken och halsen",warn:true,why:"Deepfakes blandar ofta ihop hud och skuggor i kanten mellan ansikte och hals."},
+    {t:"Ljudet har ett svagt men j\u00e4mnt brus som inte matchar rummet",warn:true,why:"Genererat tal saknar ofta rummets naturliga efterklang."},
+    {t:"Klippet \u00e4r 42 sekunder och publicerat av ett konto med 12 f\u00f6ljare",warn:false,why:"L\u00e4ngd och f\u00f6ljare s\u00e4ger inget i sig \u2013 sm\u00e5 konton sprider b\u00e5de sant och falskt."},
+    {t:"Personen blinkar aldrig under hela klippet",warn:true,why:"Onaturligt blinkm\u00f6nster \u00e4r ett vanligt tecken, men inte bevis."},
+    {t:"Ingen oberoende k\u00e4lla har samma uttalande",warn:true,why:"Avsaknad av oberoende k\u00e4llor \u00e4r ett av de starkaste varningstecknen."},
+    {t:"Klippet \u00e4r i svartvitt",warn:false,why:"Svartvitt \u00e4r en stil, inte ett tecken p\u00e5 manipulation."},
+    {t:"Texten uppmanar dig att dela innan den tas bort",warn:true,why:"Br\u00e5dska och spridningsuppmaning \u00e4r påverkansteknik."}
+  ];
+  host.innerHTML='<div class="card"><p>Ett klipp cirkulerar. Kryssa f\u00f6r de tecken som \u00e4r varningstecken \u2013 inte de som bara \u00e4r stilinval.</p><div id="i-list"></div>'+
+    '<div class="actions"><button type="button" id="i-run">Kontrollera</button></div><div id="i-out" aria-live="polite"></div></div>';
+  var list=document.getElementById("i-list");
+  claims.forEach(function(c,i){
+    var l=document.createElement("label");l.className="checkline";
+    l.innerHTML='<input type="checkbox" id="i-'+i+'"><span>'+c.t+'<span class="rownote" id="in-'+i+'" hidden></span></span>';
+    list.appendChild(l);
+  });
+  document.getElementById("i-run").addEventListener("click",function(){
+    var ok=0;
+    claims.forEach(function(c,i){
+      var box=document.getElementById("i-"+i),good=box.checked===c.warn;if(good)ok++;
+      var n=document.getElementById("in-"+i);n.hidden=false;
+      n.innerHTML="<b>"+(good?"R\u00e4tt":(c.warn?"Detta \u00e4r ett varningstecken":"Inget varningstecken"))+"</b> \u2013 "+c.why;
+      box.parentElement.style.background=good?"#e7f4ec":"#fbe7e3";
+    });
+    var out=document.getElementById("i-out");out.className="fb show "+(ok===claims.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+claims.length+" r\u00e4tt.</b> "+(ok===claims.length?"Du skiljer tecken fr\u00e5n stil.":"Ett tecken \u00e4r inte bevis \u2013 men flera tillsammans motiverar kontroll.");
+  });
+})();
+
+(function(){
+  var host=document.getElementById("u3-det");
+  if(!host)return;
+  var items=[];
+  for(var i=0;i<20;i++){items.push({fake:i%2===0,score:(i%2===0)?58+((i*7)%38):12+((i*11)%48)})}
+  host.innerHTML='<div class="card"><p>Ett detektionsverktyg ger varje bild eller klipp en po\u00e4ng 0\u2013100 f\u00f6r "sannolikt AI-genererad". 10 av 20 objekt \u00e4r falska.</p>'+
+    '<label class="field" for="dthr">Tr\u00f6skel: <span class="rangeout" id="dthrv">60</span></label><input type="range" id="dthr" min="20" max="95" value="60">'+
+    '<div id="dbars"></div><p class="fb" id="dsum"></p><p class="hint">Prova tr\u00f6skel 40 och 80. Fundera p\u00e5 vad ett fel betyder i verkligheten: att en \u00e4kta video pekas ut som falsk, eller att en falsk sl\u00e4pps igenom.</p></div>';
+  function run(){
+    var t=Number(document.getElementById("dthr").value);
+    document.getElementById("dthrv").textContent=t;
+    var c={tp:0,fp:0,fn:0,tn:0};
+    items.forEach(function(it){
+      var l=it.score>=t;
+      if(l&&it.fake)c.tp++;else if(l&&!it.fake)c.fp++;else if(!l&&it.fake)c.fn++;else c.tn++;
+    });
+    var m=WS.metric(c.tp,c.fp,c.fn);
+    WS.bars(document.getElementById("dbars"),[
+      {label:"Falska som flaggas",value:c.tp,display:c.tp,tone:"ok"},
+      {label:"Falska som sl\u00e4pps igenom",value:c.fn,display:c.fn,tone:"bad"},
+      {label:"\u00c4kta som pekas ut",value:c.fp,display:c.fp,tone:"warn"},
+      {label:"\u00c4kta som godk\u00e4nns",value:c.tn,display:c.tn}
+    ],{max:20});
+    document.getElementById("dsum").className="fb show";
+    document.getElementById("dsum").innerHTML="<b>Tr\u00f6skel "+t+":</b> "+c.tp+" av 10 falska f\u00e5ngas, "+c.fp+
+      " \u00e4kta pekas ut felaktigt. Precision "+WS.fmt(m.precision,2)+", recall "+WS.fmt(m.recall,2)+". "+
+      (c.fp>3?"M\u00e5nga \u00e4kta pekas ut \u2013 ett f\u00f6rtroendeproblem f\u00f6r verktyget.":"F\u00e5 \u00e4kta drabbas, men "+c.fn+" falska slipper igenom.");
+  }
+  document.getElementById("dthr").addEventListener("input",run);run();
+})();
+
+(function(){
+  var g1=document.getElementById("g-1");
+  if(!g1)return;
+  var g2=document.getElementById("g-2"),g3=document.getElementById("g-3"),out=document.getElementById("g-out");
+  function calc(){
+    var risk=1,notes=[];
+    if(g1.value==="pay"){risk=2;notes.push("Betalningen g\u00e5r till ett nytt konto utan verifiering \u2013 pengarna f\u00f6rsvinner ofta inom minuter.")}
+    if(g1.value==="hold"){notes.push("Att stoppa betalningen kostar ingenting och k\u00f6per tid f\u00f6r verifiering.")}
+    if(g1.value==="half"){risk=2;notes.push("Att betala h\u00e4lften \u00e4r fortfarande en f\u00f6rlust och legitimerar beg\u00e4ran.")}
+    if(g2.value==="known"){notes.push("Uppringning p\u00e5 ett k\u00e4nt nummer g\u00e5r f\u00f6rbi deepfaken helt \u2013 den kan inte svara i telefon.")}
+    if(g2.value==="same"){risk=2;notes.push("Att fr\u00e5ga samma videosamtal \u00e4r meningsl\u00f6st om samtalet \u00e4r manipulerat.")}
+    if(g2.value==="mail"){risk=Math.max(risk,1);notes.push("Adressen i fakturan \u00e4r angriparens. Ring i st\u00e4llet.")}
+    if(g3.value==="report"){risk=0;notes.push("Rapport och polisanm\u00e4lan g\u00f6r att fler kan varnas och att m\u00f6nstret dokumenteras.")}
+    if(g3.value==="intern"){risk=Math.max(risk,1);notes.push("Intern anteckning hj\u00e4lper er men inte andra utsatta.")}
+    if(g3.value==="nothing"){risk=2;notes.push("Utan rapport upprepas f\u00f6rs\u00f6ket mot n\u00e4sta kollega.")}
+    out.innerHTML='<div class="note"><b>Simulerat utfall</b> '+WS.riskLabel(risk,1,2)+
+      '<ul style="margin:8px 0 0">'+notes.map(function(n){return "<li>"+n+"</li>"}).join("")+"</ul>"+
+      '<p class="hint">Po\u00e4ngen: verifieringen ska ske i en kanal som angriparen inte kontrollerar.</p></div>';
+  }
+  [g1,g2,g3].forEach(function(e){e.addEventListener("change",calc)});
+  document.getElementById("g-run").addEventListener("click",calc);calc();
+})();
+
+WS.facit(document.getElementById("facit-lista"),[
+  ["Uppgift 1 \u2013 Riskbed\u00f6mning",'<p>H\u00f6g risk: det nya kontots klipp, den felstavade dom\u00e4nen och bilden med sex fingrar. L\u00e5g risk: SR-artikeln med namn, datum och k\u00e4lla. Medelrisk: p\u00e5st\u00e5endet om vaccinstudien \u2013 det kan motbevisas eller styrkas, men kr\u00e4ver att du l\u00e4ser studien.</p><p>Bed\u00f6mningen bygger p\u00e5 tre fr\u00e5gor: vem s\u00e4ger det, vilket syfte finns, och kan jag kontrollera det n\u00e5gon annanstans?</p>'],
+  ["Uppgift 2 – Indikatorer och AI-text",'<p>Varningstecken: onaturliga skuggor, avvikande ljudrum, aldrig blinkande, ingen oberoende k\u00e4lla och uppmaningen att dela snabbt. Inte tecken: antal f\u00f6ljare och svartvitt.</p><p>Inget enskilt tecken bevisar manipulation. Flera tillsammans motiverar en kontroll \u2013 och kontrollen \u00e4r alltid starkare \u00e4n tecknen.<p><b>AI-text:</b> påståendet om 15 misslyckade försök och det lyckade försöket stöds av loggen. VPN-detaljen är påhittad och spärren är inte styrkt – ingen åtgärd har utförts. Hög variation ökar risken för trovärdiga men påhittade detaljer; verifiera alltid mot en oberoende källa.</p>'],
+  ["Uppgift 3 – Källor och verifiering",'<p>Åtta påståenden, sex källor och tio verifieringar. Fem resultat är <b>Supported</b>, tre <b>Unverified</b>, ett <b>Needs review</b> och ett <b>Contradicted</b>. Påståendet om valresultatet motsägs av en nyhetsartikel och är overifierat i sociala medier – två svaga källor ger ingen säker slutsats.</p><p>JOIN:en claims → verification_results → sources visar tio rader med påstående, källa, tillförlitlighet och resultat. ”Supported” betyder att källan stöder påståendet, inte att påståendet är sant: en anonym källa kan också ge stöd. Källor med hög tillförlitlighet är den officiella webbplatsen och en myndighet.</p><p>Tolkning: kombinera minst två oberoende källor, kontrollera bild/ljud/video separat och var öppen med osäkerheten. En enskild indikator – dålig stavning, konstig belysning eller ett AI-verktygs procenttal – bevisar inget.</p>'],
+    ["Uppgift 4 \u2013 Ekonomichefen",'<p>Rekommendationen: stoppa betalningen, ring upp chefen p\u00e5 ett k\u00e4nt nummer och rapportera f\u00f6rs\u00f6ket till s\u00e4kerhetsansvarig och polis.</p><p>Deepfaken kan se perfekt ut i fem sekunder. Det som avsl\u00f6jar den \u00e4r att den inte kan svara i telefon n\u00e4r du ringer ett nummer du sj\u00e4lv hittat.</p>']
+]);
+
+WS.quiz(document.getElementById("quiz"),{
+  title:"Avslutande kunskapskontroll",
+  hint:"Fyra fr\u00e5gor om k\u00e4llkritik, deepfakes och verifiering.",
+  questions:[{"text": "Vad är skillnaden mellan desinformation och misinformation?", "options": ["Ingen", "Desinformation sprids med avsikt, misinformation utan avsikt", "Desinformation är alltid video", "Misinformation är alltid sant"], "answer": 1, "why": "Båda är falska, men avsikten skiljer dem. Det påverkar hur ni ska hantera spridningen."}, {"text": "Ett videosamtal ser ut som chefen och ber om en snabb betalning. Vad är rätt första steg?", "options": ["Betala, det är brådskande", "Avbryt och ring upp på ett nummer du redan har", "Fråga i samtalet om det verkligen är chefen", "Skicka pengarna till ett tillfälligt konto"], "answer": 1, "why": "Verifiera via en kanal du själv kontrollerar. Den som ringer kan vara en deepfake."}, {"text": "Ett AI-verktyg säger att en bild är 92 procent AI-genererad. Vad betyder det?", "options": ["Bilden är bevisat falsk", "Verktyget ger en sannolikhet som måste tolkas av en människa", "Bilden är äkta", "Inget alls"], "answer": 1, "why": "Verktyget mäter mönster, inte sanning. Det kan ha fel både åt ena och andra hållet."}, {"text": "Varför är brådska ett varningstecken?", "options": ["Det är alltid olagligt", "Den som stressar dig vill ofta att du hoppar över verifieringen", "Det betyder att avsändaren är okänd", "Det gör texten längre"], "answer": 1, "why": "TidsPress är en klassisk påverkansteknik. En legit begäran tål en kontroll."}]
+});
+WS.init();
+</script>
+
+<script>
+(function(){
+  var host=document.getElementById("gn-claims");
+  if(!host)return;
+  var low="Sammanfattning av incident 2026-05-25:\nKl. 02:14–02:19 misslyckades 15 inloggningsförsök mot kontot bjorn från källa NL. Ett av försöken lyckades. Ingen åtgärd har ännu vidtagits.\n\nBedömning: fortsatt utredning behövs.";
+  var high="Sammanfattning av incident 2026-05-25:\nUnder natten utsattes kontot bjorn för en riktad attack. Runt 02:14 gjordes ett stort antal inloggningsförsök från Nederländerna, och angriparen använde en VPN-tjänst för att dölja sig. Ett försök lyckades, vilket tyder på att lösenordet läckt. Kontot är nu spärrat och incidenten är stängd.\n\nBedömning: åtgärden fungerade.";
+  var t=document.getElementById("gn-text");
+  function setText(highVar){
+    t.textContent=highVar?high:low;
+    document.getElementById("gn-low").setAttribute("aria-pressed",highVar?"false":"true");
+    document.getElementById("gn-high").setAttribute("aria-pressed",highVar?"true":"false");
+  }
+  var C=[
+    {t:"15 misslyckade inloggningsförsök kl. 02:14",a:"styrkt",why:"Står i loggen."},
+    {t:"Angriparen använde en VPN-tjänst",a:"pahittad",why:"Inget i underlaget stöder det. Vid hög variation lade modellen till en trovärdig men påhittad detalj."},
+    {t:"Ett försök lyckades",a:"styrkt",why:"Står i loggen."},
+    {t:"Kontot är nu spärrat",a:"ej",why:"Loggen säger att ingen åtgärd utförts. Modellen kan inte veta att något hänt efter loggen."}
+  ];
+  var labels=[["styrkt","Styrkt av underlaget"],["ej","Inte styrkt"],["pahittad","Påhittad detalj"]];
+  function build(){
+    host.innerHTML=C.map(function(c,i){
+      return '<div class="mini" style="margin-bottom:8px"><b>'+WS.esc(c.t)+'</b><div class="seg" style="margin-top:6px" data-i="'+i+'">'+
+        labels.map(function(l){return '<button type="button" data-v="'+l[0]+'" aria-pressed="false">'+l[1]+"</button>"}).join("")+"</div></div>";
+    }).join("");
+    Array.prototype.forEach.call(host.querySelectorAll(".seg"),function(g){
+      Array.prototype.forEach.call(g.querySelectorAll("button"),function(b){
+        b.addEventListener("click",function(){
+          Array.prototype.forEach.call(g.querySelectorAll("button"),function(x){x.setAttribute("aria-pressed","false")});
+          b.setAttribute("aria-pressed","true");g.setAttribute("data-val",b.getAttribute("data-v"));
+        });
+      });
+    });
+  }
+  function check(){
+    var ok=0;
+    C.forEach(function(c,i){
+      var g=host.querySelector('.seg[data-i="'+i+'"]'),v=g.getAttribute("data-val")||"";
+      if(v===c.a)ok++;
+      g.parentElement.style.background=v?(v===c.a?"#e7f4ec":"#fbe7e3"):"";
+      g.parentElement.title=v===c.a?"Rätt":(v?c.why:"");
+    });
+    var o=document.getElementById("gn-out");
+    o.className=ok===C.length?"note":"warn";
+    o.innerHTML="<b>"+ok+" av 4 rätt.</b> "+C.map(function(c){return "«"+WS.esc(c.t)+"» – "+WS.esc(c.why)}).join("<br>");
+  }
+  document.getElementById("gn-low").addEventListener("click",function(){setText(false)});
+  document.getElementById("gn-high").addEventListener("click",function(){setText(true)});
+  document.getElementById("gn-check").addEventListener("click",check);
+  document.getElementById("gn-reset").addEventListener("click",function(){
+    build();document.getElementById("gn-out").textContent="";document.getElementById("gn-out").className="";
+    setText(false);
+  });
+  build();setText(false);
+})();
+</script>
+<script>window.__DB_CFG=window.__DB_CFG||{};window.__DB_CFG['06']={"title":"claims, sources och verification_results","intro":"Ett påstående är inte sant för att en källa säger det. Databasen kopplar varje påstående till flera källor och till en bedömning.","tables":[{"name":"claims","pk":"claim_id","cols":[["claim_id","INTEGER"],["claim_text","TEXT"],["category","TEXT"]],"fk":[],"rows":[[1,"En organisation rapporterade en dataintrång","Security"],[2,"En offentlig person gjorde ett uttalande","Media"],[3,"En video visar en ovanlig händelse","Video"],[4,"Ny skadlig kod sprids via e-post","Security"],[5,"Ett valresultat manipulerades","Politics"],[6,"En produkt återkallas","Business"],[7,"En känd person rekommenderar ett varumärke","Media"],[8,"Ett strömavbrott orsakades av en cyberattack","Infrastructure"]]},{"name":"sources","pk":"source_id","cols":[["source_id","INTEGER"],["source_name","TEXT"],["source_type","TEXT"],["reliability","TEXT"]],"fk":[],"rows":[[1,"Officiell webbplats","Primary","High"],[2,"Nyhetsartikel","Secondary","Medium"],[3,"Inlägg i sociala medier","Social","Unknown"],[4,"Myndighet","Primary","High"],[5,"Branschrapport","Secondary","Medium"],[6,"Anonymt forum","Anonymous","Low"]]},{"name":"verification_results","pk":"verification_id","cols":[["verification_id","INTEGER"],["claim_id","INTEGER"],["source_id","INTEGER"],["result","TEXT"],["checked_at","TEXT"]],"fk":[["claim_id","claims.claim_id"],["source_id","sources.source_id"]],"rows":[[1,1,1,"Supported","11:00"],[2,2,2,"Needs review","11:05"],[3,3,3,"Unverified","11:10"],[4,4,1,"Supported","11:15"],[5,4,5,"Supported","11:18"],[6,5,2,"Contradicted","11:25"],[7,5,3,"Unverified","11:28"],[8,6,1,"Supported","11:35"],[9,7,3,"Unverified","11:40"],[10,8,4,"Supported","11:45"]]}],"queries":[{"label":"Alla påståenden","sql":"SELECT * FROM claims;","explain":"Åtta påståenden i olika kategorier. Databasen säger inget om de är sanna – bara att de finns och ska kontrolleras.","cols":["claim_id","claim_text","category"],"rows":[[1,"En organisation rapporterade en dataintrång","Security"],[2,"En offentlig person gjorde ett uttalande","Media"],[3,"En video visar en ovanlig händelse","Video"],[4,"Ny skadlig kod sprids via e-post","Security"],[5,"Ett valresultat manipulerades","Politics"],[6,"En produkt återkallas","Business"],[7,"En känd person rekommenderar ett varumärke","Media"],[8,"Ett strömavbrott orsakades av en cyberattack","Infrastructure"]]},{"label":"Påstående med källor","sql":"SELECT c.claim_text, s.source_name, s.reliability, v.result FROM claims c JOIN verification_results v ON c.claim_id = v.claim_id JOIN sources s ON v.source_id = s.source_id;","explain":"Två JOIN: påstående → verifiering → källa. Tio rader. Ett påstående kan ha flera källor med olika bedömning – det är styrkan.","cols":["claim_text","source_name","reliability","result"],"rows":[["En organisation rapporterade en dataintrång","Officiell webbplats","High","Supported"],["En offentlig person gjorde ett uttalande","Nyhetsartikel","Medium","Needs review"],["En video visar en ovanlig händelse","Inlägg i sociala medier","Unknown","Unverified"],["Ny skadlig kod sprids via e-post","Officiell webbplats","High","Supported"],["Ny skadlig kod sprids via e-post","Branschrapport","Medium","Supported"],["Ett valresultat manipulerades","Nyhetsartikel","Medium","Contradicted"],["Ett valresultat manipulerades","Inlägg i sociala medier","Unknown","Unverified"],["En produkt återkallas","Officiell webbplats","High","Supported"],["En känd person rekommenderar ett varumärke","Inlägg i sociala medier","Unknown","Unverified"],["Ett strömavbrott orsakades av en cyberattack","Myndighet","High","Supported"]]},{"label":"Bara styrkta","sql":"SELECT c.claim_text, s.source_name FROM claims c JOIN verification_results v ON c.claim_id = v.claim_id JOIN sources s ON v.source_id = s.source_id WHERE v.result = 'Supported';","explain":"Fem rader är styrkta. Men 'styrkt' betyder bara att den källan stöder påståendet – en dålig källa kan också ge stöd. Kontrollera alltid källtypen.","cols":["claim_text","source_name","reliability"],"rows":[["En organisation rapporterade en dataintrång","Officiell webbplats","High"],["Ny skadlig kod sprids via e-post","Officiell webbplats","High"],["Ny skadlig kod sprids via e-post","Branschrapport","Medium"],["En produkt återkallas","Officiell webbplats","High"],["Ett strömavbrott orsakades av en cyberattack","Myndighet","High"]]},{"label":"Bedömningar per resultat","sql":"SELECT result, COUNT(*) AS antal FROM verification_results GROUP BY result ORDER BY antal DESC;","explain":"Fem styrkta, tre overifierade, en som behöver granskas och en motsagd. Summerar man kolumnen blir det tio kontroller.","cols":["result","antal"],"rows":[["Supported",5],["Unverified",3],["Needs review",1],["Contradicted",1]]},{"label":"Källor med hög tillförlitlighet","sql":"SELECT source_name, source_type FROM sources WHERE reliability = 'High';","explain":"Två källor har hög tillförlitlighet. Hög tillförlitlighet är inte samma sak som att just det här påståendet är sant.","cols":["source_name","source_type"],"rows":[["Officiell webbplats","Primary"],["Myndighet","Primary"]]}],"note":"Verifiering är en kedja: hitta påståendet, hitta oberoende källor, jämför, och var tydlig med osäkerheten. En indikator bevisar inget ensam."};</script>
+
+<script>
+(function(){
+  var CFG=window.__DB_CFG||{};
+  function esc(s){return WS.esc(String(s))}
+  function isNum(v){return typeof v==="number"}
+  document.querySelectorAll("[data-db]").forEach(function(host){
+    var key=host.getAttribute("data-db"),db=CFG[key];
+    if(!db)return;
+    var ti=0,qi=0,filter="",sortCol=-1,sortDir=1;
+    function tab(){return db.tables[ti]}
+    function rowsNow(){
+      var t=tab(),rows=t.rows.slice();
+      if(filter){
+        var f=filter.toLowerCase();
+        rows=rows.filter(function(r){return r.join(" ").toLowerCase().indexOf(f)>=0});
+      }
+      if(sortCol>=0){
+        rows.sort(function(a,b){
+          var x=a[sortCol],y=b[sortCol];
+          if(isNum(x)&&isNum(y))return (x-y)*sortDir;
+          return String(x).localeCompare(String(y),"sv")*sortDir;
+        });
+      }
+      return rows;
+    }
+    function tableHTML(){
+      var t=tab(),rows=rowsNow();
+      var head="<tr>"+t.cols.map(function(c,i){
+        var arrow=sortCol===i?(sortDir>0?" \u2191":" \u2193"):"";
+        return '<th data-col="'+i+'" title="Sortera">'+esc(c[0])+arrow+"</th>";
+      }).join("")+"</tr>";
+      var body=rows.length?rows.map(function(r){
+        return "<tr>"+r.map(function(v){return '<td'+(isNum(v)?' class="num"':"")+">"+(v===null?"NULL":esc(v))+"</td>"}).join("")+"</tr>";
+      }).join(""):'<tr><td colspan="'+t.cols.length+'" class="db-empty">Inga rader matchar filtret.</td></tr>';
+      return '<div class="db-scroll"><table class="tbl"><thead>'+head+"</thead><tbody data-role=\"tbody\">"+body+"</tbody></table></div>"+
+        '<p class="hint" data-role="count" style="margin:6px 0 0">'+rows.length+" av "+t.rows.length+" rader \u00b7 "+t.cols.length+" kolumner</p>";
+    }
+    function paint(){
+      host.querySelector('[data-role="tablewrap"]').innerHTML=tableHTML();
+      bindSort();
+    }
+    function bindSort(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-col]"),function(th){
+        th.addEventListener("click",function(){
+          var i=+th.getAttribute("data-col");
+          if(sortCol===i)sortDir*=-1;else{sortCol=i;sortDir=1}
+          paint();
+        });
+      });
+    }
+    function schema(){
+      var t=tab();
+      return '<ul class="schema">'+t.cols.map(function(c){
+        var key=t.pk===c[0]?' <span class="key">PK</span>':"";
+        return "<li>"+esc(c[0])+" "+esc(c[1])+key+"</li>";
+      }).join("")+"</ul>"+(t.fk&&t.fk.length?'<p class="hint" style="margin:0 0 8px">Främmande nycklar: '+t.fk.map(function(f){
+        return "<code>"+esc(f[0])+"</code> \u2192 "+esc(f[1]);
+      }).join(" \u00b7 ")+"</p>":'<p class="hint" style="margin:0 0 8px">Primärnyckel: <code>'+esc(t.pk)+"</code> identifierar varje rad.</p>");
+    }
+    function timeline(){
+      if(!db.timeline)return "";
+      var t=db.tables.filter(function(x){return x.name===db.timeline.table})[0];
+      if(!t)return "";
+      return '<h5 style="margin:10px 0 0">Tidslinje</h5><ol class="timeline">'+t.rows.map(function(r){
+        return "<li><time>"+esc(r[db.timeline.time])+"</time><b>"+esc(r[db.timeline.title])+"</b> \u00b7 "+esc(r[db.timeline.level])+"</li>";
+      }).join("")+"</ol>";
+    }
+    function featureBox(){
+      var f=db.features;
+      if(!f)return "";
+      return '<div class="featurebox"><b>Features och label</b><p class="hint">'+esc(f.prompt)+"</p>"+
+        f.items.map(function(it,i){
+          return '<label class="checkline"><input type="checkbox" data-f="'+i+'"><span>'+esc(it[0])+"</span></label>";
+        }).join("")+
+        '<div class="actions"><button type="button" data-role="fcheck">Kontrollera valen</button></div><div data-role="fout" aria-live="polite"></div></div>';
+    }
+    function render(){
+      var t=tab(),q=db.queries[qi];
+      host.innerHTML='<div class="db-head"><span class="tag">Pedagogisk databas \u00b7 syntetiska data</span><h4>'+esc(db.title)+"</h4><p class=\"hint\">"+esc(db.intro)+"</p></div>"+
+        (db.timeline?timeline():"")+
+        '<div class="db-tabs" role="group" aria-label="Tabeller">'+db.tables.map(function(x,i){
+          return '<button type="button" data-t="'+i+'" aria-pressed="'+(i===ti?"true":"false")+'">'+esc(x.name)+"</button>";
+        }).join("")+"</div>"+
+        '<div class="db-grid">'+
+          '<div class="db-box"><b>Tabell: '+esc(t.name)+"</b>"+schema()+
+            '<div class="db-tools"><input type="search" data-role="filter" placeholder="Filtrera rader\u2026" value="'+esc(filter)+'" aria-label="Filtrera tabellen"><button type="button" class="ghost" data-role="reset">\u00c5terst\u00e4ll</button></div>'+
+            '<div data-role="tablewrap">'+tableHTML()+"</div></div>"+
+          '<div class="db-box"><b>SQL-fr\u00e5gor</b><div class="sqlbtns">'+db.queries.map(function(x,i){
+            return '<button type="button" data-q="'+i+'" aria-pressed="'+(i===qi?"true":"false")+'">'+esc(x.label)+"</button>";
+          }).join("")+"</div>"+
+            '<pre class="code">'+esc(q.sql)+"</pre><p>"+esc(q.explain)+"</p>"+
+            '<p class="hint" style="margin:4px 0">F\u00f6rv\u00e4ntat resultat: <b>'+q.rows.length+" rader</b></p>"+
+            '<div class="db-scroll"><table class="tbl"><thead><tr>'+q.cols.map(function(c){return "<th>"+esc(c)+"</th>"}).join("")+"</tr></thead><tbody>"+
+            q.rows.map(function(r){return "<tr>"+r.map(function(v){return "<td"+(isNum(v)?' class="num"':"")+">"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")+
+            "</tbody></table></div></div>"+
+        "</div>"+featureBox()+'<p class="hint" style="margin:10px 0 0">'+esc(db.note)+"</p>";
+      bind();
+    }
+    function bind(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-t]"),function(b){
+        b.addEventListener("click",function(){ti=+b.getAttribute("data-t");qi=0;filter="";sortCol=-1;render()});
+      });
+      Array.prototype.forEach.call(host.querySelectorAll("[data-q]"),function(b){
+        b.addEventListener("click",function(){qi=+b.getAttribute("data-q");render()});
+      });
+      var f=host.querySelector('[data-role="filter"]');
+      if(f)f.addEventListener("input",function(){filter=f.value;paint()});
+      host.querySelector('[data-role="reset"]').addEventListener("click",function(){ti=0;qi=0;filter="";sortCol=-1;render()});
+      var fc=host.querySelector('[data-role="fcheck"]');
+      if(fc)fc.addEventListener("click",function(){
+        var f=db.features,ok=0,picked=[];
+        Array.prototype.forEach.call(host.querySelectorAll("[data-f]"),function(c){
+          var i=+c.getAttribute("data-f"),good=c.checked===!!f.items[i][1];
+          if(good)ok++;else picked.push(f.items[i][0]);
+          c.parentElement.style.background=good?"#e7f4ec":"#fbe7e3";
+        });
+        var o=host.querySelector('[data-role="fout"]');
+        o.className=ok===f.items.length?"note":"warn";
+        o.innerHTML="<b>"+ok+" av "+f.items.length+" r\u00e4tt.</b> "+(picked.length?"Justera: "+picked.map(esc).join(", ")+".":"Alla val st\u00e4mmer.")+
+          "<br>"+f.items.map(function(it){return "<span class=\"hint\">"+esc(it[0])+": "+esc(it[2])+"</span>"}).join("<br>");
+      });
+      bindSort();
+    }
+    render();
+  });
+})();
+</script>
+
+</body>
+</html>

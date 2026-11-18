@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop 03 – IT/OT, zonindelning och datadiod · AI inom cybersäkerhet</title>
+<style>
+
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d1c19;--muted:#5c5a54;--line:#dcd8cf;
+--ok:#1f6b45;--bad:#a32b1c;--warn:#8a5a12;--soft:#efece4;--shadow:0 1px 2px rgba(0,0,0,.05)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.62 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+img,svg{max-width:100%}
+a{color:var(--dark);text-underline-offset:3px}
+a:hover{color:var(--acc)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:10px;z-index:99;border-radius:8px}
+header.top{background:var(--dark);color:#fff;padding:10px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+header.top a{color:#fff;text-decoration:none;font-weight:600;font-size:.92rem}
+header.top a:hover{color:#ffd9c9}
+header.top .kicker{font-size:.85rem;opacity:.9}
+main{max-width:1000px;margin:0 auto;padding:24px 18px 56px}
+.hero{margin:6px 0 18px}
+.eyebrow{font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--acc);font-weight:700;margin:0 0 4px}
+h1{font-size:clamp(1.55rem,3.2vw,2.2rem);line-height:1.18;margin:.1em 0 .35em;color:var(--dark)}
+.lead{font-size:1.06rem;max-width:70ch;color:#33312c;margin:.2em 0 1em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.86rem;color:var(--muted)}
+.chips b{color:var(--ink)}
+h2{font-size:1.35rem;margin:1.6em 0 .5em;color:var(--dark)}
+h3{font-size:1.06rem;margin:1.3em 0 .4em}
+h4{font-size:.98rem;margin:1em 0 .3em}
+p,li{max-width:74ch}
+ul,ol{padding-left:1.25em}
+li{margin:.25em 0}
+.goals{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:10px;padding:14px 18px;margin:16px 0 6px}
+.goals h2{margin:.1em 0 .4em;font-size:1.05rem}
+.goals ul{margin:0}
+.tabs{position:sticky;top:0;z-index:30;background:var(--bg);display:flex;gap:6px;align-items:center;flex-wrap:wrap;
+padding:10px 0;border-bottom:2px solid var(--line);margin:18px 0 6px}
+.tabs [role=tab]{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);
+color:var(--muted);border-radius:9px;padding:9px 15px}
+.tabs [role=tab]:hover{border-color:var(--acc);color:var(--ink)}
+.tabs [role=tab][aria-selected=true]{background:var(--dark);border-color:var(--dark);color:#fff}
+.tabs [role=tab]:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,th:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.timer{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:4px 8px}
+.timer .clock{font-variant-numeric:tabular-nums;font-weight:700;min-width:52px;text-align:center;color:var(--dark)}
+.timer.low .clock{color:var(--bad)}
+.timer.done .clock{color:var(--warn)}
+.timer button{font:inherit;font-size:.82rem;padding:4px 9px;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+.timer button:hover{border-color:var(--acc)}
+[role=tabpanel]{padding:8px 0 20px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.task{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;box-shadow:var(--shadow)}
+.task>h3{margin-top:0;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.task .no{background:var(--acc);color:#fff;border-radius:7px;font-size:.8rem;padding:2px 9px;font-weight:700}
+.brief{display:grid;gap:6px;margin:10px 0 14px;font-size:.95rem}
+.brief div{display:grid;grid-template-columns:110px 1fr;gap:10px}
+.brief dt,.brief b{color:var(--muted);font-weight:600}
+.brief span{min-width:0}
+@media(max-width:520px){.brief div{grid-template-columns:1fr;gap:0}}
+.hint{font-size:.9rem;color:var(--muted);margin:.4em 0}
+.note{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+.warn{background:#fdf2e2;border:1px solid #e6c9a2;border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--dark);background:var(--dark);color:#fff;padding:9px 16px}
+button:hover{filter:brightness(1.12)}
+button.ghost{background:transparent;color:var(--dark);border-color:var(--line)}
+button.ghost:hover{background:var(--soft)}
+button:disabled{opacity:.6;cursor:default;filter:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 4px}
+label.field{display:block;font-weight:600;font-size:.92rem;margin:10px 0 4px}
+select,input[type=number],input[type=range],input[type=search]{font:inherit}
+select,input[type=number],input[type=search]{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--dark);height:28px}
+input[type=checkbox],input[type=radio]{accent-color:var(--dark);width:18px;height:18px}
+.rangeout{font-variant-numeric:tabular-nums;font-weight:700;color:var(--dark)}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:10px 0}
+legend{font-weight:600;font-size:.92rem;padding:0 6px}
+.checkline{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.95rem}
+.checkline:last-child{border-bottom:0}
+.checkline input{margin-top:4px;flex:none}
+.checkline span{flex:1}
+.tablewrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.93rem;min-width:420px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-weight:600;white-space:nowrap}
+th[data-i]{cursor:pointer;user-select:none}
+th[data-i]:hover{background:#e6e2d8}
+th .arrow{opacity:.45;font-size:.8em}
+tbody tr:hover{background:#faf8f3}
+tbody tr.good{background:#eaf5ee}
+tbody tr.bad{background:#fbecea}
+.rownote{font-size:.84rem;color:var(--muted);margin-top:4px}
+.filter{margin-bottom:8px;width:min(340px,100%)}
+.fb{font-size:.93rem;margin:10px 0;padding:10px 12px;border-radius:8px;background:var(--soft)}
+.fb:empty{display:none}
+.fb.ok{background:#eaf5ee;border-left:4px solid var(--ok)}
+.fb.bad{background:#fbecea;border-left:4px solid var(--bad)}
+.fb b{color:var(--ink)}
+.whynot{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+.q{border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0;background:#fff}
+.qt{font-weight:600;margin:0 0 8px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--soft);border:1px solid var(--line);
+color:var(--ink);border-radius:8px;padding:9px 11px;font-weight:400}
+.opt:hover:not(:disabled){border-color:var(--acc)}
+.opt .k{font-weight:700;color:var(--muted);flex:none}
+.opt.correct{border-color:var(--ok);background:#e7f4ec}
+.opt.wrong{border-color:var(--bad);background:#fbe7e3}
+.opt .k{min-width:1em}
+.quizsum{font-size:.95rem;margin:12px 0 4px}
+.chart{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+.chart .grid{stroke:#e5e1d8;stroke-width:1}
+.chart .ax{font-size:11px;fill:#6b6862}
+.chart .lbl{font-size:12px;fill:#3a3833}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.86rem;color:var(--muted);margin:6px 0 0;padding:0;list-style:none}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.bars{margin:10px 0}
+.barrow{display:grid;grid-template-columns:minmax(110px,1.1fr) 2fr minmax(56px,auto);gap:10px;align-items:center;font-size:.9rem;margin:6px 0}
+.bl{color:var(--muted)}
+.btrack{background:var(--soft);border-radius:999px;height:12px;overflow:hidden}
+.bfill{display:block;height:100%;background:var(--dark);border-radius:999px;transition:width .18s ease}
+.barrow.ok .bfill{background:var(--ok)}
+.barrow.bad .bfill{background:var(--bad)}
+.barrow.warn .bfill{background:var(--warn)}
+.bv{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;margin:12px 0;font-size:.9rem}
+.cm .cmh{font-weight:600;color:var(--muted);padding:4px 6px;display:flex;align-items:center}
+.cm .cell{border-radius:8px;padding:10px;border:1px solid var(--line);background:#fff}
+.cm .cell b{display:block;font-size:1.3rem}
+.cm .cell span{font-size:.8rem;color:var(--muted)}
+.cm .tp{background:#e6f4ec;border-color:#b6ddc6}
+.cm .tn{background:#eef1f0;border-color:#cfd8d3}
+.cm .fp{background:#fdf1e2;border-color:#e8cfae}
+.cm .fn{background:#fbe8e5;border-color:#e8bcb4}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0}
+details[open]{box-shadow:var(--shadow)}
+summary{cursor:pointer;font-weight:600;color:var(--dark)}
+details[open] summary{margin-bottom:8px;border-bottom:1px solid var(--line);padding-bottom:8px}
+details .why{font-size:.95rem}
+details ul{margin:.4em 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--muted);vertical-align:middle}
+.tag.sim{background:#efe6f5;color:#5b3a72}
+.flow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flow li{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.85rem}
+.flow li.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.flow li b{font-weight:700}
+.stepbtns{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.stepbtns button{background:var(--card);color:var(--ink);border:1px solid var(--line);padding:6px 10px;font-size:.86rem;border-radius:8px}
+.stepbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.stepinfo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:8px;padding:12px 14px;margin:8px 0;min-height:76px}
+.stepinfo h4{margin:0 0 4px}
+.riskbadge{display:inline-block;border-radius:6px;padding:2px 9px;font-weight:700;font-size:.85rem}
+.riskbadge.low{background:#e6f4ec;color:#1f5c3e}
+.riskbadge.mid{background:#fdf1e2;color:#7a5112}
+.riskbadge.high{background:#fbe8e5;color:#8c2417}
+footer{border-top:1px solid var(--line);margin-top:26px;padding:18px;text-align:center;color:var(--muted);font-size:.83rem}
+@media(max-width:640px){main{padding:16px 12px 40px}.tabs{padding:8px 0}.timer{width:100%;justify-content:center}.brief div{grid-template-columns:1fr}th,td{padding:6px 8px}}
+@media print{header.top,.tabs,.actions,button{display:none}body{background:#fff}[role=tabpanel][hidden]{display:block!important}main{max-width:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* --- nya interaktiva komponenter --- */
+.figure-wrap{display:grid;gap:16px;grid-template-columns:minmax(240px,0.9fr) minmax(280px,1.1fr);align-items:start}
+@media(max-width:760px){.figure-wrap{grid-template-columns:1fr}}
+.human{position:relative;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:8px}
+.human svg{display:block;width:100%;height:auto}
+.hotspot{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--dark);background:#fff;color:var(--dark);border-radius:999px;font:inherit;font-size:.72rem;font-weight:700;padding:3px 7px;line-height:1.2;cursor:pointer;white-space:nowrap}
+.hotspot[aria-pressed=true]{background:var(--dark);color:#fff}
+.hotspot:hover{border-color:var(--acc)}
+.hotspot:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:150px}
+.panel h4{margin:.1em 0 .4em}
+.flows{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flows li{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:.82rem}
+.flows li.off{opacity:.45;text-decoration:line-through}
+.flows .arr{background:none;border:0;color:var(--muted);padding:0 1px}
+.code{background:#23261f;color:#eae7df;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.5;padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:pre;margin:8px 0}
+.code .k{color:#9ec9a8}
+.code .s{color:#e6c07b}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;border-radius:0;background:var(--card);color:var(--ink);padding:6px 10px;font-size:.85rem;font-weight:600}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--dark);color:#fff}
+.chips2{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;padding:0;list-style:none}
+.chips2 button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.85rem}
+.chips2 button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.metricgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin:10px 0}
+.metric{background:var(--soft);border-radius:9px;padding:8px 10px}
+.metric b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.metric span{font-size:.78rem;color:var(--muted)}
+.modelgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:10px 0}
+.modelcard{text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-weight:600;font-size:.9rem}
+.modelcard small{display:block;font-weight:400;color:var(--muted);font-size:.78rem;margin-top:3px}
+.modelcard[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
+.cards3{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:10px 0}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.88rem}
+.mini h5{margin:0 0 4px;font-size:.9rem}
+.legendline{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin:4px 0 0}
+
+/* --- databasvy --- */
+.db{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);margin:12px 0}
+.db-head h4{margin:0 0 4px}
+.db-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.db-tabs button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 10px;font-size:.85rem;font-weight:600}
+.db-tabs button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-grid{display:grid;gap:12px;grid-template-columns:minmax(280px,1fr) minmax(280px,1fr)}
+@media(max-width:820px){.db-grid{grid-template-columns:1fr}}
+.db-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.schema{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px;padding:0;list-style:none}
+.schema li{font-size:.75rem;background:var(--soft);border-radius:6px;padding:2px 6px;font-family:ui-monospace,Consolas,monospace}
+.schema .key{color:var(--dark);font-weight:700}
+.db-tools{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.db-tools input{flex:1;min-width:120px;border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;font-size:.85rem;background:var(--card);color:var(--ink)}
+.db-tools button{font-size:.8rem;padding:4px 9px}
+.db-scroll{overflow-x:auto}
+.db .tbl{font-size:.82rem;min-width:0}
+.db .tbl th{white-space:nowrap;cursor:pointer}
+.db .tbl td{white-space:nowrap}
+.db .tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.sqlbtns{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px}
+.sqlbtns button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:4px 9px;font-size:.8rem}
+.sqlbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-empty{padding:10px;color:var(--muted);font-size:.85rem}
+.timeline{list-style:none;margin:8px 0;padding:0 0 0 14px;border-left:3px solid var(--acc)}
+.timeline li{margin:0 0 6px;font-size:.85rem;position:relative}
+.timeline li:before{content:"";position:absolute;left:-20px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.timeline time{font-weight:700;margin-right:6px}
+.featurebox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px}
+.featurebox .checkline{margin:0 0 2px}
+.fitgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:10px 0}
+.fitgrid .mini svg{width:100%;height:auto;display:block}
+.facitbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.facitbar .hint{margin:0}
+
+:root{--dark:#26343a;--dark2:#1a252a;--acc:#0f8f8f;--acc2:#0b6f6f;--bg:#f2f6f6;--soft:#e3edee}
+/* ===== Extra labb med avancerad grafik (tillagt) ===== */
+.lab{margin:34px 0 8px;border-radius:16px;overflow:hidden;border:1px solid #1d2b45;
+background:radial-gradient(1200px 520px at 12% -12%,#172c50 0%,#0b1220 46%,#070c16 100%);
+color:#dbe7ff;box-shadow:0 18px 46px rgba(8,18,38,.28);padding:20px 0 0}
+.lab-eyebrow{margin:0 18px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#6ff2d9;font-weight:700}
+.lab h2{margin:.25em 18px .3em;color:#f2f7ff;font-size:clamp(1.25rem,2.4vw,1.6rem)}
+.lab-lead{margin:0 18px 16px;color:#a8bcd8;max-width:78ch;font-size:.98rem}
+.lab-shell{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.95fr);gap:14px;padding:0 18px 18px}
+@media(max-width:860px){.lab-shell{grid-template-columns:1fr}}
+.lab-stage{position:relative;border-radius:13px;border:1px solid #1e3355;background:#060b14;overflow:hidden;align-self:start}
+.lab-stage canvas{display:block;width:100%;height:auto}
+.lab-hud{display:flex;gap:8px;flex-wrap:wrap;padding:8px 10px;border-top:1px solid #16253d;background:#08111f;font-size:.74rem}
+.lab-hud span{background:rgba(10,22,40,.9);border:1px solid #23406b;border-radius:999px;padding:3px 10px;color:#a9c6ee}
+.lab-hud b{color:#7ff2d6;font-variant-numeric:tabular-nums}
+.lab-side{display:grid;gap:10px;align-content:start}
+.lab-card{background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:12px;padding:12px 13px}
+.lab-card>b{display:block;font-size:.9rem;color:#eaf2ff;margin-bottom:6px}
+.lab label{display:block;font-size:.8rem;color:#a8bcd8;margin:9px 0 2px;font-weight:600}
+.lab output{color:#7ff2d6;font-weight:700;font-variant-numeric:tabular-nums}
+.lab input[type=range]{width:100%;accent-color:#38e1c4;height:26px}
+.lab input[type=checkbox]{accent-color:#38e1c4;width:17px;height:17px;flex:none}
+.lab select{width:100%;padding:7px 9px;border-radius:8px;border:1px solid #26456f;background:#0b1524;color:#dbe7ff;font:inherit;font-size:.88rem}
+.lab button{background:linear-gradient(180deg,#1a5cc8,#123f96);border:1px solid #2f6bff;color:#eef4ff;
+padding:8px 14px;border-radius:9px;font-size:.88rem;font-weight:600}
+.lab button:hover{filter:brightness(1.15)}
+.lab button.ghost{background:transparent;border-color:#26456f;color:#a9c6ee}
+.lab .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lab .readout{font-size:.85rem;line-height:1.55;color:#c6d7f2;margin:6px 0}
+.lab .readout b{color:#fff}
+.lab .verdict{border-radius:9px;padding:8px 10px;font-size:.8rem;font-weight:700;line-height:1.4;
+background:rgba(120,150,190,.14);border:1px solid rgba(120,150,190,.3);color:#c6d7f2;margin-top:8px}
+.lab .verdict.good{background:rgba(31,140,90,.20);border-color:#2b8a5f;color:#93f2bd}
+.lab .verdict.mid{background:rgba(160,110,25,.20);border-color:#a87a2c;color:#ffd79a}
+.lab .verdict.bad{background:rgba(180,50,35,.22);border-color:#b5452f;color:#ffb3a7}
+.lab .lab-q ul{margin:4px 0 0;padding-left:1.15em;font-size:.85rem;color:#a8bcd8}
+.lab .lab-q li{margin:5px 0;max-width:none}
+.lab .lab-bar{height:11px;border-radius:999px;background:#0d1b2e;border:1px solid #1e3355;overflow:hidden;margin:8px 0}
+.lab .lab-bar>span{display:block;height:100%;width:0;background:#38e1c4;transition:width .2s ease,background .2s ease}
+.lab .metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem;color:#a8bcd8}
+.lab .metricgrid div{background:rgba(6,14,26,.85);border:1px solid #1b2f4d;border-radius:8px;padding:6px 8px}
+.lab .metricgrid b{display:block;color:#7ff2d6;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.lab .lab-how{margin:0 18px 18px;background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:10px;padding:10px 14px;color:#c6d7f2}
+.lab .lab-how summary{color:#7ff2d6;font-weight:700;font-size:.9rem}
+.lab .lab-how ol{margin:8px 0 0;padding-left:1.3em;font-size:.86rem;color:#a8bcd8}
+.lab .lab-how li{margin:4px 0;max-width:none}
+@media(max-width:600px){.lab{padding-top:14px}.lab-shell{padding:0 12px 14px}.lab h2,.lab-lead,.lab-eyebrow,.lab-how{margin-left:12px;margin-right:12px}}
+@media print{.lab{box-shadow:none;background:#fff;color:#111;border-color:#ccc}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Hoppa till innehåll</a>
+<header class="top">
+  <a href="../../index.html" title="Öppnar kursens startsida">&#8592; Alla workshoppar</a>
+  <span class="kicker">Lektion 03 · IT/OT och datadiod</span>
+</header>
+<main id="main">
+  <div class="hero">
+    <p class="eyebrow">AI inom cybersäkerhet · Workshop 03</p>
+    <h1>Workshop 03 – IT/OT, zonindelning och datadiod</h1>
+    <p class="lead">Zoner, datadioder och allowlisting är kursens mest konkreta skydd. Här bygger du skyddet kring en fabrik, konfigurerar en zongräns och ser vad som händer när ett steg saknas.</p>
+    <ul class="chips"><li><b>Tid:</b> ca 50 min (halvdag)</li><li><b>Individuellt:</b> 22 min</li><li><b>Grupp:</b> 16 min</li><li><b>Facit och quiz:</b> 12 min</li></ul>
+  </div>
+  <section class="goals" aria-labelledby="mal">
+    <h2 id="mal">Efter workshopen kan du</h2>
+    <ul><li>förklara varför IT och OT separeras och vad zonindelning innebär i praktiken</li><li>beskriva vad en datadiod gör – och vad den inte klarar</li><li>avgöra vilka kommunikationsflöden som ska tillåtas mellan zoner</li><li>bedöma hur en kedja av skyddsåtgärder påverkar en angripares väg mot en PLC</li></ul>
+  </section>
+  <nav class="tabs" role="tablist" aria-label="Workshopens tre delar">
+    <button type="button" role="tab" id="tab-ind" aria-controls="panel-ind" aria-selected="true" data-panel="ind">1. Individuellt arbete</button>
+    <button type="button" role="tab" id="tab-grp" aria-controls="panel-grp" aria-selected="false" tabindex="-1" data-panel="grp">2. Grupparbete</button>
+    <button type="button" role="tab" id="tab-fac" aria-controls="panel-fac" aria-selected="false" tabindex="-1" data-panel="fac">3. Facit</button>
+    <div class="timer" id="timer" data-minutes="50">
+      <span class="clock" id="tOut" aria-live="off">50:00</span>
+      <button type="button" id="tStart" aria-pressed="false" title="Starta eller pausa timern">Start</button>
+      <button type="button" id="tReset" title="Nollställ timern">Nollställ</button>
+    </div>
+  </nav>
+  <noscript><p class="warn">JavaScript är avstängt. Flikar, simuleringar och facit kräver JavaScript. Slå på det i webbläsaren och ladda om sidan.</p></noscript>
+  <section id="panel-ind" role="tabpanel" aria-labelledby="tab-ind" tabindex="0">
+
+
+<p>I ett kontor får ett misstag kosta en omstart. I en fabrik kan samma misstag stoppa en
+produktionslinje eller skada någon. Därför delas nätet in i zoner, och därför får vissa
+förbindelser bara gå åt ett håll. Här bygger du en sådan miljö och testar vad som händer.</p>
+
+<details class="card">
+  <summary>Begrepp du möter här</summary>
+  <ul>
+    <li><b>IT</b> – kontorsnät, servrar, e-post, affärssystem.</li>
+    <li><b>OT</b> – teknik som styr fysiska processer: givare, PLC, ställdon.</li>
+    <li><b>Zon</b> – ett avgränsat område med egna regler för vad som får passera.</li>
+    <li><b>Datadiod</b> – släpper igenom data åt ett håll och blockerar andra riktningen.</li>
+    <li><b>Allowlisting</b> – bara uttryckligen godkända program, adresser eller portar får användas.</li>
+    <li><b>Purdue-modellen</b> – nivåindelning från företagsnät (högst) ned till fysisk process (lägst).</li>
+    <li><b>GDPR</b> – regler för personuppgifter: ändamål, laglig grund, dataminimering och lagringstid.</li>
+    <li><b>AI Act</b> – EU:s riskbaserade regler för AI-system; hög risk kräver mer kontroll.</li>
+  </ul>
+</details>
+
+
+<p>Tre uppgifter, cirka 22 minuter. Workshopen är en simulering – inga riktiga nätverk eller enheter används.</p>
+<article class="task" id="u1">
+  <h3><span class="no">Uppgift 1</span> Bygg skyddet</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Kryssa för skyddsåtgärder och följ hur en angripares väg mot PLC:n förändras.</span></div>
+    <div><dt>Varför?</dt><span>Zonmodellen blir konkret först när du ser vilket steg som stoppar vad – och vad som händer när ett skydd saknas.</span></div>
+    <div><dt>Hur?</dt><span>Bocka av och på skydden. Läs flödet och bedömningen som uppdateras direkt.</span></div>
+    <div><dt>Observera</dt><span>Vilket enskilt skydd stoppar flest steg? Vad händer med fjärrstyrningen om du bara har datadiod?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna förklara varför separation och enkelriktad trafik är starkare än en brandvägg med många öppna portar.</span></div>
+  </dl>
+  <div id="u1-zon"></div>
+</article>
+<article class="task" id="u2">
+  <h3><span class="no">Uppgift 2</span> Allowlistan</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Välj vilka tio kommunikationsflöden som ska tillåtas över en ny zongräns.</span></div>
+    <div><dt>Varför?</dt><span>En allowlist är bara så bra som sin minsta tillåtna mängd – varje extra port är en väg in.</span></div>
+    <div><dt>Hur?</dt><span>Kryssa för de flöden du vill tillåta och tryck <b>Kontrollera allowlistan</b>.</span></div>
+    <div><dt>Observera</dt><span>Vilka flöden behövs för drift och underhåll? Vilka är administrativa genvägar?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska neka minst sju av tio flöden och kunna motivera varje nej.</span></div>
+  </dl>
+  <div id="u2-allow"></div><div class="db" data-db="03"></div>
+</article>
+<article class="task" id="u3">
+  <h3><span class="no">Uppgift 3</span> Lokal eller molnbaserad drift – och GDPR</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Välj driftform utifrån data, hårdvara, tid och budget. Gå sedan igenom GDPR-kraven för ett scenario.</span></div>
+    <div><dt>Varför?</dt><span>Zonindelningen avgör var data får finnas. Dataskyddsreglerna avgör om den får behandlas alls.</span></div>
+    <div><dt>Hur?</dt><span>Ändra förutsättningarna och läs förslaget. Kryssa sedan i checklistan och välj AI Act-kategori.</span></div>
+    <div><dt>Observera</dt><span>Vad ändras när datan är känslig? Vilka krav gäller oavsett var modellen körs?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna motivera lokal eller molnbaserad drift och skilja på GDPR och AI Act.</span></div>
+  </dl>
+  
+<div class="grid2">
+  <div class="card">
+    <h4 style="margin-top:0">Lokal eller molnbaserad lösning?</h4>
+    <label class="field" for="gd-sens">Vilken data ska behandlas?</label>
+    <select id="gd-sens"><option value="public">Offentlig information</option><option value="internal">Intern affärsdata</option><option value="personal" selected>Personuppgifter</option><option value="sensitive">Känsliga personuppgifter</option></select>
+    <label class="field" for="gd-hw">Tillgänglig hårdvara</label>
+    <select id="gd-hw"><option value="laptop" selected>Vanlig laptop, 16 GB</option><option value="server">Egen server med GPU</option><option value="none">Ingen egen hårdvara</option></select>
+    <label class="field" for="gd-lat">Krav på svarstid</label>
+    <select id="gd-lat"><option value="fast">Sekunder</option><option value="normal" selected>Några sekunder</option><option value="batch">Batch över natten</option></select>
+    <label class="field" for="gd-budget">Budget</label>
+    <select id="gd-budget"><option value="low" selected>Låg</option><option value="mid">Medel</option><option value="high">Hög</option></select>
+    <label class="field" for="gd-scale">Behov av skalning</label>
+    <select id="gd-scale"><option value="low" selected>Få användare</option><option value="high">Många samtidiga</option></select>
+    <div id="gd-out" aria-live="polite" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">GDPR-check innan AI:n används</h4>
+    <label class="field" for="gd-scen">Scenario</label>
+    <select id="gd-scen">
+      <option value="hr">HR: AI sorterar jobbansökningar</option>
+      <option value="log" selected>Säkerhet: AI analyserar inloggningsloggar</option>
+      <option value="chat">Support: chattbot svarar kunder</option>
+    </select>
+    <div id="gd-list"></div>
+    <div class="actions"><button type="button" id="gd-check">Kontrollera checklistan</button></div>
+    <label class="field" for="gd-act">AI Act-kategori enligt din bedömning</label>
+    <select id="gd-act"><option value="">– välj –</option><option value="forb">Förbjuden</option><option value="high">Hög risk</option><option value="trans">Transparens</option><option value="min">Minimal risk</option></select>
+    <div id="gd-actout" aria-live="polite"></div>
+    <p class="hint">Källor: IMY, <i>Vägledning om GDPR och AI</i> (2026-06-02) och IMY:s sida om GDPR och AI (2026-09-09); AI Act, förordning (EU) 2024/1689, med ändringar i Omnibus on AI, förordning (EU) 2026/1744. Kontrollerat 2026-11-12. Utbildningsmaterial, inte juridisk rådgivning.</p>
+  </div>
+</div>
+
+</article>
+
+    <section class="card" id="quiz">
+      <noscript><p class="warn">Quizet kräver JavaScript.</p></noscript>
+    </section>
+  </section>
+  <section id="panel-grp" role="tabpanel" aria-labelledby="tab-grp" tabindex="0" hidden>
+
+<h2>Uppgift 4 – Mejlet som stoppade fabriken</h2>
+<div class="task">
+  <h3><span class="no">Gruppuppgift</span> En anställd klickade – nu ska ni välja arkitektur</h3>
+  <p>En anställd på kontoret öppnade en bilaga. Angriparen finns nu i kontorsnätet. Fabriken kör
+  för fullt och ni får inte stoppa produktionen i onödan. Gruppen ska välja hur nätet ska byggas
+  om – och vad som ska göras i natt.</p>
+  <dl class="brief">
+    <div><dt>Tid</dt><span>15 minuter beslut, 5 minuter redovisning.</span></div>
+    <div><dt>Roller</dt><span>Ordförande, skeptiker, sekreterare, rapportör.</span></div>
+    <div><dt>Krav</dt><span>Ett beslut per fråga, med en mening om varför.</span></div>
+  </dl>
+</div>
+<div class="card">
+  <label class="field" for="g-1">1. Hur ska OT skyddas från kontorsnätet?</label>
+  <select id="g-1">
+    <option value="fw">Brandvägg med öppna portar där det behövs</option>
+    <option value="diode" selected>Datadiod för insamling – separata lösningar för fjärrstyrning</option>
+    <option value="flat">Ingen separation, det är enklast</option>
+  </select>
+  <label class="field" for="g-2">2. Vad gör ni i natt?</label>
+  <select id="g-2">
+    <option value="all">Stänger hela fabriken</option>
+    <option value="target" selected>Isolerar drabbade kontorsdatorer och övervakar OT extra</option>
+    <option value="nothing">Väntar till morgondagen</option>
+  </select>
+  <label class="field" for="g-3">3. Hur kontrolleras fjärråtkomst till OT?</label>
+  <select id="g-3">
+    <option value="vpn">VPN direkt in i OT-nätet för alla tekniker</option>
+    <option value="jump" selected>Hoppserver i DMZ med allowlist, MFA och logg</option>
+    <option value="modem">Modem med fast lösenord</option>
+  </select>
+  <div class="actions"><button type="button" id="g-run">Visa konsekvenser</button></div>
+  <div id="g-out" aria-live="polite"></div>
+</div>
+<h3>Redovisa på 2 minuter</h3>
+<ol><li>Vilken arkitektur valde ni?</li><li>Vad kostar den i kronor och arbetstid?</li><li>Vad händer nästa gång någon klickar?</li></ol>
+
+  </section>
+  <section id="panel-fac" role="tabpanel" aria-labelledby="tab-fac" tabindex="0" hidden>
+    <div class="facitbar">
+      <button type="button" id="facOpenAll">Öppna alla facit</button>
+      <button type="button" class="ghost" id="facCloseAll">Fäll ihop alla</button>
+      <span class="hint">Facit kan öppnas när som helst – du behöver inte svara först.</span>
+    </div>
+
+<p>Öppna en uppgift i taget och jämför med ditt eget svar.</p>
+<div id="facit-lista"></div>
+<h2>Kom ihåg</h2>
+<ul>
+  <li>Separation är skyddet. En datadiod är starkare än en brandvägg eftersom den inte kan övertalas.</li>
+  <li>En datadiod ger ingen fjärrstyrning tillbaka. Underhåll kräver en egen, kontrollerad väg.</li>
+  <li>Allowlisting ska vara <b>minimal</b>: bara de flöden som processen behöver, inte "allt som kan behövas".</li>
+  <li>Loggning stoppar ingenting – men utan logg vet ni inte vad som hänt.</li>
+</ul>
+
+  </section>
+
+<script>(function(){if(!window.CanvasRenderingContext2D||!CanvasRenderingContext2D.prototype||CanvasRenderingContext2D.prototype.roundRect)return;
+CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){r=Math.min(typeof r==="number"?r:0,w/2,h/2);
+this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);
+this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this;};})();</script>
+<section class="lab" id="lab-extra-3" aria-labelledby="lab3-h">
+  <p class="lab-eyebrow">Extra labb · avancerad grafik · IT/OT-separation</p>
+  <h2 id="lab3-h">Zonbyggaren – vad stoppar en attack, och vad släpps igenom?</h2>
+  <p class="lab-lead">Här är tre zoner: kontorsnät (IT), DMZ och produktionsnät (OT). Slå på brandvägg, allowlist och datadiod och skicka sedan in en attack. Prova också att skicka telemetri utåt – en datadiod är inte en vägg, den är en envägsventil.</p>
+  <div class="lab-shell">
+    <div class="lab-stage">
+      <canvas id="lab3cv" width="960" height="520" role="img" aria-label="Tre nätverkszoner med brandvägg och datadiod, med attacker som rör sig mellan zonerna"></canvas>
+      <div class="lab-hud">
+        <span>Stoppade <b id="lab3block">0</b></span>
+        <span>Nådde PLC <b id="lab3hit">0</b></span>
+        <span>Telemetri ut <b id="lab3tel">0</b></span>
+      </div>
+    </div>
+    <div class="lab-side">
+      <div class="lab-card">
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="lab3fw" checked> Brandvägg vid zongräns (bara 443 in)</label>
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="lab3al" checked> Allowlist – bara kända program i DMZ</label>
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="lab3di" checked> Datadiod mellan DMZ och OT</label>
+        <div class="actions">
+          <button type="button" id="lab3atk">Skicka attack</button>
+          <button type="button" class="ghost" id="lab3telem">Skicka telemetri</button>
+          <button type="button" class="ghost" id="lab3reset">Nollställ</button>
+        </div>
+      </div>
+      <div class="lab-card">
+        <b>Resultat av senaste körning</b>
+        <div class="readout" id="lab3read">Ingen trafik skickad än.</div>
+        <div class="verdict mid" id="lab3verdict">Testa en attack med allt avstängt – och sedan med allt på.</div>
+      </div>
+      <div class="lab-card lab-q">
+        <b>Diskutera i par</b>
+        <ul>
+          <li>Varför räcker det inte med bara en brandvägg?</li>
+          <li>Vad kostar en datadiod i form av underhåll och krångel?</li>
+          <li>Vilken zon skulle du sätta en fjärrstyrd underhållsdator i?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <details class="lab-how">
+    <summary>Så gör du – 10 min individuellt, 15 min i grupp</summary>
+    <ol>
+      <li>Stäng av allt skydd och skicka en attack. Följ paketen hela vägen.</li>
+      <li>Slå på brandväggen. Skicka igen – var stoppas attacken nu?</li>
+      <li>Slå på datadioden. Skicka attack och sedan telemetri. Jämför de två riktningarna.</li>
+      <li>Skriv en slutsats om varför zonindelning och datadiod används tillsammans.</li>
+    </ol>
+  </details>
+</section>
+<script>
+(function(){
+  var cv=document.getElementById("lab3cv"),cx=cv.getContext("2d");
+  var W=960,H=520,$=function(i){return document.getElementById(i)};
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var st={pk:[],t:0,blocked:0,hit:0,tel:0,flash:0,last:""};
+  var Z=[{x0:40,x1:330,name:"IT – kontor",col:"rgba(90,160,255,"},
+         {x0:330,x1:640,name:"DMZ",col:"rgba(255,196,90,"},
+         {x0:640,x1:920,name:"OT – produktion",col:"rgba(56,225,196,"}];
+  var DEV=[{x:110,y:150,label:"PC",z:0},{x:110,y:300,label:"SERVER",z:0},{x:200,y:400,label:"MEJL",z:0},
+           {x:470,y:170,label:"JUMP",z:1},{x:470,y:330,label:"PROXY",z:1},
+           {x:760,y:150,label:"PLC",z:2},{x:760,y:290,label:"HMI",z:2},{x:860,y:420,label:"SENSOR",z:2}];
+  var FW=330,DIODE=640;
+
+  function send(kind){
+    var start=kind==="atk"?[DEV[0],DEV[1],DEV[2]]:[DEV[5],DEV[6],DEV[7]];
+    var i;
+    st.last=kind;
+    for(i=0;i<18;i++){
+      var d=start[i%start.length];
+      st.pk.push({x:d.x+20,y:d.y+(Math.random()*20-10),kind:kind,vx:kind==="atk"?150:-150,
+        port:Math.random()<0.35?443:22+Math.floor(Math.random()*3000),
+        trusted:Math.random()<0.6,dead:false,age:0,hue:kind==="atk"?0:140});
+    }
+  }
+  function step(dt){
+    var fw=$("lab3fw").checked,al=$("lab3al").checked,di=$("lab3di").checked,i,p;
+    for(i=st.pk.length-1;i>=0;i--){
+      p=st.pk[i];p.age+=dt;
+      if(p.dead){if(p.age>1.1)st.pk.splice(i,1);continue;}
+      p.x+=p.vx*dt;
+      if(p.kind==="atk"){
+        if(!fw&&p.x>FW-14&&p.x<FW+14&&!p.passedFw){/* ingen brandvägg -> passerar */}
+        if(fw&&!p.passedFw&&p.x>FW-12){
+          if(p.port!==443){p.dead=true;st.blocked++;st.flash=0.35;p.x=FW;continue;}
+          p.passedFw=true;
+        }
+        if(al&&!p.passedAl&&p.x>FW+70){
+          if(!p.trusted){p.dead=true;st.blocked++;st.flash=0.35;p.x=FW+70;continue;}
+          p.passedAl=true;
+        }
+        if(p.x>DIODE-14){
+          if(di){p.dead=true;st.blocked++;st.flash=0.3;p.x=DIODE;continue;}
+          if(!p.passedDiode){p.passedDiode=true;}
+        }
+        if(p.x>=DEV[5].x-6){p.dead=true;st.hit++;st.flash=0.5;p.x=DEV[5].x;}
+      }else{
+        // telemetri OT -> IT: datadioden släpper igenom utåt, och utgående trafik tillåts av brandväggen
+        if(p.x<=DEV[1].x+24){p.dead=true;st.tel++;p.x=DEV[1].x+24;}
+      }
+      if(p.x<-40||p.x>W+40)st.pk.splice(i,1);
+    }
+    if(st.flash>0)st.flash-=dt*1.6;
+  }
+
+  function draw(){
+    var i,t=st.t,fw=$("lab3fw").checked,al=$("lab3al").checked,di=$("lab3di").checked;
+    var g=cx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0,"#060c16");g.addColorStop(1,"#0a1524");
+    cx.fillStyle=g;cx.fillRect(0,0,W,H);
+
+    // zoner
+    for(i=0;i<Z.length;i++){
+      var z=Z[i];
+      cx.fillStyle=z.col+".05)";cx.fillRect(z.x0,40,z.x1-z.x0,H-80);
+      cx.strokeStyle=z.col+".22)";cx.lineWidth=1;cx.strokeRect(z.x0,40,z.x1-z.x0,H-80);
+      cx.fillStyle=z.col+".85)";cx.font="700 12px system-ui,Segoe UI,Arial";
+      cx.fillText(z.name.toUpperCase(),z.x0+12,62);
+    }
+
+    // zongränser
+    var walls=[{x:FW,on:fw,label:"BRANDVÄGG"},{x:DIODE,on:di,label:"DATADIOD"}];
+    for(i=0;i<walls.length;i++){
+      var w=walls[i];
+      cx.setLineDash([8,7]);cx.lineWidth=w.on?2.4:1.4;
+      cx.strokeStyle=w.on?"rgba(120,230,255,.85)":"rgba(150,170,200,.28)";
+      cx.beginPath();cx.moveTo(w.x,40);cx.lineTo(w.x,H-40);cx.stroke();cx.setLineDash([]);
+      cx.save();cx.translate(w.x,26);cx.fillStyle=w.on?"#7ff2d6":"rgba(160,180,210,.5)";
+      cx.font="700 10px system-ui,Segoe UI,Arial";cx.textAlign="center";
+      cx.fillText(w.label+(w.on?"":" (AV)"),0,0);cx.restore();
+    }
+    // datadiodens riktning
+    if(di){
+      for(i=0;i<4;i++){
+        var ay=140+i*90,a=Math.sin(t*4+i)*0.5;
+        cx.save();cx.translate(DIODE,ay);cx.rotate(-Math.PI/2+a*0.1);
+        cx.beginPath();cx.moveTo(0,-9);cx.lineTo(0,9);cx.lineTo(9,0);cx.closePath();
+        cx.fillStyle="rgba(120,230,255,.35)";cx.fill();cx.restore();
+      }
+    }
+
+    // enheter
+    for(i=0;i<DEV.length;i++){
+      var d=DEV[i],z=Z[d.z];
+      cx.save();cx.translate(d.x,d.y);
+      cx.fillStyle="rgba(10,22,36,.95)";cx.strokeStyle=z.col+".65)";cx.lineWidth=2;
+      cx.beginPath();cx.roundRect(-24,-16,48,32,6);cx.fill();cx.stroke();
+      cx.fillStyle=z.col+".9)";cx.font="600 9px system-ui,Segoe UI,Arial";cx.textAlign="center";
+      cx.fillText(d.label,0,4);cx.textAlign="left";cx.restore();
+      if((d.label==="PLC"&&st.hit>0)||(d.label==="SERVER"&&st.tel>0)){
+        cx.beginPath();cx.arc(d.x,d.y,34+Math.sin(t*6)*4,0,6.284);
+        cx.strokeStyle=(st.flash>0?"rgba(255,80,80,":"rgba(56,225,196,")+"0.55)";cx.lineWidth=2;cx.stroke();
+      }
+    }
+
+    // paket
+    for(i=0;i<st.pk.length;i++){
+      var p=st.pk[i],alpha=p.dead?Math.max(0,1-p.age):1;
+      cx.beginPath();cx.arc(p.x,p.y,p.dead?4:4.2,0,6.284);
+      cx.fillStyle="hsla("+p.hue+",95%,65%,"+alpha+")";
+      cx.shadowColor="hsla("+p.hue+",95%,65%,"+alpha+")";cx.shadowBlur=12;cx.fill();cx.shadowBlur=0;
+      if(!p.dead){
+        cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(p.x-p.vx*0.05,p.y);
+        cx.strokeStyle="hsla("+p.hue+",95%,70%,.45)";cx.lineWidth=2;cx.stroke();
+      }
+    }
+
+    if(st.flash>0){
+      cx.fillStyle="rgba(255,70,70,"+(st.flash*0.16)+")";cx.fillRect(0,0,W,H);
+    }
+    readout();
+  }
+
+  function readout(){
+    $("lab3block").textContent=st.blocked;
+    $("lab3hit").textContent=st.hit;
+    $("lab3tel").textContent=st.tel;
+    var v=$("lab3verdict"),r=$("lab3read");
+    if(st.last==="atk"){
+      if(st.hit>0){v.className="verdict bad";v.textContent="Attacken nådde PLC:n. Otillräcklig separation.";}
+      else{v.className="verdict good";v.textContent="Attacken stoppades innan OT-zonen.";}
+      r.innerHTML="Du skickade <b>18</b> angreppspaket. <b>"+st.blocked+"</b> stoppades, <b>"+st.hit+"</b> nådde PLC:n.";
+    }else if(st.last==="tel"){
+      v.className=st.tel>0?"verdict good":"verdict mid";
+      v.textContent=st.tel>0?"Telemetrin tog sig ut – det är datadiodens hela poäng.":"Ingen telemetri kom ut. Kontrollera brandväggen.";
+      r.innerHTML="Du skickade <b>18</b> telemetripaket. <b>"+st.tel+"</b> nådde IT-sidan, <b>"+st.blocked+"</b> stoppades.";
+    }
+  }
+
+  function loop(ts){
+    var now=ts||performance.now();
+    if(!loop.last)loop.last=now;
+    var dt=Math.min(0.05,(now-loop.last)/1000);loop.last=now;
+    st.t+=dt;step(dt);draw();requestAnimationFrame(loop);
+  }
+
+  $("lab3atk").addEventListener("click",function(){send("atk");});
+  $("lab3telem").addEventListener("click",function(){send("tel");});
+  $("lab3reset").addEventListener("click",function(){st.pk=[];st.blocked=0;st.hit=0;st.tel=0;st.last="";$("lab3read").textContent="Ingen trafik skickad än.";$("lab3verdict").className="verdict mid";$("lab3verdict").textContent="Testa en attack med allt avstängt – och sedan med allt på.";});
+  loop();
+})();
+</script>
+
+</main>
+
+
+<script>
+var WS=(function(){
+"use strict";
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(n,d){if(!isFinite(n))return "\u2013";return n.toFixed(d==null?2:d).replace(".",",")}
+function num(v){return Number(String(v).replace(",","."))}
+
+/* ---------- flikar ---------- */
+function initTabs(){
+  var btns=$$('.tabs [role="tab"]');
+  if(!btns.length)return;
+  function show(id,setHash){
+    btns.forEach(function(b){
+      var on=b.getAttribute("data-panel")===id;
+      b.setAttribute("aria-selected",on?"true":"false");
+      b.tabIndex=on?0:-1;
+    });
+    $$('[role="tabpanel"]').forEach(function(p){p.hidden=p.id!=="panel-"+id});
+    if(setHash){try{history.replaceState(null,"","#"+id)}catch(e){}}
+  }
+  btns.forEach(function(b,i){
+    b.addEventListener("click",function(){show(b.getAttribute("data-panel"),true)});
+    b.addEventListener("keydown",function(e){
+      var n=null;
+      if(e.key==="ArrowRight")n=(i+1)%btns.length;
+      if(e.key==="ArrowLeft")n=(i-1+btns.length)%btns.length;
+      if(e.key==="Home")n=0;
+      if(e.key==="End")n=btns.length-1;
+      if(n!==null){e.preventDefault();btns[n].focus();show(btns[n].getAttribute("data-panel"),true)}
+    });
+  });
+  var h=(location.hash||"").replace("#","");
+  var ok=btns.some(function(b){return b.getAttribute("data-panel")===h});
+  show(ok?h:"ind",false);
+}
+
+/* ---------- timer ---------- */
+function initTimer(){
+  var box=$("#timer"); if(!box)return;
+  var total=(parseInt(box.getAttribute("data-minutes"),10)||60)*60;
+  var left=total,id=null;
+  var out=$("#tOut"),st=$("#tStart"),rs=$("#tReset");
+  function paint(){
+    var m=Math.floor(left/60),s=left%60;
+    out.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    box.classList.toggle("low",left>0&&left<=300);
+  }
+  function stop(){
+    if(id){clearInterval(id);id=null}
+    st.textContent=left===0?"Klar":"Forts\u00e4tt";
+    st.setAttribute("aria-pressed","false");
+  }
+  st.addEventListener("click",function(){
+    if(id){stop();return}
+    if(left===0){left=total;box.classList.remove("done");paint()}
+    id=setInterval(function(){
+      if(left>0){left--;paint()}
+      if(left===0){stop();box.classList.add("done");st.textContent="Klar"}
+    },1000);
+    st.textContent="Pausa";st.setAttribute("aria-pressed","true");
+  });
+  rs.addEventListener("click",function(){
+    stop();left=total;box.classList.remove("done");paint();st.textContent="Start";
+  });
+  paint();
+}
+
+/* ---------- quiz ---------- */
+function quiz(host,cfg){
+  if(!host)return;
+  var qs=cfg.questions||[];
+  host.innerHTML="";
+  var h=document.createElement("h3");h.textContent=cfg.title||"Avslutande kunskapskontroll";host.appendChild(h);
+  if(cfg.hint){var p=document.createElement("p");p.className="hint";p.textContent=cfg.hint;host.appendChild(p)}
+  var answered=0,right=0;
+  var status=document.createElement("p");status.className="quizsum";
+  var retry=document.createElement("button");
+  retry.type="button";retry.className="ghost";retry.textContent="G\u00f6r om quizet";retry.hidden=true;
+  retry.addEventListener("click",function(){quiz(host,cfg);host.scrollIntoView({block:"center"})});
+  qs.forEach(function(q,i){
+    var wrap=document.createElement("div");wrap.className="q";
+    var qt=document.createElement("p");qt.className="qt";qt.textContent=(i+1)+". "+q.text;wrap.appendChild(qt);
+    var opts=document.createElement("div");opts.className="opts";wrap.appendChild(opts);
+    var fb=document.createElement("p");fb.className="fb";fb.hidden=true;wrap.appendChild(fb);
+    q.options.forEach(function(o,j){
+      var b=document.createElement("button");b.type="button";b.className="opt";
+      b.innerHTML='<span class="k">'+String.fromCharCode(65+j)+'</span><span>'+esc(o)+'</span>';
+      b.addEventListener("click",function(){
+        if(wrap.getAttribute("data-done")==="1")return;
+        wrap.setAttribute("data-done","1");answered++;
+        $$(".opt",opts).forEach(function(x,k){x.disabled=true;if(k===q.answer)x.classList.add("correct")});
+        var good=j===q.answer;
+        if(good){right++}else{b.classList.add("wrong")}
+        fb.hidden=false;fb.className="fb "+(good?"ok":"bad");
+        fb.innerHTML="<b>"+(good?"R\u00e4tt.":"Fel.")+"</b> "+esc(q.why||"");
+        if(!good){var s=document.createElement("span");s.className="whynot";s.textContent="R\u00e4tt svar: "+q.options[q.answer]+".";fb.appendChild(s)}
+        status.textContent=answered+" av "+qs.length+" besvarade \u00b7 "+right+" r\u00e4tt";
+        if(answered===qs.length){
+          status.innerHTML="<b>Resultat: "+right+" av "+qs.length+" r\u00e4tt.</b> "+(right===qs.length?"Mycket bra \u2013 du kan begreppen.":"L\u00e4s f\u00f6rklaringarna och g\u00f6r om quizet om du vill.");
+          retry.hidden=false;
+        }
+      });
+      opts.appendChild(b);
+    });
+    host.appendChild(wrap);
+  });
+  status.textContent="0 av "+qs.length+" besvarade";
+  host.appendChild(status);
+  host.appendChild(retry);
+}
+
+/* ---------- klassificering med dropdown ---------- */
+function classify(host,cfg){
+  if(!host)return;
+  var rows=cfg.rows||[],opts=cfg.options||[];
+  var t=document.createElement("table");
+  t.innerHTML='<thead><tr><th scope="col">'+esc(cfg.col1||"System")+'</th><th scope="col">'+esc(cfg.col2||"Din bed\u00f6mning")+'</th></tr></thead>';
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  rows.forEach(function(r){
+    var tr=document.createElement("tr");
+    var td=document.createElement("td");td.textContent=r.text;
+    var note=document.createElement("div");note.className="rownote";note.hidden=true;td.appendChild(note);
+    var td2=document.createElement("td");
+    var sel=document.createElement("select");
+    sel.setAttribute("aria-label","Bed\u00f6mning f\u00f6r: "+r.text);
+    sel.innerHTML='<option value="">\u2013 v\u00e4lj \u2013</option>'+opts.map(function(o,i){return '<option value="'+i+'">'+esc(o)+'</option>'}).join("");
+    td2.appendChild(sel);tr.appendChild(td);tr.appendChild(td2);tb.appendChild(tr);
+  });
+  var btn=document.createElement("button");btn.type="button";btn.textContent=cfg.btn||"Kontrollera mina svar";
+  var out=document.createElement("p");out.className="fb";
+  btn.addEventListener("click",function(){
+    var ok=0,missing=0;
+    Array.prototype.forEach.call(tb.rows,function(tr,i){
+      var sel=$("select",tr),v=sel.value===""?null:Number(sel.value);
+      var good=v===rows[i].correct;if(good){ok++}if(v===null){missing++}
+      tr.classList.toggle("good",good);tr.classList.toggle("bad",!good&&v!==null);
+      var n=$(".rownote",tr);
+      if(n){n.hidden=false;n.innerHTML="<b>"+(good?"R\u00e4tt":(v===null?"Inget val":"R\u00e4tt svar: "+esc(opts[rows[i].correct])))+"</b> "+(rows[i].note||"")}
+    });
+    out.className="fb show "+(ok===rows.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+rows.length+" r\u00e4tt.</b> "+(ok===rows.length?"Bra \u2013 du ser m\u00f6nstret.":"L\u00e4s radens f\u00f6rklaring och justera"+(missing?" ("+missing+" rad(er) utan val)":"")+".");
+  });
+  host.appendChild(t);host.appendChild(btn);host.appendChild(out);
+}
+
+/* ---------- tabell med sortering och filter ---------- */
+function sortTable(host,cfg){
+  if(!host)return;
+  var cols=cfg.cols||[],rows=(cfg.rows||[]).slice();
+  var wrap=document.createElement("div");wrap.className="tablewrap";
+  var filter=null;
+  if(cfg.filter){
+    filter=document.createElement("input");filter.type="search";filter.className="filter";
+    filter.placeholder=cfg.filterPlaceholder||"Filtrera \u2026";
+    filter.setAttribute("aria-label","Filtrera tabellen");
+    wrap.appendChild(filter);
+  }
+  var t=document.createElement("table");
+  var thead=document.createElement("thead"),htr=document.createElement("tr");
+  cols.forEach(function(c,i){
+    var th=document.createElement("th");th.scope="col";th.setAttribute("data-i",i);th.tabIndex=0;
+    th.innerHTML=esc(c)+' <span class="arrow" aria-hidden="true">\u2195</span>';
+    function sort(){
+      var dir=th.getAttribute("data-dir")==="asc"?"desc":"asc";th.setAttribute("data-dir",dir);
+      rows.sort(function(a,b){
+        var x=a[i],y=b[i];
+        var nx=parseFloat(String(x).replace(/\s/g,"").replace(",",".")),ny=parseFloat(String(y).replace(/\s/g,"").replace(",","."));
+        var both=isFinite(nx)&&isFinite(ny)&&String(x).replace(/[^0-9]/g,"")!==""&&String(y).replace(/[^0-9]/g,"")!=="";
+        if(both)return dir==="asc"?nx-ny:ny-nx;
+        return dir==="asc"?String(x).localeCompare(String(y),"sv"):String(y).localeCompare(String(x),"sv");
+      });
+      render();
+    }
+    th.addEventListener("click",sort);
+    th.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();sort()}});
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr);t.appendChild(thead);
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  function render(){
+    tb.innerHTML="";
+    var q=filter?filter.value.toLowerCase():"";
+    rows.forEach(function(r){
+      if(q&&r.join(" ").toLowerCase().indexOf(q)<0)return;
+      var tr=document.createElement("tr");
+      r.forEach(function(c){var td=document.createElement("td");td.innerHTML=c;tr.appendChild(td)});
+      tb.appendChild(tr);
+    });
+  }
+  wrap.appendChild(t);host.appendChild(wrap);
+  if(filter)filter.addEventListener("input",render);
+  render();
+}
+
+/* ---------- stapeldiagram ---------- */
+function bars(host,items,opt){
+  if(!host)return;
+  opt=opt||{};host.innerHTML="";
+  var max=opt.max||Math.max.apply(null,items.map(function(i){return Math.abs(i.value)}).concat([1]));
+  var box=document.createElement("div");box.className="bars";
+  items.forEach(function(it){
+    var row=document.createElement("div");row.className="barrow"+(it.tone?" "+it.tone:"");
+    var pct=Math.max(0,Math.min(100,Math.abs(it.value)/max*100));
+    row.innerHTML='<span class="bl">'+esc(it.label)+'</span><span class="btrack"><span class="bfill" style="width:'+pct.toFixed(1)+'%"></span></span><span class="bv">'+esc(it.display!=null?it.display:it.value)+'</span>';
+    box.appendChild(row);
+  });
+  host.appendChild(box);
+  if(opt.caption){var p=document.createElement("p");p.className="hint";p.textContent=opt.caption;host.appendChild(p)}
+}
+
+/* ---------- linjediagram i ren SVG ---------- */
+function line(host,cfg){
+  if(!host)return;
+  var W=560,H=250,L=46,R=14,T=14,B=34;
+  var maxY=cfg.maxY||1,maxX=cfg.maxX||1;
+  function X(v){return L+(v/maxX)*(W-L-R)}
+  function Y(v){return H-B-(v/maxY)*(H-T-B)}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="chart" role="img" aria-label="'+esc(cfg.label||"Diagram")+'">';
+  for(var i=0;i<=4;i++){
+    var y=T+i*(H-T-B)/4;
+    s+='<line class="grid" x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'"/>';
+    s+='<text class="ax" x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+fmt(maxY*(1-i/4),maxY<=1?1:0)+'</text>';
+  }
+  (cfg.xTicks||[0,0.5,1]).forEach(function(t){
+    s+='<text class="ax" x="'+X(t*maxX)+'" y="'+(H-12)+'" text-anchor="middle">'+fmt(t*maxX,0)+'</text>';
+  });
+  (cfg.hlines||[]).forEach(function(hl){
+    s+='<line x1="'+L+'" y1="'+Y(hl.y).toFixed(1)+'" x2="'+(W-R)+'" y2="'+Y(hl.y).toFixed(1)+'" stroke="'+hl.color+'" stroke-width="1.5" stroke-dasharray="5 4"><title>'+esc(hl.label||"")+'</title></line>';
+  });
+  (cfg.series||[]).forEach(function(ser){
+    var pts=ser.points.map(function(p){return X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)}).join(" ");
+    if(!ser.onlyDots){s+='<polyline points="'+pts+'" fill="none" stroke="'+ser.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';}
+    if(ser.dots){ser.points.forEach(function(p){
+      s+='<circle cx="'+X(p[0]).toFixed(1)+'" cy="'+Y(p[1]).toFixed(1)+'" r="3.5" fill="'+ser.color+'"><title>'+esc(ser.name)+": "+fmt(p[1],2)+'</title></circle>';
+    })}
+    if(ser.fill){
+      s+='<polygon points="'+X(ser.points[0][0]).toFixed(1)+','+Y(0)+' '+pts+' '+X(ser.points[ser.points.length-1][0]).toFixed(1)+','+Y(0)+'" fill="'+ser.color+'" opacity="0.08"/>';
+    }
+  });
+  if(cfg.xLabel)s+='<text class="lbl" x="'+(L+(W-L-R)/2)+'" y="'+(H-1)+'" text-anchor="middle">'+esc(cfg.xLabel)+'</text>';
+  s+="</svg>";
+  host.innerHTML=s;
+  if((cfg.series||[]).length){
+    var ul=document.createElement("ul");ul.className="legend";
+    cfg.series.forEach(function(ser){var li=document.createElement("li");li.innerHTML='<i style="background:'+ser.color+'"></i>'+esc(ser.name);ul.appendChild(li)});
+    host.appendChild(ul);
+  }
+}
+
+/* ---------- confusion matrix ---------- */
+function cm(host,c){
+  if(!host)return;
+  host.innerHTML='<div class="cm">'+
+    '<div class="cmh"></div><div class="cmh">Modellen larmar</div><div class="cmh">Modellen \u00e4r tyst</div>'+
+    '<div class="cmh">Verkligt hot</div><div class="cell tp"><b>'+c.tp+'</b><span>TP \u2013 f\u00e5ngat hot</span></div><div class="cell fn"><b>'+c.fn+'</b><span>FN \u2013 missat hot</span></div>'+
+    '<div class="cmh">Verkligt normalt</div><div class="cell fp"><b>'+c.fp+'</b><span>FP \u2013 falsklarm</span></div><div class="cell tn"><b>'+c.tn+'</b><span>TN \u2013 korrekt tyst</span></div>'+
+    '</div>';
+}
+
+/* ---------- sm\u00e5hj\u00e4lp ---------- */
+function metric(tp,fp,fn){
+  var p=tp+fp?tp/(tp+fp):0, r=tp+fn?tp/(tp+fn):0;
+  return {precision:p,recall:r,f1:(p+r)?2*p*r/(p+r):0};
+}
+function riskLabel(v,lo,hi){
+  var t=v<lo?"low":(v<hi?"mid":"high");
+  var txt=t==="low"?"L\u00e5g risk":(t==="mid"?"Medelrisk":"H\u00f6g risk");
+  return '<span class="riskbadge '+t+'">'+txt+"</span>";
+}
+function facit(host,items){
+  if(!host)return;
+  items.forEach(function(f){
+    var d=document.createElement("details");
+    d.innerHTML="<summary>"+f[0]+"</summary>"+f[1];
+    host.appendChild(d);
+  });
+}
+function init(){initTabs();initTimer()}
+return {$,$$,esc,fmt,num,quiz,classify,sortTable,bars,line,cm,metric,riskLabel,facit,init:init};
+})();
+(function(){
+  var open=document.getElementById("facOpenAll"),close=document.getElementById("facCloseAll");
+  function all(v){Array.prototype.forEach.call(document.querySelectorAll("#panel-fac details"),function(d){d.open=v})}
+  if(open)open.addEventListener("click",function(){all(true)});
+  if(close)close.addEventListener("click",function(){all(false)});
+})();
+</script>
+
+
+<script>
+(function(){
+  var host=document.getElementById("u1-zon");
+  if(!host)return;
+  var controls=[
+    {id:"patch",label:"Skydd mot n\u00e4tfiske och patchning av kontorsdatorer"},
+    {id:"allow",label:"Allowlisting: bara godk\u00e4nda program f\u00e5r k\u00f6ras"},
+    {id:"segment",label:"Segmentering av kontorsn\u00e4tet i mindre zoner"},
+    {id:"diode",label:"Datadiod mellan DMZ och OT (bara in\u00e5t)"},
+    {id:"otseg",label:"Zonindelning i OT \u2013 PLC n\u00e5s bara fr\u00e5n styrsystemet"},
+    {id:"ids",label:"IDS och loggning i alla zoner"}
+  ];
+  var box=document.createElement("div");box.className="card";
+  box.innerHTML='<p>Kryssa f\u00f6r de skydd ni vill ha. Fl\u00f6det nedan visar vad som h\u00e4nder en angripare som b\u00f6rjar med ett n\u00e4tfiskemejl.</p><div id="z-list"></div>';
+  host.appendChild(box);
+  var list=document.getElementById("z-list");
+  controls.forEach(function(c){
+    var l=document.createElement("label");l.className="checkline";
+    l.innerHTML='<input type="checkbox" id="z-'+c.id+'"'+(c.id==="ids"?" checked":"")+'><span>'+c.label+'</span>';
+    list.appendChild(l);
+  });
+  var out=document.createElement("div");out.id="z-out";box.appendChild(out);
+
+  function on(id){var e=document.getElementById("z-"+id);return !!(e&&e.checked)}
+  function draw(){
+    var steps=[
+      {t:"1. Nätfiske mot en anställd",on:"Skyddet stoppar bilagan innan den körs.",off:"Bilagan körs och angriparen får fotfäste.",blocked:on("patch")},
+      {t:"2. Spridning i kontorsnätet",on:(on("allow")?"Allowlistan stoppar det okända programmet.":"Segmenteringen begränsar spridningen."),off:"Angriparen når filservrar och DMZ.",blocked:(on("allow")||on("segment"))},
+      {t:"3. Från DMZ till OT",on:"Datadioden släpper inte igenom något inåt.",off:"Brandväggen har en öppen väg som kan missbrukas.",blocked:on("diode")},
+      {t:"4. Från OT-nät till PLC",on:"PLC nås bara från styrsystemet.",off:"PLC:n svarar vem som helst i OT-nätet.",blocked:on("otseg")}
+    ];
+    var open=steps.filter(function(s){return !s.blocked}).length;
+    var html='<ol class="flow" style="display:block">';
+    steps.forEach(function(s){
+      var badge=s.blocked?'<span class="riskbadge low">STOPPAD</span>':'<span class="riskbadge high">ÖPPEN</span>';
+      html+='<li style="display:block;margin:6px 0">'+badge+' <b>'+s.t+'</b> – '+(s.blocked?s.on:s.off)+'</li>';
+    });
+    html+="</ol>";
+    var plc=open>0, detected=on("ids")&&plc;
+    var risk=plc?2:(on("ids")?0:1);
+    html+='<p class="fb show"><b>Når angriparen PLC:n?</b> '+(plc?"Ja – "+open+" av 4 steg är öppna.":"Nej – alla fyra stegen är stängda.")+
+      " <b>Upptäcks försöket?</b> "+(detected?"Ja, IDS ser trafiken.":(on("ids")?"Inget att upptäcka – allt stoppades.":"Nej, ingen loggning finns."))+
+      " "+WS.riskLabel(risk,1,2)+"</p>"+
+      '<p class="hint">En kedja är bara så stark som sin svagaste länk. Prova att ta bort datadioden och se vad som händer.</p>';
+    out.innerHTML=html;
+  }
+  controls.forEach(function(c){document.getElementById("z-"+c.id).addEventListener("change",draw)});
+  draw();
+})();
+
+(function(){
+  var host=document.getElementById("u2-allow");
+  if(!host)return;
+  var rows=[
+    {text:"OPC UA, port 4840, fr\u00e5n styrsystem till historiker i DMZ",allow:true,why:"Processdata ska upp\u00e5t f\u00f6r analys \u2013 ett smalt, k\u00e4nt fl\u00f6de."},
+    {text:"HTTPS, port 443, fr\u00e5n underh\u00e5llsserver till leverant\u00f6rens uppdateringstj\u00e4nst",allow:true,why:"Signerade uppdateringar beh\u00f6vs, via en kontrollerad v\u00e4g."},
+    {text:"NTP, port 123, fr\u00e5n OT-enheter till intern tidserver",allow:true,why:"R\u00e4tt tid kr\u00e4vs f\u00f6r loggar och certifikat."},
+    {text:"SMB, port 445, fr\u00e5n OT-n\u00e4t till kontorets filserver",allow:false,why:"Filutdelning mellan zoner \u00e4r en klassisk spridningsv\u00e4g f\u00f6r utpressningstrojaner."},
+    {text:"RDP, port 3389, fr\u00e5n internet till en teknisk dator i OT",allow:false,why:"Fjärrskrivbord mot internet \u00e4r ett av de vanligaste insteg som skannas."},
+    {text:"Telnet, port 23, till en \u00e4ldre switch",allow:false,why:"Okrypterat och utan stark autentisering. Byt till SSH i st\u00e4llet."},
+    {text:"FTP, port 21, f\u00f6r att h\u00e4mta receptfiler",allow:false,why:"Okrypterat. Anv\u00e4nd SFTP/HTTPS och en best\u00e4md k\u00e4lla."},
+    {text:"HTTP, port 80, till PLC:ns webbgr\u00e4nssnitt fr\u00e5n hela kontorsn\u00e4tet",allow:false,why:"Administrationsgr\u00e4nssnitt ska n\u00e5s fr\u00e5n en hoppserver, inte fr\u00e5n alla."},
+    {text:"DNS, port 53, fr\u00e5n OT till valfri extern resolver",allow:false,why:"Okontrollerad utg\u00e5ende trafik kan anv\u00e4ndas f\u00f6r datautl\u00e4mning. Anv\u00e4nd intern resolver."},
+    {text:"ICMP (ping) fr\u00e5n internet till OT",allow:false,why:"Avsl\u00f6jar n\u00e4rvaro och anv\u00e4nds f\u00f6r kartl\u00e4ggning. Blockera i gr\u00e4nsen."}
+  ];
+  host.innerHTML='<div class="card"><p>En ny zongr\u00e4ns ska konfigureras. Kryssa f\u00f6r de fl\u00f6den som ska <b>till\u00e5tas</b>. Allt annat nekas.</p><div id="a-list"></div>'+
+    '<div class="actions"><button type="button" id="a-run">Kontrollera allowlistan</button></div><div id="a-out" aria-live="polite"></div></div>';
+  var list=document.getElementById("a-list");
+  rows.forEach(function(r,i){
+    var l=document.createElement("label");l.className="checkline";
+    l.innerHTML='<input type="checkbox" id="a-'+i+'"><span>'+r.text+'<span class="rownote" id="an-'+i+'" hidden></span></span>';
+    list.appendChild(l);
+  });
+  document.getElementById("a-run").addEventListener("click",function(){
+    var ok=0;
+    rows.forEach(function(r,i){
+      var c=document.getElementById("a-"+i),good=c.checked===r.allow;if(good)ok++;
+      var n=document.getElementById("an-"+i);n.hidden=false;
+      n.innerHTML="<b>"+(good?"R\u00e4tt":(r.allow?"Borde till\u00e5tas":"Borde nekas"))+"</b> \u2013 "+r.why;
+      c.parentElement.style.background=good?"#e7f4ec":"#fbe7e3";
+    });
+    var out=document.getElementById("a-out");out.className="fb show "+(ok===rows.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+rows.length+" r\u00e4tt.</b> "+(ok===rows.length?"En minimal och sp\u00e5rbar allowlist.":"Justera de r\u00f6da raderna och f\u00f6rs\u00f6k igen.");
+  });
+})();
+
+(function(){
+  WS.classify(document.getElementById("u3-klass"),{
+    col1:"Enhet",col2:"Zon",
+    options:["Internet/exponerat","Kontorsn\u00e4t (IT)","DMZ","OT-produktionszon"],
+    rows:[
+      {text:"Webbserver som visar f\u00f6retagets produkter",correct:2,note:"N\u00e5s utifr\u00e5n men st\u00e5r i DMZ, aldrig i OT."},
+      {text:"E-postserver f\u00f6r de anst\u00e4llda",correct:1,note:"IT-tj\u00e4nst. Ska inte kunna n\u00e5 OT direkt."},
+      {text:"PLC som styr en robotcell",correct:3,note:"Styr fysisk process \u2013 l\u00e4gst i modellen."},
+      {text:"Historiker som samlar processdata",correct:3,note:"Tar emot data fr\u00e5n OT; placering och riktning m\u00e5ste best\u00e4mmas."},
+      {text:"Teknikerns hoppserver f\u00f6r fj\u00e4rr\u00e5tkomst",correct:2,note:"Hoppserver i DMZ med MFA, allowlist och logg."},
+      {text:"G\u00e4stn\u00e4t f\u00f6r bes\u00f6kare",correct:0,note:"Exponerat och avskilt \u2013 aldrig i n\u00e4rheten av OT."}
+    ]
+  });
+})();
+
+(function(){
+  var g1=document.getElementById("g-1");
+  if(!g1)return;
+  var g2=document.getElementById("g-2"),g3=document.getElementById("g-3"),out=document.getElementById("g-out");
+  function calc(){
+    var risk=1,notes=[],cost=0;
+    if(g1.value==="fw"){risk=1;cost+=180;notes.push("En brandv\u00e4gg kan konfigureras fel och m\u00e5ste granskas \u2013 men den ger kontroll om reglerna \u00e4r smala.")}
+    if(g1.value==="diode"){risk=0;cost+=450;notes.push("En datadiod skyddar insamlingen och kan inte luras. Fjärrstyrning kr\u00e4ver en separat, granskad v\u00e4g.")}
+    if(g1.value==="flat"){risk=2;notes.push("Utan separation n\u00e5r ett klick i kontoret produktionslinjen.")}
+    if(g2.value==="all"){risk=Math.max(risk,1);cost+=900;notes.push("Ett fullstopp \u00e4r s\u00e4kert men dyrt. Ofta r\u00e4cker isolering och \u00f6vervakning.")}
+    if(g2.value==="target"){notes.push("Isolering av drabbade datorer och extra \u00f6vervakning av OT begr\u00e4nsar skadan utan att stoppa allt.")}
+    if(g2.value==="nothing"){risk=2;notes.push("Att v\u00e4nta ger angriparen en hel natt \u2013 ofta d\u00e5 utpressningstrojanen sl\u00e5r till.")}
+    if(g3.value==="vpn"){risk=Math.max(risk,1);notes.push("VPN ger alla tekniker en v\u00e4g rakt in i OT \u2013 en komprometterad laptop r\u00e4cker.")}
+    if(g3.value==="jump"){notes.push("Hoppserver med allowlist, MFA och logg ger sp\u00e5rbarhet och minsta beh\u00f6righet.")}
+    if(g3.value==="modem"){risk=2;notes.push("Modem med fast l\u00f6senord \u00e4r en klassisk bakd\u00f6rr.")}
+    out.innerHTML='<div class="note"><b>Simulerat utfall</b> '+WS.riskLabel(risk,1,2)+
+      '<ul style="margin:8px 0 0">'+notes.map(function(n){return "<li>"+n+"</li>"}).join("")+"</ul>"+
+      '<p class="hint">Uppskattad kostnad f\u00f6r \u00e5tg\u00e4rderna: <b>'+cost+' tkr</b> ut\u00f6ver driftstopp. Siffrorna \u00e4r pedagogiska.</p></div>';
+  }
+  [g1,g2,g3].forEach(function(e){e.addEventListener("change",calc)});
+  document.getElementById("g-run").addEventListener("click",calc);
+  calc();
+})();
+
+WS.facit(document.getElementById("facit-lista"),[
+  ["Uppgift 1 \u2013 Skyddskedjan",'<p>Utan skydd g\u00e5r v\u00e4gen hela v\u00e4gen fram till PLC:n. Varje kontroll tar bort ett steg: skydd mot n\u00e4tfiske stoppar starten, allowlisting eller segmentering bromsar spridningen, datadioden st\u00e4nger v\u00e4gen in i OT och zonindelningen skyddar PLC:n.</p><p>L\u00e4gg m\u00e4rke till att datadioden ensam kan stoppa hela kedjan \u2013 men d\u00e5 f\u00f6rsvinner ocks\u00e5 m\u00f6jligheten att fj\u00e4rrstyra. D\u00e4rf\u00f6r beh\u00f6vs en separat, loggad v\u00e4g f\u00f6r underh\u00e5ll.</p>'],
+  ["Uppgift 2 \u2013 Allowlistan",'<p>Till\u00e5t bara OPC UA upp\u00e5t, HTTPS f\u00f6r signerade uppdateringar och NTP mot intern tidsserver. Neka SMB, RDP mot internet, telnet, FTP, \u00f6ppet HTTP till PLC, DNS mot valfri resolver och ping utifr\u00e5n.</p><p>Vanligt fel: att till\u00e5ta "allt som teknikerna kan beh\u00f6va". En allowlist som v\u00e4xer utan granskning \u00e4r till slut en brandvägg med alla portar \u00f6ppna.</p><p><b>Databasen:</b> tre zoner, nio enheter och tolv trafikbeslut. Fyra anslutningar är blockerade: Office PC → PLC, Office PC → Historian, Internet → PLC och HMI → Office PC. JOIN på <code>zone_id</code> visar att PLC, Historian och HMI ligger i Industrial OT med skyddsnivå Critical. Protokollfrågan ger HTTPS 4, TCP 2, OPC UA 2, SMB 2, Modbus 1 och HTTP 1. Tolkning: OT nås bara via Gateway eller HMI med tillåtna protokoll – datadioden är en fysisk begränsning som SQL inte kan visa.</p>'],["Uppgift 3 – Drift och dataskydd",'<p><b>Lokal eller moln:</b> känsliga uppgifter talar för lokal modell om hårdvaran räcker. Saknas hårdvara blir molnet enda vägen, men då krävs avtal, kontroll av lagringsplats och dataminimering. Låg budget och batchjobb passar lokal körning; många samtidiga användare talar för moln eller hybrid.</p><p><b>GDPR:</b> identifiera personuppgifter, bestäm rättslig grund (artikel 6), begränsa ändålet, samla bara in det som behövs, sätt lagringstid, informera de registrerade och teckna biträdesavtal när en leverantör behandlar data. Konsekvensbedömning (DPIA) krävs vid hög risk, till exempel systematisk övervakning eller känsliga uppgifter i stor skala.</p><p><b>AI Act:</b> HR-urval är hög risk enligt bilaga III, cybersecurity-stöd är normalt minimal risk och en chattbot omfattas av transparenskrav enligt artikel 50. Det är två olika regelverk: GDPR skyddar personuppgifter, AI Act reglerar AI-systemets risk. Kontrollera alltid mot EU-kommissionens tidslinje och IMY – övningen är utbildningsmaterial, inte juridisk rådgivning.</p>'],
+    ["Uppgift 4 \u2013 Fabriken",'<p>Rekommendationen \u00e4r datadiod f\u00f6r insamling, isolering av drabbade datorer i st\u00e4llet f\u00f6r fullstopp, och hoppserver med MFA och logg f\u00f6r fj\u00e4rr\u00e5tkomst.</p><p>Huvudpo\u00e4ngen: separera det som m\u00e5ste vara \u00e5tkomstbart fr\u00e5n det som styr fysiska processer. Ett klick i kontoret ska inte kunna stoppa en l\u00e4nk.</p>']
+]);
+
+WS.quiz(document.getElementById("quiz"),{
+  title:"Avslutande kunskapskontroll",
+  hint:"Fyra fr\u00e5gor om zoner, datadiod och allowlisting.",
+  questions:[{"text": "Varför separeras IT och OT?", "options": ["För att spara kablar", "För att ett angrepp i kontorsnätet inte ska nå styrsystemen", "För att OT inte har något nätverk", "För att IT är dyrare"], "answer": 1, "why": "Kontorsnätet är exponerat för mejl och webbsidor. OT styr fysiska processer där fel kan skada människor och produktion."}, {"text": "Vad gör en datadiod?", "options": ["Krypterar all trafik", "Släpper igenom data åt ett håll och blockerar andra riktningen", "Dubblar hastigheten", "Ersätter brandväggen helt i alla zoner"], "answer": 1, "why": "Dioden är enkelriktad. Data kan samlas in från OT, men inget kan skickas in – inte ens av en angripare."}, {"text": "Vad menas med allowlisting i en zongräns?", "options": ["Alla får ansluta utom de som blockeras", "Bara uttryckligen godkända adresser och portar får passera", "Listan över anställda", "En lista med lösenord"], "answer": 1, "why": "Allowlisting är vitlista: allt som inte är godkänt nekas. Det är motsatsen till en svartlista."}, {"text": "Ni har en datadiod men ingen loggning. Vad är problemet?", "options": ["Inget, dioden räcker", "Ni ser inte om något försöker ta sig in eller vad som skickats ut", "Dioden slutar fungera", "Data kan inte samlas in"], "answer": 1, "why": "Dioden blockerar men berättar inget. Utan logg saknas underlag för larm och utredning."}]
+});
+WS.init();
+</script>
+
+<script>
+(function(){
+  var sens=document.getElementById("gd-sens");
+  if(!sens)return;
+  var hw=document.getElementById("gd-hw"),lat=document.getElementById("gd-lat"),bud=document.getElementById("gd-budget"),
+      scale=document.getElementById("gd-scale"),out=document.getElementById("gd-out");
+  function rec(){
+    var s=sens.value,h=hw.value,l=lat.value,b=bud.value,sc=scale.value;
+    var title,why=[],risk=0;
+    if(h==="none"){title="Molnbaserad LLM";why.push("Du har ingen egen hårdvara – då är en molntjänst enda vägen till en stor modell.");risk=(s==="sensitive"?2:1)}
+    else if(s==="sensitive"){title="Lokal modell (SLM eller mindre LLM)";why.push("Känsliga personuppgifter bör stanna i din egen miljö om det går.");why.push("En mindre modell räcker ofta för klassificering och sammanfattning.")}
+    else if(sc==="high"||l==="fast"){title="Hybrid: lokal modell + moln vid behov";why.push("Snabb respons och skalning Kräver att du styr vilken data som får gå till molnet.");risk=1}
+    else if(b==="high"){title="Molnbaserad LLM";why.push("Störst kvalitet och skalning, men data lämnar miljön.");risk=1}
+    else {title="Lokal LLM i LM Studio";why.push("Tillräcklig hårdvara och låg budget – lokal körning är billigast i drift.")}
+    if(s==="personal"&&h!=="none")why.push("Personuppgifter kräver rättslig grund och dataminimering – oavsett var modellen körs.");
+    if(s==="sensitive")why.push("Känsliga uppgifter (artikel 9) kräver särskild grund och starkare skydd.");
+    if(l==="batch"&&h==="laptop")why.push("Batchjobb över natten passar lokal körning – hastigheten är inte avgörande.");
+    out.innerHTML='<div class="note"><b>Förslag: '+WS.esc(title)+"</b> "+WS.riskLabel(risk,1,2)+
+      "<ul style=\"margin:6px 0 0\">"+why.map(function(x){return "<li>"+WS.esc(x)+"</li>"}).join("")+"</ul>"+
+      '<p class="hint">Avvägningen är en bedömning, inte ett rättsligt beslut. Molndrift kräver avtal och kontroll av var data lagras.</p></div>';
+  }
+  [sens,hw,lat,bud,scale].forEach(function(el){el.addEventListener("change",rec)});
+
+  var scen=document.getElementById("gd-scen"),list=document.getElementById("gd-list");
+  var ITEMS=[
+    ["pii","Behandlingen omfattar personuppgifter"],
+    ["grund","Det finns en rättslig grund (artikel 6)"],
+    ["andamal","Ändamålet är bestämt och begränsat"],
+    ["minim","Bara nödvändiga uppgifter samlas in"],
+    ["lagring","Det finns en lagringstid och rutin för radering"],
+    ["info","De registrerade får information (artikel 13–14)"],
+    ["bitrade","Biträdesavtal finns om en leverantör behandlar data"],
+    ["dpia","En konsekvensbedömning (DPIA) görs"]
+  ];
+  var NEED={
+    hr:{pii:1,grund:1,andamal:1,minim:1,lagring:1,info:1,bitrade:1,dpia:1},
+    log:{pii:1,grund:1,andamal:1,minim:1,lagring:1,info:0,bitrade:1,dpia:1},
+    chat:{pii:1,grund:1,andamal:1,minim:1,lagring:1,info:1,bitrade:1,dpia:0}
+  };
+  var ACT={hr:"high",log:"min",chat:"trans"};
+  ITEMS.forEach(function(it){
+    var l=document.createElement("label");l.className="checkline";
+    l.innerHTML='<input type="checkbox" id="gd-'+it[0]+'"><span>'+it[1]+'<span class="rownote" id="gdn-'+it[0]+'" hidden></span></span>';
+    list.appendChild(l);
+  });
+  document.getElementById("gd-check").addEventListener("click",function(){
+    var need=NEED[scen.value],ok=0;
+    ITEMS.forEach(function(it){
+      var c=document.getElementById("gd-"+it[0]),good=!!c.checked===!!need[it[0]];
+      if(good)ok++;
+      var n=document.getElementById("gdn-"+it[0]);n.hidden=false;
+      n.innerHTML="<b>"+(good?"Rätt":(need[it[0]]?"Behövs":"Inte nödvändig här"))+"</b>";
+      c.parentElement.style.background=good?"#e7f4ec":"#fbe7e3";
+    });
+    var o=document.getElementById("gd-actout");
+    o.className=(ok===ITEMS.length?"note":"warn");
+    o.innerHTML="<b>"+ok+" av "+ITEMS.length+" rätt.</b> "+(ok===ITEMS.length?"Du har fångat både GDPR-frågorna och AI Act-kategorin nedan.":"Titta på de röda raderna: vilka krav gäller för just det här scenariet?");
+  });
+  document.getElementById("gd-act").addEventListener("change",function(){
+    var o=document.getElementById("gd-actout"),v=this.value,right=ACT[scen.value];
+    if(!v){o.className="";o.textContent="";return}
+    var names={forb:"förbjuden",high:"hög risk",trans:"transparens",min:"minimal risk"};
+    var good=v===right;
+    o.className=(good?"note":"warn");
+    o.innerHTML="<b>"+(good?"Rätt":"Inte rätt")+": "+names[right]+".</b> "+
+      (scen.value==="hr"?"AI som används för urval i arbetslivet är hög risk enligt AI Act (bilaga III). Exakt när skyldigheterna börjar gälla för just er lösning måste kontrolleras i EU-kommissionens tidslinje – den har ändrats genom Omnibus.":
+       scen.value==="log"?"AI som stödjer cybersäkerhet är normalt minimal risk, men GDPR gäller fullt ut eftersom loggar kan innehålla personuppgifter.":
+       "En chattbot som interagerar med människor omfattas av transparenskrav (artikel 50): användaren ska veta att den pratar med AI. Artikeln börjar gälla 2 augusti 2026.");
+  });
+  scen.addEventListener("change",function(){
+    ITEMS.forEach(function(it){document.getElementById("gd-"+it[0]).checked=false;document.getElementById("gdn-"+it[0]).hidden=true;document.getElementById("gd-"+it[0]).parentElement.style.background=""});
+    document.getElementById("gd-act").value="";document.getElementById("gd-actout").textContent="";
+  });
+  rec();
+})();
+</script>
+<script>window.__DB_CFG=window.__DB_CFG||{};window.__DB_CFG['03']={"title":"network_zones, network_devices och network_traffic","intro":"Zoner, enheter och trafikbeslut hänger ihop. Databasen gör det möjligt att svara på vilka anslutningar som faktiskt blockerades – och varför.","tables":[{"name":"network_zones","pk":"zone_id","cols":[["zone_id","INTEGER"],["zone_name","TEXT"],["security_level","TEXT"]],"fk":[],"rows":[[1,"Office IT","Medium"],[2,"DMZ","High"],[3,"Industrial OT","Critical"]]},{"name":"network_devices","pk":"device_id","cols":[["device_id","INTEGER"],["device_name","TEXT"],["zone_id","INTEGER"],["device_type","TEXT"]],"fk":[["zone_id","network_zones.zone_id"]],"rows":[[1,"Office PC",1,"Workstation"],[2,"Mail Server",1,"Server"],[3,"Web Server",2,"Server"],[4,"Gateway",2,"Gateway"],[5,"PLC Controller",3,"PLC"],[6,"Historian",3,"Historian"],[7,"HMI Panel",3,"HMI"],[8,"Guest Laptop",1,"Workstation"],[9,"Backup Server",2,"Server"]]},{"name":"network_traffic","pk":"traffic_id","cols":[["traffic_id","INTEGER"],["source_device","TEXT"],["destination_device","TEXT"],["protocol","TEXT"],["decision","TEXT"]],"fk":[["source_device","network_devices.device_name"],["destination_device","network_devices.device_name"]],"rows":[[1,"Office PC","Gateway","HTTPS","Allowed"],[2,"Office PC","PLC Controller","TCP","Blocked"],[3,"Gateway","PLC Controller","OPC UA","Allowed"],[4,"Web Server","Gateway","HTTPS","Allowed"],[5,"Guest Laptop","Web Server","HTTPS","Allowed"],[6,"Office PC","Historian","SMB","Blocked"],[7,"HMI Panel","PLC Controller","Modbus","Allowed"],[8,"Gateway","Historian","OPC UA","Allowed"],[9,"Internet","PLC Controller","TCP","Blocked"],[10,"Backup Server","Historian","SMB","Allowed"],[11,"Office PC","Web Server","HTTPS","Allowed"],[12,"HMI Panel","Office PC","HTTP","Blocked"]]}],"queries":[{"label":"All trafik","sql":"SELECT * FROM network_traffic;","explain":"Tolv beslut. Kolumnen decision visar om brandväggen släppte igenom eller stoppade anslutningen.","cols":["traffic_id","source_device","destination_device","protocol","decision"],"rows":[[1,"Office PC","Gateway","HTTPS","Allowed"],[2,"Office PC","PLC Controller","TCP","Blocked"],[3,"Gateway","PLC Controller","OPC UA","Allowed"],[4,"Web Server","Gateway","HTTPS","Allowed"],[5,"Guest Laptop","Web Server","HTTPS","Allowed"],[6,"Office PC","Historian","SMB","Blocked"],[7,"HMI Panel","PLC Controller","Modbus","Allowed"],[8,"Gateway","Historian","OPC UA","Allowed"],[9,"Internet","PLC Controller","TCP","Blocked"],[10,"Backup Server","Historian","SMB","Allowed"],[11,"Office PC","Web Server","HTTPS","Allowed"],[12,"HMI Panel","Office PC","HTTP","Blocked"]]},{"label":"Blockerad trafik","sql":"SELECT source_device, destination_device, protocol FROM network_traffic WHERE decision = 'Blocked';","explain":"Fyra anslutningar stoppades. Lägg märke till att Internet inte kan nå PLC:n – det är zonregeln som fungerar.","cols":["source_device","destination_device","protocol"],"rows":[["Office PC","PLC Controller","TCP"],["Office PC","Historian","SMB"],["Internet","PLC Controller","TCP"],["HMI Panel","Office PC","HTTP"]]},{"label":"Enheter med zon","sql":"SELECT d.device_name, z.zone_name, z.security_level FROM network_devices d JOIN network_zones z ON d.zone_id = z.zone_id;","explain":"JOIN på zone_id gör att varje enhet visas med sin zon och skyddsnivå. Nio rader.","cols":["device_name","zone_name","security_level"],"rows":[["Office PC","Office IT","Medium"],["Mail Server","Office IT","Medium"],["Web Server","DMZ","High"],["Gateway","DMZ","High"],["PLC Controller","Industrial OT","Critical"],["Historian","Industrial OT","Critical"],["HMI Panel","Industrial OT","Critical"],["Guest Laptop","Office IT","Medium"],["Backup Server","DMZ","High"]]},{"label":"Antal per protokoll","sql":"SELECT protocol, COUNT(*) AS antal FROM network_traffic GROUP BY protocol ORDER BY antal DESC;","explain":"Grupperar trafiken per protokoll. HTTPS dominerar, men det är OPC UA och Modbus som når OT – det är de flödena som måste granskas noga.","cols":["protocol","antal"],"rows":[["HTTPS",4],["TCP",2],["OPC UA",2],["SMB",2],["Modbus",1],["HTTP",1]]}],"note":"Datadioden syns inte som en tabell: den är en fysisk begränsning som bara tillåter trafik i en riktning. SQL visar vad som beslutades, inte varför enheten är konstruerad så."};</script>
+
+<script>
+(function(){
+  var CFG=window.__DB_CFG||{};
+  function esc(s){return WS.esc(String(s))}
+  function isNum(v){return typeof v==="number"}
+  document.querySelectorAll("[data-db]").forEach(function(host){
+    var key=host.getAttribute("data-db"),db=CFG[key];
+    if(!db)return;
+    var ti=0,qi=0,filter="",sortCol=-1,sortDir=1;
+    function tab(){return db.tables[ti]}
+    function rowsNow(){
+      var t=tab(),rows=t.rows.slice();
+      if(filter){
+        var f=filter.toLowerCase();
+        rows=rows.filter(function(r){return r.join(" ").toLowerCase().indexOf(f)>=0});
+      }
+      if(sortCol>=0){
+        rows.sort(function(a,b){
+          var x=a[sortCol],y=b[sortCol];
+          if(isNum(x)&&isNum(y))return (x-y)*sortDir;
+          return String(x).localeCompare(String(y),"sv")*sortDir;
+        });
+      }
+      return rows;
+    }
+    function tableHTML(){
+      var t=tab(),rows=rowsNow();
+      var head="<tr>"+t.cols.map(function(c,i){
+        var arrow=sortCol===i?(sortDir>0?" \u2191":" \u2193"):"";
+        return '<th data-col="'+i+'" title="Sortera">'+esc(c[0])+arrow+"</th>";
+      }).join("")+"</tr>";
+      var body=rows.length?rows.map(function(r){
+        return "<tr>"+r.map(function(v){return '<td'+(isNum(v)?' class="num"':"")+">"+(v===null?"NULL":esc(v))+"</td>"}).join("")+"</tr>";
+      }).join(""):'<tr><td colspan="'+t.cols.length+'" class="db-empty">Inga rader matchar filtret.</td></tr>';
+      return '<div class="db-scroll"><table class="tbl"><thead>'+head+"</thead><tbody data-role=\"tbody\">"+body+"</tbody></table></div>"+
+        '<p class="hint" data-role="count" style="margin:6px 0 0">'+rows.length+" av "+t.rows.length+" rader \u00b7 "+t.cols.length+" kolumner</p>";
+    }
+    function paint(){
+      host.querySelector('[data-role="tablewrap"]').innerHTML=tableHTML();
+      bindSort();
+    }
+    function bindSort(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-col]"),function(th){
+        th.addEventListener("click",function(){
+          var i=+th.getAttribute("data-col");
+          if(sortCol===i)sortDir*=-1;else{sortCol=i;sortDir=1}
+          paint();
+        });
+      });
+    }
+    function schema(){
+      var t=tab();
+      return '<ul class="schema">'+t.cols.map(function(c){
+        var key=t.pk===c[0]?' <span class="key">PK</span>':"";
+        return "<li>"+esc(c[0])+" "+esc(c[1])+key+"</li>";
+      }).join("")+"</ul>"+(t.fk&&t.fk.length?'<p class="hint" style="margin:0 0 8px">Främmande nycklar: '+t.fk.map(function(f){
+        return "<code>"+esc(f[0])+"</code> \u2192 "+esc(f[1]);
+      }).join(" \u00b7 ")+"</p>":'<p class="hint" style="margin:0 0 8px">Primärnyckel: <code>'+esc(t.pk)+"</code> identifierar varje rad.</p>");
+    }
+    function timeline(){
+      if(!db.timeline)return "";
+      var t=db.tables.filter(function(x){return x.name===db.timeline.table})[0];
+      if(!t)return "";
+      return '<h5 style="margin:10px 0 0">Tidslinje</h5><ol class="timeline">'+t.rows.map(function(r){
+        return "<li><time>"+esc(r[db.timeline.time])+"</time><b>"+esc(r[db.timeline.title])+"</b> \u00b7 "+esc(r[db.timeline.level])+"</li>";
+      }).join("")+"</ol>";
+    }
+    function featureBox(){
+      var f=db.features;
+      if(!f)return "";
+      return '<div class="featurebox"><b>Features och label</b><p class="hint">'+esc(f.prompt)+"</p>"+
+        f.items.map(function(it,i){
+          return '<label class="checkline"><input type="checkbox" data-f="'+i+'"><span>'+esc(it[0])+"</span></label>";
+        }).join("")+
+        '<div class="actions"><button type="button" data-role="fcheck">Kontrollera valen</button></div><div data-role="fout" aria-live="polite"></div></div>';
+    }
+    function render(){
+      var t=tab(),q=db.queries[qi];
+      host.innerHTML='<div class="db-head"><span class="tag">Pedagogisk databas \u00b7 syntetiska data</span><h4>'+esc(db.title)+"</h4><p class=\"hint\">"+esc(db.intro)+"</p></div>"+
+        (db.timeline?timeline():"")+
+        '<div class="db-tabs" role="group" aria-label="Tabeller">'+db.tables.map(function(x,i){
+          return '<button type="button" data-t="'+i+'" aria-pressed="'+(i===ti?"true":"false")+'">'+esc(x.name)+"</button>";
+        }).join("")+"</div>"+
+        '<div class="db-grid">'+
+          '<div class="db-box"><b>Tabell: '+esc(t.name)+"</b>"+schema()+
+            '<div class="db-tools"><input type="search" data-role="filter" placeholder="Filtrera rader\u2026" value="'+esc(filter)+'" aria-label="Filtrera tabellen"><button type="button" class="ghost" data-role="reset">\u00c5terst\u00e4ll</button></div>'+
+            '<div data-role="tablewrap">'+tableHTML()+"</div></div>"+
+          '<div class="db-box"><b>SQL-fr\u00e5gor</b><div class="sqlbtns">'+db.queries.map(function(x,i){
+            return '<button type="button" data-q="'+i+'" aria-pressed="'+(i===qi?"true":"false")+'">'+esc(x.label)+"</button>";
+          }).join("")+"</div>"+
+            '<pre class="code">'+esc(q.sql)+"</pre><p>"+esc(q.explain)+"</p>"+
+            '<p class="hint" style="margin:4px 0">F\u00f6rv\u00e4ntat resultat: <b>'+q.rows.length+" rader</b></p>"+
+            '<div class="db-scroll"><table class="tbl"><thead><tr>'+q.cols.map(function(c){return "<th>"+esc(c)+"</th>"}).join("")+"</tr></thead><tbody>"+
+            q.rows.map(function(r){return "<tr>"+r.map(function(v){return "<td"+(isNum(v)?' class="num"':"")+">"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")+
+            "</tbody></table></div></div>"+
+        "</div>"+featureBox()+'<p class="hint" style="margin:10px 0 0">'+esc(db.note)+"</p>";
+      bind();
+    }
+    function bind(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-t]"),function(b){
+        b.addEventListener("click",function(){ti=+b.getAttribute("data-t");qi=0;filter="";sortCol=-1;render()});
+      });
+      Array.prototype.forEach.call(host.querySelectorAll("[data-q]"),function(b){
+        b.addEventListener("click",function(){qi=+b.getAttribute("data-q");render()});
+      });
+      var f=host.querySelector('[data-role="filter"]');
+      if(f)f.addEventListener("input",function(){filter=f.value;paint()});
+      host.querySelector('[data-role="reset"]').addEventListener("click",function(){ti=0;qi=0;filter="";sortCol=-1;render()});
+      var fc=host.querySelector('[data-role="fcheck"]');
+      if(fc)fc.addEventListener("click",function(){
+        var f=db.features,ok=0,picked=[];
+        Array.prototype.forEach.call(host.querySelectorAll("[data-f]"),function(c){
+          var i=+c.getAttribute("data-f"),good=c.checked===!!f.items[i][1];
+          if(good)ok++;else picked.push(f.items[i][0]);
+          c.parentElement.style.background=good?"#e7f4ec":"#fbe7e3";
+        });
+        var o=host.querySelector('[data-role="fout"]');
+        o.className=ok===f.items.length?"note":"warn";
+        o.innerHTML="<b>"+ok+" av "+f.items.length+" r\u00e4tt.</b> "+(picked.length?"Justera: "+picked.map(esc).join(", ")+".":"Alla val st\u00e4mmer.")+
+          "<br>"+f.items.map(function(it){return "<span class=\"hint\">"+esc(it[0])+": "+esc(it[2])+"</span>"}).join("<br>");
+      });
+      bindSort();
+    }
+    render();
+  });
+})();
+</script>
+
+</body>
+</html>

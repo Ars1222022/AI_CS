@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop 01 – Introduktion till AI, automation och maskininlärning · AI inom cybersäkerhet</title>
+<style>
+
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d1c19;--muted:#5c5a54;--line:#dcd8cf;
+--ok:#1f6b45;--bad:#a32b1c;--warn:#8a5a12;--soft:#efece4;--shadow:0 1px 2px rgba(0,0,0,.05)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.62 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+img,svg{max-width:100%}
+a{color:var(--dark);text-underline-offset:3px}
+a:hover{color:var(--acc)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:10px;z-index:99;border-radius:8px}
+header.top{background:var(--dark);color:#fff;padding:10px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+header.top a{color:#fff;text-decoration:none;font-weight:600;font-size:.92rem}
+header.top a:hover{color:#ffd9c9}
+header.top .kicker{font-size:.85rem;opacity:.9}
+main{max-width:1000px;margin:0 auto;padding:24px 18px 56px}
+.hero{margin:6px 0 18px}
+.eyebrow{font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--acc);font-weight:700;margin:0 0 4px}
+h1{font-size:clamp(1.55rem,3.2vw,2.2rem);line-height:1.18;margin:.1em 0 .35em;color:var(--dark)}
+.lead{font-size:1.06rem;max-width:70ch;color:#33312c;margin:.2em 0 1em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.86rem;color:var(--muted)}
+.chips b{color:var(--ink)}
+h2{font-size:1.35rem;margin:1.6em 0 .5em;color:var(--dark)}
+h3{font-size:1.06rem;margin:1.3em 0 .4em}
+h4{font-size:.98rem;margin:1em 0 .3em}
+p,li{max-width:74ch}
+ul,ol{padding-left:1.25em}
+li{margin:.25em 0}
+.goals{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:10px;padding:14px 18px;margin:16px 0 6px}
+.goals h2{margin:.1em 0 .4em;font-size:1.05rem}
+.goals ul{margin:0}
+.tabs{position:sticky;top:0;z-index:30;background:var(--bg);display:flex;gap:6px;align-items:center;flex-wrap:wrap;
+padding:10px 0;border-bottom:2px solid var(--line);margin:18px 0 6px}
+.tabs [role=tab]{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);
+color:var(--muted);border-radius:9px;padding:9px 15px}
+.tabs [role=tab]:hover{border-color:var(--acc);color:var(--ink)}
+.tabs [role=tab][aria-selected=true]{background:var(--dark);border-color:var(--dark);color:#fff}
+.tabs [role=tab]:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,th:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.timer{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:4px 8px}
+.timer .clock{font-variant-numeric:tabular-nums;font-weight:700;min-width:52px;text-align:center;color:var(--dark)}
+.timer.low .clock{color:var(--bad)}
+.timer.done .clock{color:var(--warn)}
+.timer button{font:inherit;font-size:.82rem;padding:4px 9px;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+.timer button:hover{border-color:var(--acc)}
+[role=tabpanel]{padding:8px 0 20px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.task{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;box-shadow:var(--shadow)}
+.task>h3{margin-top:0;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.task .no{background:var(--acc);color:#fff;border-radius:7px;font-size:.8rem;padding:2px 9px;font-weight:700}
+.brief{display:grid;gap:6px;margin:10px 0 14px;font-size:.95rem}
+.brief div{display:grid;grid-template-columns:110px 1fr;gap:10px}
+.brief dt,.brief b{color:var(--muted);font-weight:600}
+.brief span{min-width:0}
+@media(max-width:520px){.brief div{grid-template-columns:1fr;gap:0}}
+.hint{font-size:.9rem;color:var(--muted);margin:.4em 0}
+.note{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+.warn{background:#fdf2e2;border:1px solid #e6c9a2;border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--dark);background:var(--dark);color:#fff;padding:9px 16px}
+button:hover{filter:brightness(1.12)}
+button.ghost{background:transparent;color:var(--dark);border-color:var(--line)}
+button.ghost:hover{background:var(--soft)}
+button:disabled{opacity:.6;cursor:default;filter:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 4px}
+label.field{display:block;font-weight:600;font-size:.92rem;margin:10px 0 4px}
+select,input[type=number],input[type=range],input[type=search]{font:inherit}
+select,input[type=number],input[type=search]{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--dark);height:28px}
+input[type=checkbox],input[type=radio]{accent-color:var(--dark);width:18px;height:18px}
+.rangeout{font-variant-numeric:tabular-nums;font-weight:700;color:var(--dark)}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:10px 0}
+legend{font-weight:600;font-size:.92rem;padding:0 6px}
+.checkline{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.95rem}
+.checkline:last-child{border-bottom:0}
+.checkline input{margin-top:4px;flex:none}
+.checkline span{flex:1}
+.tablewrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.93rem;min-width:420px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-weight:600;white-space:nowrap}
+th[data-i]{cursor:pointer;user-select:none}
+th[data-i]:hover{background:#e6e2d8}
+th .arrow{opacity:.45;font-size:.8em}
+tbody tr:hover{background:#faf8f3}
+tbody tr.good{background:#eaf5ee}
+tbody tr.bad{background:#fbecea}
+.rownote{font-size:.84rem;color:var(--muted);margin-top:4px}
+.filter{margin-bottom:8px;width:min(340px,100%)}
+.fb{font-size:.93rem;margin:10px 0;padding:10px 12px;border-radius:8px;background:var(--soft)}
+.fb:empty{display:none}
+.fb.ok{background:#eaf5ee;border-left:4px solid var(--ok)}
+.fb.bad{background:#fbecea;border-left:4px solid var(--bad)}
+.fb b{color:var(--ink)}
+.whynot{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+.q{border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0;background:#fff}
+.qt{font-weight:600;margin:0 0 8px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--soft);border:1px solid var(--line);
+color:var(--ink);border-radius:8px;padding:9px 11px;font-weight:400}
+.opt:hover:not(:disabled){border-color:var(--acc)}
+.opt .k{font-weight:700;color:var(--muted);flex:none}
+.opt.correct{border-color:var(--ok);background:#e7f4ec}
+.opt.wrong{border-color:var(--bad);background:#fbe7e3}
+.opt .k{min-width:1em}
+.quizsum{font-size:.95rem;margin:12px 0 4px}
+.chart{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+.chart .grid{stroke:#e5e1d8;stroke-width:1}
+.chart .ax{font-size:11px;fill:#6b6862}
+.chart .lbl{font-size:12px;fill:#3a3833}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.86rem;color:var(--muted);margin:6px 0 0;padding:0;list-style:none}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.bars{margin:10px 0}
+.barrow{display:grid;grid-template-columns:minmax(110px,1.1fr) 2fr minmax(56px,auto);gap:10px;align-items:center;font-size:.9rem;margin:6px 0}
+.bl{color:var(--muted)}
+.btrack{background:var(--soft);border-radius:999px;height:12px;overflow:hidden}
+.bfill{display:block;height:100%;background:var(--dark);border-radius:999px;transition:width .18s ease}
+.barrow.ok .bfill{background:var(--ok)}
+.barrow.bad .bfill{background:var(--bad)}
+.barrow.warn .bfill{background:var(--warn)}
+.bv{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;margin:12px 0;font-size:.9rem}
+.cm .cmh{font-weight:600;color:var(--muted);padding:4px 6px;display:flex;align-items:center}
+.cm .cell{border-radius:8px;padding:10px;border:1px solid var(--line);background:#fff}
+.cm .cell b{display:block;font-size:1.3rem}
+.cm .cell span{font-size:.8rem;color:var(--muted)}
+.cm .tp{background:#e6f4ec;border-color:#b6ddc6}
+.cm .tn{background:#eef1f0;border-color:#cfd8d3}
+.cm .fp{background:#fdf1e2;border-color:#e8cfae}
+.cm .fn{background:#fbe8e5;border-color:#e8bcb4}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0}
+details[open]{box-shadow:var(--shadow)}
+summary{cursor:pointer;font-weight:600;color:var(--dark)}
+details[open] summary{margin-bottom:8px;border-bottom:1px solid var(--line);padding-bottom:8px}
+details .why{font-size:.95rem}
+details ul{margin:.4em 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--muted);vertical-align:middle}
+.tag.sim{background:#efe6f5;color:#5b3a72}
+.flow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flow li{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.85rem}
+.flow li.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.flow li b{font-weight:700}
+.stepbtns{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.stepbtns button{background:var(--card);color:var(--ink);border:1px solid var(--line);padding:6px 10px;font-size:.86rem;border-radius:8px}
+.stepbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.stepinfo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:8px;padding:12px 14px;margin:8px 0;min-height:76px}
+.stepinfo h4{margin:0 0 4px}
+.riskbadge{display:inline-block;border-radius:6px;padding:2px 9px;font-weight:700;font-size:.85rem}
+.riskbadge.low{background:#e6f4ec;color:#1f5c3e}
+.riskbadge.mid{background:#fdf1e2;color:#7a5112}
+.riskbadge.high{background:#fbe8e5;color:#8c2417}
+footer{border-top:1px solid var(--line);margin-top:26px;padding:18px;text-align:center;color:var(--muted);font-size:.83rem}
+@media(max-width:640px){main{padding:16px 12px 40px}.tabs{padding:8px 0}.timer{width:100%;justify-content:center}.brief div{grid-template-columns:1fr}th,td{padding:6px 8px}}
+@media print{header.top,.tabs,.actions,button{display:none}body{background:#fff}[role=tabpanel][hidden]{display:block!important}main{max-width:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* --- nya interaktiva komponenter --- */
+.figure-wrap{display:grid;gap:16px;grid-template-columns:minmax(240px,0.9fr) minmax(280px,1.1fr);align-items:start}
+@media(max-width:760px){.figure-wrap{grid-template-columns:1fr}}
+.human{position:relative;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:8px}
+.human svg{display:block;width:100%;height:auto}
+.hotspot{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--dark);background:#fff;color:var(--dark);border-radius:999px;font:inherit;font-size:.72rem;font-weight:700;padding:3px 7px;line-height:1.2;cursor:pointer;white-space:nowrap}
+.hotspot[aria-pressed=true]{background:var(--dark);color:#fff}
+.hotspot:hover{border-color:var(--acc)}
+.hotspot:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:150px}
+.panel h4{margin:.1em 0 .4em}
+.flows{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flows li{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:.82rem}
+.flows li.off{opacity:.45;text-decoration:line-through}
+.flows .arr{background:none;border:0;color:var(--muted);padding:0 1px}
+.code{background:#23261f;color:#eae7df;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.5;padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:pre;margin:8px 0}
+.code .k{color:#9ec9a8}
+.code .s{color:#e6c07b}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;border-radius:0;background:var(--card);color:var(--ink);padding:6px 10px;font-size:.85rem;font-weight:600}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--dark);color:#fff}
+.chips2{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;padding:0;list-style:none}
+.chips2 button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.85rem}
+.chips2 button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.metricgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin:10px 0}
+.metric{background:var(--soft);border-radius:9px;padding:8px 10px}
+.metric b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.metric span{font-size:.78rem;color:var(--muted)}
+.modelgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:10px 0}
+.modelcard{text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-weight:600;font-size:.9rem}
+.modelcard small{display:block;font-weight:400;color:var(--muted);font-size:.78rem;margin-top:3px}
+.modelcard[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
+.cards3{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:10px 0}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.88rem}
+.mini h5{margin:0 0 4px;font-size:.9rem}
+.legendline{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin:4px 0 0}
+
+/* --- databasvy --- */
+.db{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);margin:12px 0}
+.db-head h4{margin:0 0 4px}
+.db-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.db-tabs button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 10px;font-size:.85rem;font-weight:600}
+.db-tabs button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-grid{display:grid;gap:12px;grid-template-columns:minmax(280px,1fr) minmax(280px,1fr)}
+@media(max-width:820px){.db-grid{grid-template-columns:1fr}}
+.db-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.schema{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px;padding:0;list-style:none}
+.schema li{font-size:.75rem;background:var(--soft);border-radius:6px;padding:2px 6px;font-family:ui-monospace,Consolas,monospace}
+.schema .key{color:var(--dark);font-weight:700}
+.db-tools{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.db-tools input{flex:1;min-width:120px;border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;font-size:.85rem;background:var(--card);color:var(--ink)}
+.db-tools button{font-size:.8rem;padding:4px 9px}
+.db-scroll{overflow-x:auto}
+.db .tbl{font-size:.82rem;min-width:0}
+.db .tbl th{white-space:nowrap;cursor:pointer}
+.db .tbl td{white-space:nowrap}
+.db .tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.sqlbtns{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px}
+.sqlbtns button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:4px 9px;font-size:.8rem}
+.sqlbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-empty{padding:10px;color:var(--muted);font-size:.85rem}
+.timeline{list-style:none;margin:8px 0;padding:0 0 0 14px;border-left:3px solid var(--acc)}
+.timeline li{margin:0 0 6px;font-size:.85rem;position:relative}
+.timeline li:before{content:"";position:absolute;left:-20px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.timeline time{font-weight:700;margin-right:6px}
+.featurebox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px}
+.featurebox .checkline{margin:0 0 2px}
+.fitgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:10px 0}
+.fitgrid .mini svg{width:100%;height:auto;display:block}
+.facitbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.facitbar .hint{margin:0}
+
+:root{--dark:#14532d;--dark2:#0d3a20;--acc:#a4552b;--acc2:#7f3f1e;--bg:#f4f5f1;--soft:#e8ebe2}
+/* ===== Extra labb med avancerad grafik (tillagt) ===== */
+.lab{margin:34px 0 8px;border-radius:16px;overflow:hidden;border:1px solid #1d2b45;
+background:radial-gradient(1200px 520px at 12% -12%,#172c50 0%,#0b1220 46%,#070c16 100%);
+color:#dbe7ff;box-shadow:0 18px 46px rgba(8,18,38,.28);padding:20px 0 0}
+.lab-eyebrow{margin:0 18px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#6ff2d9;font-weight:700}
+.lab h2{margin:.25em 18px .3em;color:#f2f7ff;font-size:clamp(1.25rem,2.4vw,1.6rem)}
+.lab-lead{margin:0 18px 16px;color:#a8bcd8;max-width:78ch;font-size:.98rem}
+.lab-shell{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.95fr);gap:14px;padding:0 18px 18px}
+@media(max-width:860px){.lab-shell{grid-template-columns:1fr}}
+.lab-stage{position:relative;border-radius:13px;border:1px solid #1e3355;background:#060b14;overflow:hidden;align-self:start}
+.lab-stage canvas{display:block;width:100%;height:auto}
+.lab-hud{display:flex;gap:8px;flex-wrap:wrap;padding:8px 10px;border-top:1px solid #16253d;background:#08111f;font-size:.74rem}
+.lab-hud span{background:rgba(10,22,40,.9);border:1px solid #23406b;border-radius:999px;padding:3px 10px;color:#a9c6ee}
+.lab-hud b{color:#7ff2d6;font-variant-numeric:tabular-nums}
+.lab-side{display:grid;gap:10px;align-content:start}
+.lab-card{background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:12px;padding:12px 13px}
+.lab-card>b{display:block;font-size:.9rem;color:#eaf2ff;margin-bottom:6px}
+.lab label{display:block;font-size:.8rem;color:#a8bcd8;margin:9px 0 2px;font-weight:600}
+.lab output{color:#7ff2d6;font-weight:700;font-variant-numeric:tabular-nums}
+.lab input[type=range]{width:100%;accent-color:#38e1c4;height:26px}
+.lab input[type=checkbox]{accent-color:#38e1c4;width:17px;height:17px;flex:none}
+.lab select{width:100%;padding:7px 9px;border-radius:8px;border:1px solid #26456f;background:#0b1524;color:#dbe7ff;font:inherit;font-size:.88rem}
+.lab button{background:linear-gradient(180deg,#1a5cc8,#123f96);border:1px solid #2f6bff;color:#eef4ff;
+padding:8px 14px;border-radius:9px;font-size:.88rem;font-weight:600}
+.lab button:hover{filter:brightness(1.15)}
+.lab button.ghost{background:transparent;border-color:#26456f;color:#a9c6ee}
+.lab .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lab .readout{font-size:.85rem;line-height:1.55;color:#c6d7f2;margin:6px 0}
+.lab .readout b{color:#fff}
+.lab .verdict{border-radius:9px;padding:8px 10px;font-size:.8rem;font-weight:700;line-height:1.4;
+background:rgba(120,150,190,.14);border:1px solid rgba(120,150,190,.3);color:#c6d7f2;margin-top:8px}
+.lab .verdict.good{background:rgba(31,140,90,.20);border-color:#2b8a5f;color:#93f2bd}
+.lab .verdict.mid{background:rgba(160,110,25,.20);border-color:#a87a2c;color:#ffd79a}
+.lab .verdict.bad{background:rgba(180,50,35,.22);border-color:#b5452f;color:#ffb3a7}
+.lab .lab-q ul{margin:4px 0 0;padding-left:1.15em;font-size:.85rem;color:#a8bcd8}
+.lab .lab-q li{margin:5px 0;max-width:none}
+.lab .lab-bar{height:11px;border-radius:999px;background:#0d1b2e;border:1px solid #1e3355;overflow:hidden;margin:8px 0}
+.lab .lab-bar>span{display:block;height:100%;width:0;background:#38e1c4;transition:width .2s ease,background .2s ease}
+.lab .metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem;color:#a8bcd8}
+.lab .metricgrid div{background:rgba(6,14,26,.85);border:1px solid #1b2f4d;border-radius:8px;padding:6px 8px}
+.lab .metricgrid b{display:block;color:#7ff2d6;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.lab .lab-how{margin:0 18px 18px;background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:10px;padding:10px 14px;color:#c6d7f2}
+.lab .lab-how summary{color:#7ff2d6;font-weight:700;font-size:.9rem}
+.lab .lab-how ol{margin:8px 0 0;padding-left:1.3em;font-size:.86rem;color:#a8bcd8}
+.lab .lab-how li{margin:4px 0;max-width:none}
+@media(max-width:600px){.lab{padding-top:14px}.lab-shell{padding:0 12px 14px}.lab h2,.lab-lead,.lab-eyebrow,.lab-how{margin-left:12px;margin-right:12px}}
+@media print{.lab{box-shadow:none;background:#fff;color:#111;border-color:#ccc}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Hoppa till innehåll</a>
+<header class="top">
+  <a href="../../index.html" title="Öppnar kursens startsida">&#8592; Alla workshoppar</a>
+  <span class="kicker">Lektion 01 · Introduktion</span>
+</header>
+<main id="main">
+  <div class="hero">
+    <p class="eyebrow">AI inom cybersäkerhet · Workshop 01</p>
+    <h1>Workshop 01 – Introduktion till AI, automation och maskininlärning</h1>
+    <p class="lead">AI, maskininlärning, språkmodeller, agenter och automation blandas ofta ihop. Här tränar du på att skilja dem – och att sätta ihop dem till en kedja som faktiskt fungerar i ett säkerhetsteam.</p>
+    <ul class="chips"><li><b>Tid:</b> ca 60 min</li><li><b>Individuellt:</b> 25 min</li><li><b>Grupp:</b> 20 min</li><li><b>Facit och quiz:</b> 15 min</li></ul>
+  </div>
+  <section class="goals" aria-labelledby="mal">
+    <h2 id="mal">Efter workshopen kan du</h2>
+    <ul><li>förklara skillnaden mellan AI, maskininlärning (ML), språkmodell (LLM), AI-agent och automation</li><li>avgöra vilken teknik som passar ett enkelt säkerhetsscenario – och när en regel räcker</li><li>sätta ihop en kedja där ML hittar, en agent hämtar, en LLM sammanfattar och automation utför</li><li>förklara varför en människa ibland måste godkänna en automatisk åtgärd</li></ul>
+  </section>
+  <nav class="tabs" role="tablist" aria-label="Workshopens tre delar">
+    <button type="button" role="tab" id="tab-ind" aria-controls="panel-ind" aria-selected="true" data-panel="ind">1. Individuellt arbete</button>
+    <button type="button" role="tab" id="tab-grp" aria-controls="panel-grp" aria-selected="false" tabindex="-1" data-panel="grp">2. Grupparbete</button>
+    <button type="button" role="tab" id="tab-fac" aria-controls="panel-fac" aria-selected="false" tabindex="-1" data-panel="fac">3. Facit</button>
+    <div class="timer" id="timer" data-minutes="60">
+      <span class="clock" id="tOut" aria-live="off">60:00</span>
+      <button type="button" id="tStart" aria-pressed="false" title="Starta eller pausa timern">Start</button>
+      <button type="button" id="tReset" title="Nollställ timern">Nollställ</button>
+    </div>
+  </nav>
+  <noscript><p class="warn">JavaScript är avstängt. Flikar, simuleringar och facit kräver JavaScript. Slå på det i webbläsaren och ladda om sidan.</p></noscript>
+  <section id="panel-ind" role="tabpanel" aria-labelledby="tab-ind" tabindex="0">
+
+
+<p>AI är paraplyet. Maskininlärning (ML) är metoden där en modell lär sig mönster från data.
+En språkmodell (LLM) arbetar med text. En AI-agent använder en modell <em>och</em> verktyg för att
+utföra steg själv. Automation följer regler som en människa skrivit. Samma incident kan kräva flera
+av dem – i rätt ordning.</p>
+
+<details class="card">
+  <summary>Begrepp du möter här (30 sekunder)</summary>
+  <ul>
+    <li><b>AI</b> – system som löser uppgifter som annars kräver mänskligt tänkande.</li>
+    <li><b>ML</b> – modellen hittar mönster i exempel (data) i stället för att få regler.</li>
+    <li><b>LLM</b> – stor språkmodell som läser och skriver text, till exempel sammanfattar en logg.</li>
+    <li><b>AI-agent</b> – modell + verktyg + ett mål. Den kan söka, jämföra och föreslå i flera steg.</li>
+    <li><b>Automation</b> – förbestämda steg som körs utan att någon tolkar varje gång.</li>
+    <li><b>Falsklarm</b> – systemet larmar när inget hot finns. <b>Missat hot</b> – hot som passerar tyst.</li>
+  </ul>
+</details>
+
+
+<p>Tre uppgifter, cirka 25 minuter. Arbeta själv. Facit finns i fliken <b>3. Facit</b>.</p>
+<article class="task" id="u1">
+  <h3><span class="no">Uppgift 1</span> Vilken teknik är det?</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Bedöm åtta system och välj teknik: regel, automation, ML, LLM eller AI-agent.</span></div>
+    <div><dt>Varför?</dt><span>Gränsen mellan begreppen är det som examineras i K1 – och den avgör vilken lösning som är rimlig.</span></div>
+    <div><dt>Hur?</dt><span>Läs systembeskrivningen, välj i listan och tryck <b>Kontrollera mina svar</b>.</span></div>
+    <div><dt>Observera</dt><span>Vilka system ändrar beteende av nya data? Vilka följer bara ett villkor?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska få 8 av 8 rätt och kunna motivera varje rad.</span></div>
+  </dl>
+  <div id="u1-klass"></div>
+</article>
+<article class="task" id="u2">
+  <h3><span class="no">Uppgift 2</span> Databasen bakom larmen</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Öppna tabellen security_alerts, filtrera och sortera rader och kör fyra SQL-frågor.</span></div>
+    <div><dt>Varför?</dt><span>AI-system blir användbara först när de får data. Här ser du varifrån larmen kommer och hur en fråga skiljer sig från en modell.</span></div>
+    <div><dt>Hur?</dt><span>Välj tabell, klicka på en kolumnrubrik för att sortera eller skriv i filtret. Kör sedan frågorna och läs resultatet.</span></div>
+    <div><dt>Observera</dt><span>Vilken fråga ger tre rader? Vad ändrar GROUP BY? Vilken kolumn är primärnyckel?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna förklara vad SELECT, WHERE, ORDER BY och COUNT gör – och varför databasen ger fakta medan modellen formulerar text.</span></div>
+  </dl>
+  <div class="db" data-db="01"></div>
+</article>
+<article class="task" id="u3">
+  <h3><span class="no">Uppgift 3</span> Bygg ett AI-system</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Välj modell, runtime, chatbot eller agent och verktyg. Jämför tre färdiga konfigurationer.</span></div>
+    <div><dt>Varför?</dt><span>En chatbot behöver ingen agent, och en LLM kan användas utan chattgränssnitt. Delarna är separata komponenter som kan kombineras olika.</span></div>
+    <div><dt>Hur?</dt><span>Klicka på figurens delar, välj alternativ och följ dataflödet. Prova de tre färdiga konfigurationerna.</span></div>
+    <div><dt>Observera</dt><span>Vad händer med flödet när du lägger till ett verktyg? När krävs mänskligt godkännande?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna förklara skillnaden mellan LLM, chatbot och agent – och varför en agent med skrivande verktyg behöver godkännande.</span></div>
+  </dl>
+  
+<div class="figure-wrap">
+  <div class="human" id="as-fig">
+    <svg viewBox="0 0 300 400" aria-hidden="true" focusable="false">
+      <ellipse cx="150" cy="86" rx="50" ry="54" fill="#fff" stroke="#2b2b28" stroke-width="3"/>
+      <rect x="112" y="136" width="76" height="128" rx="26" fill="#fff" stroke="#2b2b28" stroke-width="3"/>
+      <path d="M112 160 L70 235" stroke="#2b2b28" stroke-width="12" stroke-linecap="round"/>
+      <path d="M188 160 L230 235" stroke="#2b2b28" stroke-width="12" stroke-linecap="round"/>
+      <path d="M128 262 L118 360" stroke="#2b2b28" stroke-width="14" stroke-linecap="round"/>
+      <path d="M172 262 L182 360" stroke="#2b2b28" stroke-width="14" stroke-linecap="round"/>
+      <circle cx="118" cy="88" r="4" fill="#2b2b28"/><circle cx="150" cy="88" r="4" fill="#2b2b28"/>
+      <path d="M136 108 Q150 116 164 108" stroke="#2b2b28" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M150 44 q14 16 0 30 q-14 -14 0 -30" fill="#e7ded0" stroke="#2b2b28" stroke-width="2"/>
+    </svg>
+    <button type="button" class="hotspot" style="left:50%;top:4%" data-part="runtime" aria-pressed="false">0 Runtime</button>
+    <button type="button" class="hotspot" style="left:50%;top:17%" data-part="brain" aria-pressed="true">1 Hjärna</button>
+    <button type="button" class="hotspot" style="left:29%;top:24%" data-part="eyes" aria-pressed="false">6 Indata</button>
+    <button type="button" class="hotspot" style="left:50%;top:31%" data-part="mouth" aria-pressed="false">5 Röst</button>
+    <button type="button" class="hotspot" style="left:50%;top:49%" data-part="body" aria-pressed="false">2 Kropp</button>
+    <button type="button" class="hotspot" style="left:79%;top:64%" data-part="hands" aria-pressed="false">3 Händer</button>
+  </div>
+  <div>
+    <div class="panel" id="as-panel" aria-live="polite"></div>
+    <div class="card" style="margin-top:12px">
+      <h4 style="margin-top:0">Så hänger delarna ihop</h4>
+      <ul class="flows" id="as-flow"></ul>
+      <p id="as-summary" class="hint"></p>
+      <div id="as-warn"></div>
+      <div class="actions">
+        <button type="button" data-preset="chat">Enkel chatbot</button>
+        <button type="button" data-preset="agent">AI-agent</button>
+        <button type="button" data-preset="hitl">Agent med godkännande</button>
+        <button type="button" class="ghost" id="as-reset">Återställ</button>
+      </div>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">Kort scenario: många misslyckade inloggningar</h4>
+      <label class="field" for="as-scen">Välj lösning och se arbetsflödet</label>
+      <select id="as-scen">
+        <option value="">– välj –</option>
+        <option value="chat">Chatbot som förklarar en loggfil</option>
+        <option value="llm">LLM som sammanfattar händelserna</option>
+        <option value="agent">Agent som analyserar loggar, frågar databasen och föreslår åtgärd</option>
+        <option value="hitl">Agent som begär godkännande innan den spärrar kontot</option>
+      </select>
+      <div id="as-scenout"></div>
+    </div>
+  </div>
+</div>
+
+</article>
+
+    <section class="card" id="quiz">
+      <noscript><p class="warn">Quizet kräver JavaScript.</p></noscript>
+    </section>
+  </section>
+  <section id="panel-grp" role="tabpanel" aria-labelledby="tab-grp" tabindex="0" hidden>
+
+<h2>Uppgift 4 – Gruppen väljer en kedja</h2>
+<div class="task">
+  <h3><span class="no">Gruppuppgift</span> 400 misstänkta mejl per dag</h3>
+  <p>Ett företag med 300 anställda får cirka 400 mejl per dag som någon misstänker är phishing.
+  Säkerhetsteamet har två analytiker. Gruppen ska välja <b>en</b> kedja: hur mejlen hittas, hur
+  information hämtas, hur ärendet sammanfattas och vem som får trycka på knappen.</p>
+  <dl class="brief">
+    <div><dt>Tid</dt><span>15 minuter beslut och simulering, 5 minuter redovisning.</span></div>
+    <div><dt>Roller</dt><span>Ordförande (håller tiden), skeptiker (letar svagheter), sekreterare (skriver valen), rapportör (redovisar).</span></div>
+    <div><dt>Krav</dt><span>Gruppen ska enas om alla fyra val och kunna säga varför – inte skriva en rapport.</span></div>
+  </dl>
+</div>
+
+<h3>Gruppens beslut</h3>
+<div class="card">
+  <label class="field" for="g-det">1. Hur hittas de misstänkta mejlen?</label>
+  <select id="g-det">
+    <option value="man">Manuell granskning av alla 400</option>
+    <option value="rule">Regel: avsändare på svartlistan</option>
+    <option value="ml" selected>ML-modell som poängsätter varje mejl</option>
+  </select>
+
+  <label class="field" for="g-enr">2. Hur hämtas mer information om ett larm?</label>
+  <select id="g-enr">
+    <option value="none">Ingen – analytikern får googla själv</option>
+    <option value="script">Skript som slår upp avsändardomänen</option>
+    <option value="agent" selected>AI-agent som söker i hotintel och tidigare ärenden</option>
+  </select>
+
+  <label class="field" for="g-sum">3. Vem sammanfattar ärendet?</label>
+  <select id="g-sum">
+    <option value="mall">En mall som analytikern fyller i</option>
+    <option value="llm" selected>En LLM som skriver utkast på svenska</option>
+    <option value="ingen">Ingen sammanfattning</option>
+  </select>
+
+  <label class="field" for="g-act">4. Vem vidtar åtgärden?</label>
+  <select id="g-act">
+    <option value="auto">Automation blockerar avsändaren direkt</option>
+    <option value="approve" selected>Automation föreslår – analytikern godkänner</option>
+    <option value="man">Analytikern gör allt manuellt</option>
+  </select>
+
+  <fieldset>
+    <legend>Skydd gruppen vill behålla</legend>
+    <label class="checkline"><input type="checkbox" id="g-appr" checked><span>Mänskligt godkännande innan något blockeras</span></label>
+    <label class="checkline"><input type="checkbox" id="g-log" checked><span>Logg över varje beslut och varför</span></label>
+  </fieldset>
+
+  <div class="actions"><button type="button" id="g-run">Visa vad valen leder till</button></div>
+  <div id="g-out" aria-live="polite"></div>
+</div>
+
+<h3>Redovisa på 2 minuter</h3>
+<ol>
+  <li>Vilken kedja valde ni?</li>
+  <li>Vilket är det svagaste ledet i er kedja?</li>
+  <li>Vad skulle få er att ändra beslutet?</li>
+</ol>
+
+  </section>
+  <section id="panel-fac" role="tabpanel" aria-labelledby="tab-fac" tabindex="0" hidden>
+    <div class="facitbar">
+      <button type="button" id="facOpenAll">Öppna alla facit</button>
+      <button type="button" class="ghost" id="facCloseAll">Fäll ihop alla</button>
+      <span class="hint">Facit kan öppnas när som helst – du behöver inte svara först.</span>
+    </div>
+
+<p>Facit ligger bakom ett klick så att du först får försöka själv. Öppna en uppgift i taget och
+jämför med ditt eget svar – det är skillnaden mellan svaren som lär dig något.</p>
+<div id="facit-lista"></div>
+
+<h2>Vanliga missförstånd</h2>
+<table>
+  <thead><tr><th>Missförstånd</th><th>Vad som gäller</th></tr></thead>
+  <tbody>
+    <tr><td>"All automation är AI"</td><td>Nej. Automation utför steg någon bestämt. AI krävs först när systemet tolkar eller lär.</td></tr>
+    <tr><td>"En LLM kan själv agera i systemen"</td><td>Först när den får verktyg och ett mål – då är den en agent, och då behövs behörighetskontroll.</td></tr>
+    <tr><td>"Mer AI ger alltid bättre säkerhet"</td><td>En komplicerad modell som ingen kan förklara är svår att lita på i drift. Börja med en regel om den räcker.</td></tr>
+    <tr><td>"Modellen blir bättre av att se all data"</td><td>Den blir bättre av <em>relevant och korrekt</em> data. Fel i träningsdatan blir fel i modellen.</td></tr>
+  </tbody>
+</table>
+
+  </section>
+
+<script>(function(){if(!window.CanvasRenderingContext2D||!CanvasRenderingContext2D.prototype||CanvasRenderingContext2D.prototype.roundRect)return;
+CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){r=Math.min(typeof r==="number"?r:0,w/2,h/2);
+this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);
+this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this;};})();</script>
+<section class="lab" id="lab-extra-1" aria-labelledby="lab1-h">
+  <p class="lab-eyebrow">Extra labb · avancerad grafik · maskininlärning</p>
+  <h2 id="lab1-h">Gränsen – hur en modell lär sig av data</h2>
+  <p class="lab-lead">Varje punkt är ett exempel och linjen är modellens regel. Flytta linjen själv och jämför med vad träningen hittar. Testa sedan det cirkelformade datat: där räcker ingen rak linje, hur mycket du än tränar.</p>
+  <div class="lab-shell">
+    <div class="lab-stage">
+      <canvas id="lab1cv" width="960" height="520" role="img" aria-label="Punktdiagram med två klasser och en rörlig beslutslinje"></canvas>
+      <div class="lab-hud">
+        <span>Träffsäkerhet <b id="lab1acc">–</b></span>
+        <span>Fel <b id="lab1err">–</b></span>
+        <span>Träningssteg <b id="lab1ep">0</b></span>
+        <span>Dataset <b id="lab1modename">–</b></span>
+      </div>
+    </div>
+    <div class="lab-side">
+      <div class="lab-card">
+        <label for="lab1data">Välj dataset</label>
+        <select id="lab1data">
+          <option value="linear">Två tydliga klasser (lätt)</option>
+          <option value="overlap">Överlappande klasser (svårare)</option>
+          <option value="circle">Ring inuti ring (omöjligt för en rak linje)</option>
+        </select>
+        <label for="lab1ang">Linjens vinkel <output id="lab1angv">35°</output></label>
+        <input type="range" id="lab1ang" min="0" max="180" value="35">
+        <label for="lab1off">Linjens läge <output id="lab1offv">0</output></label>
+        <input type="range" id="lab1off" min="-70" max="70" value="0">
+        <label for="lab1lr">Inlärningstakt <output id="lab1lrv">0,35</output></label>
+        <input type="range" id="lab1lr" min="1" max="100" value="35">
+        <div class="actions">
+          <button type="button" id="lab1train">Träna modellen</button>
+          <button type="button" class="ghost" id="lab1data2">Nytt data</button>
+          <button type="button" class="ghost" id="lab1reset">Återställ</button>
+        </div>
+      </div>
+      <div class="lab-card">
+        <b>Vad händer?</b>
+        <div class="readout" id="lab1read"></div>
+        <div class="verdict mid" id="lab1verdict"></div>
+      </div>
+      <div class="lab-card lab-q">
+        <b>Diskutera i par</b>
+        <ul>
+          <li>Varför blir det fel även när modellen är ”färdigtränad”?</li>
+          <li>Vad skulle du lägga till för att klara ring-datat?</li>
+          <li>När är 92 % träffsäkerhet bra – och när är den farlig?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <details class="lab-how">
+    <summary>Så gör du – 10 min individuellt, 15 min i par</summary>
+    <ol>
+      <li>Kör <em>Träna modellen</em> på ”Två tydliga klasser”. Notera träffsäkerheten.</li>
+      <li>Byt till ”Ring inuti ring” och träna igen. Stanna när siffran slutat röra sig.</li>
+      <li>Dra i vinkel och läge för hand och försök slå modellens resultat.</li>
+      <li>Skriv en slutsats: vad kan en modell lära sig, och vad kan den aldrig lära sig av det data den får?</li>
+    </ol>
+  </details>
+</section>
+<script>
+(function(){
+  var cv=document.getElementById("lab1cv"),cx=cv.getContext("2d");
+  var W=960,H=520,PAD=64;
+  var $=function(id){return document.getElementById(id)};
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var st={mode:"linear",pts:[],th:35*Math.PI/180,d:0,lr:0.35,ep:0,training:false,t:0};
+
+  function gauss(){var u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+  function gen(mode,n){
+    var p=[],i,a,r,x,y,c;
+    for(i=0;i<n;i++){
+      if(mode==="linear"){c=Math.random()<0.5?-1:1;x=c*0.42+gauss()*0.17;y=c*0.42+gauss()*0.17;p.push({x:x,y:y,c:c});}
+      else if(mode==="overlap"){c=Math.random()<0.5?-1:1;x=c*0.3+gauss()*0.42;y=c*0.3+gauss()*0.42;p.push({x:x,y:y,c:c});}
+      else{a=Math.random()*Math.PI*2;r=Math.random();r=r<0.55?0.12+Math.random()*0.28:0.6+Math.random()*0.3;p.push({x:Math.cos(a)*r,y:Math.sin(a)*r,c:r<0.5?1:-1});}
+    }
+    return p;
+  }
+  function reset(){st.ep=0;st.training=false;st.pts=gen(st.mode,150);$("lab1ep").textContent="0";}
+  function sx(x){return PAD+(x+1)/2*(W-2*PAD)}
+  function sy(y){return H-PAD-(y+1)/2*(H-2*PAD)}
+
+  function w(){return {a:Math.cos(st.th),b:Math.sin(st.th),c:-st.d}}
+  function predict(p){var q=w();return q.a*p.x+q.b*p.y+q.c}
+
+  function score(){
+    var ok=0,i,p;
+    for(i=0;i<st.pts.length;i++){p=st.pts[i];if((predict(p)>0?1:-1)===p.c)ok++;}
+    return ok;
+  }
+
+  function trainStep(){
+    var q=w(),lr=st.lr*0.06,i,p,s,g=[0,0,0],n=st.pts.length,tot=0,grad;
+    for(i=0;i<n;i++){
+      p=st.pts[i];
+      s=q.a*p.x+q.b*p.y+q.c;
+      tot+=Math.log(1+Math.exp(-p.c*s));
+      grad=-p.c/(1+Math.exp(p.c*s));
+      g[0]+=grad*p.x;g[1]+=grad*p.y;g[2]+=grad;
+    }
+    g[0]/=n;g[1]/=n;g[2]/=n;
+    var na=q.a-lr*g[0],nb=q.b-lr*g[1],nc=q.c-lr*g[2];
+    var len=Math.sqrt(na*na+nb*nb)||1;
+    st.th=Math.atan2(nb/len,na/len);
+    st.d=-nc/len;
+    if(st.th<0)st.th+=Math.PI;
+    st.ep++;
+    $("lab1ep").textContent=st.ep;
+    $("lab1ang").value=Math.round(st.th*180/Math.PI);
+    $("lab1angv").textContent=Math.round(st.th*180/Math.PI)+"°";
+    var dd=Math.max(-70,Math.min(70,Math.round(st.d*70)));
+    $("lab1off").value=dd;$("lab1offv").textContent=dd;
+    if(Math.abs(g[0])+Math.abs(g[1])+Math.abs(g[2])<0.0016||st.ep>420)st.training=false;
+  }
+
+  function readout(){
+    var ok=score(),acc=Math.round(ok/st.pts.length*100),err=st.pts.length-ok;
+    $("lab1acc").textContent=acc+" %";
+    $("lab1err").textContent=err;
+    var v=$("lab1verdict"),msg;
+    if(acc>=90){v.className="verdict good";msg="Linjen fångar nästan allt. Här räcker en enkel regel.";}
+    else if(acc>=75){v.className="verdict mid";msg="Okej men inte bra. Några exempel hamnar på fel sida – det är modellens fel, inte datats.";}
+    else if(st.mode==="circle"){v.className="verdict bad";msg="Stopp. Klassen ligger som en ring inuti en annan ring. En rak gräns kan aldrig lösa det – modellen behöver fler features eller ett djupare nät.";}
+    else{v.className="verdict bad";msg="Dåligt. Klasserna överlappar, så gränsen kan inte bli perfekt. Frågan är hur mycket fel som är acceptabelt.";}
+    v.textContent=msg;
+    $("lab1read").innerHTML="Modellen säger <b>klass A</b> på ena sidan linjen och <b>klass B</b> på den andra. "+
+      "Nuvarande regel: <b>"+(acc>=75?"användbar":"svag")+"</b> med <b>"+err+"</b> fel av "+st.pts.length+" exempel."+
+      "<br>Träningssteg: <b>"+st.ep+"</b>. Fler steg hjälper bara om problemet går att lösa med en rak gräns.";
+  }
+
+  function draw(){
+    var q=w(),i,p,ok,t;
+    t=st.t||0;
+    cx.clearRect(0,0,W,H);
+    var g=cx.createLinearGradient(0,H,0,0);
+    g.addColorStop(0,"#070d18");g.addColorStop(1,"#0b1526");
+    cx.fillStyle=g;cx.fillRect(0,0,W,H);
+
+    // halvor
+    var nx=q.a,ny=q.b,nc=q.c;
+    var base=sx(0)*nx+sy(0)*ny+nc;
+    var gg=cx.createLinearGradient(sx(-nx*1.3),sy(-ny*1.3),sx(nx*1.3),sy(ny*1.3));
+    if(base>0){gg.addColorStop(0,"rgba(56,225,196,.10)");gg.addColorStop(1,"rgba(56,225,196,.02)");}
+    else{gg.addColorStop(0,"rgba(255,107,214,.10)");gg.addColorStop(1,"rgba(255,107,214,.02)");}
+    cx.fillStyle=gg;cx.fillRect(0,0,W,H);
+
+    // rutnät
+    cx.strokeStyle="rgba(120,170,255,.10)";cx.lineWidth=1;
+    for(i=0;i<=8;i++){var px=PAD+i*(W-2*PAD)/8,py=PAD+i*(H-2*PAD)/8;
+      cx.beginPath();cx.moveTo(px,PAD);cx.lineTo(px,H-PAD);cx.stroke();
+      cx.beginPath();cx.moveTo(PAD,py);cx.lineTo(W-PAD,py);cx.stroke();}
+    cx.strokeStyle="rgba(120,170,255,.22)";
+    cx.beginPath();cx.moveTo(PAD,H/2);cx.lineTo(W-PAD,H/2);cx.stroke();
+    cx.beginPath();cx.moveTo(W/2,PAD);cx.lineTo(W/2,H-PAD);cx.stroke();
+
+    // punkter
+    for(i=0;i<st.pts.length;i++){
+      p=st.pts[i];ok=(predict(p)>0?1:-1)===p.c;
+      var X=sx(p.x),Y=sy(p.y);
+      var col=p.c>0?"56,225,196":"255,107,214";
+      cx.beginPath();cx.arc(X,Y,ok?5.5:6.5,0,6.284);
+      cx.fillStyle="rgba("+col+",.92)";
+      cx.shadowColor="rgba("+col+",.85)";cx.shadowBlur=ok?10:16;
+      cx.fill();cx.shadowBlur=0;
+      if(!ok){cx.beginPath();cx.arc(X,Y,11+Math.sin(t*3+i)*1.6,0,6.284);
+        cx.strokeStyle="rgba(255,90,90,.75)";cx.lineWidth=2;cx.stroke();}
+    }
+
+    // linje
+    var cx0=W/2,cy0=H/2,dx=-q.b,dy=q.a;
+    var far=1400,off=-q.c;
+    var ax=sx(0),ay=sy(0);
+    var s=off*((W-2*PAD)/2);
+    var px1=ax+nx*s,py1=ay-ny*s;
+    var l1x=px1+dx*far,l1y=py1-dy*far,l2x=px1-dx*far,l2y=py1+dy*far;
+    cx.beginPath();cx.moveTo(l1x,l1y);cx.lineTo(l2x,l2y);
+    cx.strokeStyle="rgba(120,220,255,.95)";cx.lineWidth=3;
+    cx.shadowColor="rgba(80,200,255,.95)";cx.shadowBlur=18;cx.stroke();cx.shadowBlur=0;
+    cx.beginPath();cx.moveTo(l1x,l1y);cx.lineTo(l2x,l2y);
+    cx.setLineDash([9,7]);cx.strokeStyle="rgba(230,250,255,.8)";cx.lineWidth=1.4;cx.stroke();cx.setLineDash([]);
+
+    // handtag
+    cx.beginPath();cx.arc(px1,py1,7+Math.sin(t*4)*1.2,0,6.284);
+    cx.fillStyle="#7ff2d6";cx.shadowColor="#7ff2d6";cx.shadowBlur=16;cx.fill();cx.shadowBlur=0;
+
+    // etiketter
+    cx.font="600 13px system-ui,Segoe UI,Arial";cx.fillStyle="rgba(200,225,255,.75)";
+    cx.fillText("klass A",PAD+6,H-16);cx.fillText("klass B",W-PAD-64,H-16);
+
+    readout();
+  }
+
+  function loop(){if(!reduce)st.t+=0.016;if(st.training)trainStep();draw();requestAnimationFrame(loop);}
+
+  $("lab1data").addEventListener("change",function(){st.mode=this.value;$("lab1modename").textContent=this.options[this.selectedIndex].text.split("(")[0];reset();});
+  $("lab1data2").addEventListener("click",function(){reset();});
+  $("lab1ang").addEventListener("input",function(){st.th=this.value*Math.PI/180;st.training=false;$("lab1angv").textContent=this.value+"°";});
+  $("lab1off").addEventListener("input",function(){st.d=this.value/70;st.training=false;$("lab1offv").textContent=this.value;});
+  $("lab1lr").addEventListener("input",function(){st.lr=this.value/100;$("lab1lrv").textContent=(this.value/100).toFixed(2).replace(".",",");});
+  $("lab1train").addEventListener("click",function(){st.ep=0;st.training=true;});
+  $("lab1reset").addEventListener("click",function(){
+    st.th=35*Math.PI/180;st.d=0;st.ep=0;st.training=false;
+    $("lab1ang").value=35;$("lab1angv").textContent="35°";$("lab1off").value=0;$("lab1offv").textContent="0";$("lab1ep").textContent="0";
+  });
+
+  $("lab1modename").textContent="Två tydliga klasser";
+  reset();loop();
+})();
+</script>
+
+</main>
+
+
+<script>
+var WS=(function(){
+"use strict";
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(n,d){if(!isFinite(n))return "\u2013";return n.toFixed(d==null?2:d).replace(".",",")}
+function num(v){return Number(String(v).replace(",","."))}
+
+/* ---------- flikar ---------- */
+function initTabs(){
+  var btns=$$('.tabs [role="tab"]');
+  if(!btns.length)return;
+  function show(id,setHash){
+    btns.forEach(function(b){
+      var on=b.getAttribute("data-panel")===id;
+      b.setAttribute("aria-selected",on?"true":"false");
+      b.tabIndex=on?0:-1;
+    });
+    $$('[role="tabpanel"]').forEach(function(p){p.hidden=p.id!=="panel-"+id});
+    if(setHash){try{history.replaceState(null,"","#"+id)}catch(e){}}
+  }
+  btns.forEach(function(b,i){
+    b.addEventListener("click",function(){show(b.getAttribute("data-panel"),true)});
+    b.addEventListener("keydown",function(e){
+      var n=null;
+      if(e.key==="ArrowRight")n=(i+1)%btns.length;
+      if(e.key==="ArrowLeft")n=(i-1+btns.length)%btns.length;
+      if(e.key==="Home")n=0;
+      if(e.key==="End")n=btns.length-1;
+      if(n!==null){e.preventDefault();btns[n].focus();show(btns[n].getAttribute("data-panel"),true)}
+    });
+  });
+  var h=(location.hash||"").replace("#","");
+  var ok=btns.some(function(b){return b.getAttribute("data-panel")===h});
+  show(ok?h:"ind",false);
+}
+
+/* ---------- timer ---------- */
+function initTimer(){
+  var box=$("#timer"); if(!box)return;
+  var total=(parseInt(box.getAttribute("data-minutes"),10)||60)*60;
+  var left=total,id=null;
+  var out=$("#tOut"),st=$("#tStart"),rs=$("#tReset");
+  function paint(){
+    var m=Math.floor(left/60),s=left%60;
+    out.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    box.classList.toggle("low",left>0&&left<=300);
+  }
+  function stop(){
+    if(id){clearInterval(id);id=null}
+    st.textContent=left===0?"Klar":"Forts\u00e4tt";
+    st.setAttribute("aria-pressed","false");
+  }
+  st.addEventListener("click",function(){
+    if(id){stop();return}
+    if(left===0){left=total;box.classList.remove("done");paint()}
+    id=setInterval(function(){
+      if(left>0){left--;paint()}
+      if(left===0){stop();box.classList.add("done");st.textContent="Klar"}
+    },1000);
+    st.textContent="Pausa";st.setAttribute("aria-pressed","true");
+  });
+  rs.addEventListener("click",function(){
+    stop();left=total;box.classList.remove("done");paint();st.textContent="Start";
+  });
+  paint();
+}
+
+/* ---------- quiz ---------- */
+function quiz(host,cfg){
+  if(!host)return;
+  var qs=cfg.questions||[];
+  host.innerHTML="";
+  var h=document.createElement("h3");h.textContent=cfg.title||"Avslutande kunskapskontroll";host.appendChild(h);
+  if(cfg.hint){var p=document.createElement("p");p.className="hint";p.textContent=cfg.hint;host.appendChild(p)}
+  var answered=0,right=0;
+  var status=document.createElement("p");status.className="quizsum";
+  var retry=document.createElement("button");
+  retry.type="button";retry.className="ghost";retry.textContent="G\u00f6r om quizet";retry.hidden=true;
+  retry.addEventListener("click",function(){quiz(host,cfg);host.scrollIntoView({block:"center"})});
+  qs.forEach(function(q,i){
+    var wrap=document.createElement("div");wrap.className="q";
+    var qt=document.createElement("p");qt.className="qt";qt.textContent=(i+1)+". "+q.text;wrap.appendChild(qt);
+    var opts=document.createElement("div");opts.className="opts";wrap.appendChild(opts);
+    var fb=document.createElement("p");fb.className="fb";fb.hidden=true;wrap.appendChild(fb);
+    q.options.forEach(function(o,j){
+      var b=document.createElement("button");b.type="button";b.className="opt";
+      b.innerHTML='<span class="k">'+String.fromCharCode(65+j)+'</span><span>'+esc(o)+'</span>';
+      b.addEventListener("click",function(){
+        if(wrap.getAttribute("data-done")==="1")return;
+        wrap.setAttribute("data-done","1");answered++;
+        $$(".opt",opts).forEach(function(x,k){x.disabled=true;if(k===q.answer)x.classList.add("correct")});
+        var good=j===q.answer;
+        if(good){right++}else{b.classList.add("wrong")}
+        fb.hidden=false;fb.className="fb "+(good?"ok":"bad");
+        fb.innerHTML="<b>"+(good?"R\u00e4tt.":"Fel.")+"</b> "+esc(q.why||"");
+        if(!good){var s=document.createElement("span");s.className="whynot";s.textContent="R\u00e4tt svar: "+q.options[q.answer]+".";fb.appendChild(s)}
+        status.textContent=answered+" av "+qs.length+" besvarade \u00b7 "+right+" r\u00e4tt";
+        if(answered===qs.length){
+          status.innerHTML="<b>Resultat: "+right+" av "+qs.length+" r\u00e4tt.</b> "+(right===qs.length?"Mycket bra \u2013 du kan begreppen.":"L\u00e4s f\u00f6rklaringarna och g\u00f6r om quizet om du vill.");
+          retry.hidden=false;
+        }
+      });
+      opts.appendChild(b);
+    });
+    host.appendChild(wrap);
+  });
+  status.textContent="0 av "+qs.length+" besvarade";
+  host.appendChild(status);
+  host.appendChild(retry);
+}
+
+/* ---------- klassificering med dropdown ---------- */
+function classify(host,cfg){
+  if(!host)return;
+  var rows=cfg.rows||[],opts=cfg.options||[];
+  var t=document.createElement("table");
+  t.innerHTML='<thead><tr><th scope="col">'+esc(cfg.col1||"System")+'</th><th scope="col">'+esc(cfg.col2||"Din bed\u00f6mning")+'</th></tr></thead>';
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  rows.forEach(function(r){
+    var tr=document.createElement("tr");
+    var td=document.createElement("td");td.textContent=r.text;
+    var note=document.createElement("div");note.className="rownote";note.hidden=true;td.appendChild(note);
+    var td2=document.createElement("td");
+    var sel=document.createElement("select");
+    sel.setAttribute("aria-label","Bed\u00f6mning f\u00f6r: "+r.text);
+    sel.innerHTML='<option value="">\u2013 v\u00e4lj \u2013</option>'+opts.map(function(o,i){return '<option value="'+i+'">'+esc(o)+'</option>'}).join("");
+    td2.appendChild(sel);tr.appendChild(td);tr.appendChild(td2);tb.appendChild(tr);
+  });
+  var btn=document.createElement("button");btn.type="button";btn.textContent=cfg.btn||"Kontrollera mina svar";
+  var out=document.createElement("p");out.className="fb";
+  btn.addEventListener("click",function(){
+    var ok=0,missing=0;
+    Array.prototype.forEach.call(tb.rows,function(tr,i){
+      var sel=$("select",tr),v=sel.value===""?null:Number(sel.value);
+      var good=v===rows[i].correct;if(good){ok++}if(v===null){missing++}
+      tr.classList.toggle("good",good);tr.classList.toggle("bad",!good&&v!==null);
+      var n=$(".rownote",tr);
+      if(n){n.hidden=false;n.innerHTML="<b>"+(good?"R\u00e4tt":(v===null?"Inget val":"R\u00e4tt svar: "+esc(opts[rows[i].correct])))+"</b> "+(rows[i].note||"")}
+    });
+    out.className="fb show "+(ok===rows.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+rows.length+" r\u00e4tt.</b> "+(ok===rows.length?"Bra \u2013 du ser m\u00f6nstret.":"L\u00e4s radens f\u00f6rklaring och justera"+(missing?" ("+missing+" rad(er) utan val)":"")+".");
+  });
+  host.appendChild(t);host.appendChild(btn);host.appendChild(out);
+}
+
+/* ---------- tabell med sortering och filter ---------- */
+function sortTable(host,cfg){
+  if(!host)return;
+  var cols=cfg.cols||[],rows=(cfg.rows||[]).slice();
+  var wrap=document.createElement("div");wrap.className="tablewrap";
+  var filter=null;
+  if(cfg.filter){
+    filter=document.createElement("input");filter.type="search";filter.className="filter";
+    filter.placeholder=cfg.filterPlaceholder||"Filtrera \u2026";
+    filter.setAttribute("aria-label","Filtrera tabellen");
+    wrap.appendChild(filter);
+  }
+  var t=document.createElement("table");
+  var thead=document.createElement("thead"),htr=document.createElement("tr");
+  cols.forEach(function(c,i){
+    var th=document.createElement("th");th.scope="col";th.setAttribute("data-i",i);th.tabIndex=0;
+    th.innerHTML=esc(c)+' <span class="arrow" aria-hidden="true">\u2195</span>';
+    function sort(){
+      var dir=th.getAttribute("data-dir")==="asc"?"desc":"asc";th.setAttribute("data-dir",dir);
+      rows.sort(function(a,b){
+        var x=a[i],y=b[i];
+        var nx=parseFloat(String(x).replace(/\s/g,"").replace(",",".")),ny=parseFloat(String(y).replace(/\s/g,"").replace(",","."));
+        var both=isFinite(nx)&&isFinite(ny)&&String(x).replace(/[^0-9]/g,"")!==""&&String(y).replace(/[^0-9]/g,"")!=="";
+        if(both)return dir==="asc"?nx-ny:ny-nx;
+        return dir==="asc"?String(x).localeCompare(String(y),"sv"):String(y).localeCompare(String(x),"sv");
+      });
+      render();
+    }
+    th.addEventListener("click",sort);
+    th.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();sort()}});
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr);t.appendChild(thead);
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  function render(){
+    tb.innerHTML="";
+    var q=filter?filter.value.toLowerCase():"";
+    rows.forEach(function(r){
+      if(q&&r.join(" ").toLowerCase().indexOf(q)<0)return;
+      var tr=document.createElement("tr");
+      r.forEach(function(c){var td=document.createElement("td");td.innerHTML=c;tr.appendChild(td)});
+      tb.appendChild(tr);
+    });
+  }
+  wrap.appendChild(t);host.appendChild(wrap);
+  if(filter)filter.addEventListener("input",render);
+  render();
+}
+
+/* ---------- stapeldiagram ---------- */
+function bars(host,items,opt){
+  if(!host)return;
+  opt=opt||{};host.innerHTML="";
+  var max=opt.max||Math.max.apply(null,items.map(function(i){return Math.abs(i.value)}).concat([1]));
+  var box=document.createElement("div");box.className="bars";
+  items.forEach(function(it){
+    var row=document.createElement("div");row.className="barrow"+(it.tone?" "+it.tone:"");
+    var pct=Math.max(0,Math.min(100,Math.abs(it.value)/max*100));
+    row.innerHTML='<span class="bl">'+esc(it.label)+'</span><span class="btrack"><span class="bfill" style="width:'+pct.toFixed(1)+'%"></span></span><span class="bv">'+esc(it.display!=null?it.display:it.value)+'</span>';
+    box.appendChild(row);
+  });
+  host.appendChild(box);
+  if(opt.caption){var p=document.createElement("p");p.className="hint";p.textContent=opt.caption;host.appendChild(p)}
+}
+
+/* ---------- linjediagram i ren SVG ---------- */
+function line(host,cfg){
+  if(!host)return;
+  var W=560,H=250,L=46,R=14,T=14,B=34;
+  var maxY=cfg.maxY||1,maxX=cfg.maxX||1;
+  function X(v){return L+(v/maxX)*(W-L-R)}
+  function Y(v){return H-B-(v/maxY)*(H-T-B)}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="chart" role="img" aria-label="'+esc(cfg.label||"Diagram")+'">';
+  for(var i=0;i<=4;i++){
+    var y=T+i*(H-T-B)/4;
+    s+='<line class="grid" x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'"/>';
+    s+='<text class="ax" x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+fmt(maxY*(1-i/4),maxY<=1?1:0)+'</text>';
+  }
+  (cfg.xTicks||[0,0.5,1]).forEach(function(t){
+    s+='<text class="ax" x="'+X(t*maxX)+'" y="'+(H-12)+'" text-anchor="middle">'+fmt(t*maxX,0)+'</text>';
+  });
+  (cfg.hlines||[]).forEach(function(hl){
+    s+='<line x1="'+L+'" y1="'+Y(hl.y).toFixed(1)+'" x2="'+(W-R)+'" y2="'+Y(hl.y).toFixed(1)+'" stroke="'+hl.color+'" stroke-width="1.5" stroke-dasharray="5 4"><title>'+esc(hl.label||"")+'</title></line>';
+  });
+  (cfg.series||[]).forEach(function(ser){
+    var pts=ser.points.map(function(p){return X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)}).join(" ");
+    if(!ser.onlyDots){s+='<polyline points="'+pts+'" fill="none" stroke="'+ser.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';}
+    if(ser.dots){ser.points.forEach(function(p){
+      s+='<circle cx="'+X(p[0]).toFixed(1)+'" cy="'+Y(p[1]).toFixed(1)+'" r="3.5" fill="'+ser.color+'"><title>'+esc(ser.name)+": "+fmt(p[1],2)+'</title></circle>';
+    })}
+    if(ser.fill){
+      s+='<polygon points="'+X(ser.points[0][0]).toFixed(1)+','+Y(0)+' '+pts+' '+X(ser.points[ser.points.length-1][0]).toFixed(1)+','+Y(0)+'" fill="'+ser.color+'" opacity="0.08"/>';
+    }
+  });
+  if(cfg.xLabel)s+='<text class="lbl" x="'+(L+(W-L-R)/2)+'" y="'+(H-1)+'" text-anchor="middle">'+esc(cfg.xLabel)+'</text>';
+  s+="</svg>";
+  host.innerHTML=s;
+  if((cfg.series||[]).length){
+    var ul=document.createElement("ul");ul.className="legend";
+    cfg.series.forEach(function(ser){var li=document.createElement("li");li.innerHTML='<i style="background:'+ser.color+'"></i>'+esc(ser.name);ul.appendChild(li)});
+    host.appendChild(ul);
+  }
+}
+
+/* ---------- confusion matrix ---------- */
+function cm(host,c){
+  if(!host)return;
+  host.innerHTML='<div class="cm">'+
+    '<div class="cmh"></div><div class="cmh">Modellen larmar</div><div class="cmh">Modellen \u00e4r tyst</div>'+
+    '<div class="cmh">Verkligt hot</div><div class="cell tp"><b>'+c.tp+'</b><span>TP \u2013 f\u00e5ngat hot</span></div><div class="cell fn"><b>'+c.fn+'</b><span>FN \u2013 missat hot</span></div>'+
+    '<div class="cmh">Verkligt normalt</div><div class="cell fp"><b>'+c.fp+'</b><span>FP \u2013 falsklarm</span></div><div class="cell tn"><b>'+c.tn+'</b><span>TN \u2013 korrekt tyst</span></div>'+
+    '</div>';
+}
+
+/* ---------- sm\u00e5hj\u00e4lp ---------- */
+function metric(tp,fp,fn){
+  var p=tp+fp?tp/(tp+fp):0, r=tp+fn?tp/(tp+fn):0;
+  return {precision:p,recall:r,f1:(p+r)?2*p*r/(p+r):0};
+}
+function riskLabel(v,lo,hi){
+  var t=v<lo?"low":(v<hi?"mid":"high");
+  var txt=t==="low"?"L\u00e5g risk":(t==="mid"?"Medelrisk":"H\u00f6g risk");
+  return '<span class="riskbadge '+t+'">'+txt+"</span>";
+}
+function facit(host,items){
+  if(!host)return;
+  items.forEach(function(f){
+    var d=document.createElement("details");
+    d.innerHTML="<summary>"+f[0]+"</summary>"+f[1];
+    host.appendChild(d);
+  });
+}
+function init(){initTabs();initTimer()}
+return {$,$$,esc,fmt,num,quiz,classify,sortTable,bars,line,cm,metric,riskLabel,facit,init:init};
+})();
+(function(){
+  var open=document.getElementById("facOpenAll"),close=document.getElementById("facCloseAll");
+  function all(v){Array.prototype.forEach.call(document.querySelectorAll("#panel-fac details"),function(d){d.open=v})}
+  if(open)open.addEventListener("click",function(){all(true)});
+  if(close)close.addEventListener("click",function(){all(false)});
+})();
+</script>
+
+
+<script>
+(function(){
+  var rows=[
+    {text:"Termostat som slår på värmen när det blir under 21 \u00b0C",correct:0,note:"Ett fast villkor \u2013 ingen inl\u00e4rning."},
+    {text:"Skript som d\u00f6per om 300 filer enligt ett m\u00f6nster",correct:1,note:"En f\u00f6rbest\u00e4md sekvens som k\u00f6rs utan tolkning."},
+    {text:"Spamfilter som blir b\u00e4ttre n\u00e4r anv\u00e4ndare markerar skr\u00e4ppost",correct:2,note:"Beteendet \u00e4ndras av nya exempel \u2013 det \u00e4r ML."},
+    {text:"Chattbot som svarar med st\u00f6d av f\u00f6retagets dokument",correct:3,note:"Text tolkas och formuleras. Dokumenten h\u00e4mtas (RAG) men boten agerar inte sj\u00e4lv."},
+    {text:"Modell som flaggar avvikande betalkortstransaktioner",correct:2,note:"M\u00f6nster i historisk data avg\u00f6r vad som \u00e4r avvikande."},
+    {text:"AI-agent som s\u00f6ker i tre system och f\u00f6resl\u00e5r en \u00e5tg\u00e4rd",correct:4,note:"Flera steg, verktyg och ett m\u00e5l \u2013 k\u00e4nnetecknet f\u00f6r en agent."},
+    {text:"Brandlarm som utl\u00f6ses av r\u00f6kdetektorn",correct:0,note:"Ett tr\u00f6skelv\u00e4rde, ingen modell."},
+    {text:"System som sammanfattar en incidentrapport",correct:3,note:"Sammanfattning av text \u00e4r en spr\u00e5kmodells uppgift."}
+  ];
+  WS.classify(document.getElementById("u1-klass"),{
+    col1:"System",col2:"Teknik",
+    options:["Regelstyrt system","Automation","Maskininl\u00e4rning (ML)","Spr\u00e5kmodell (LLM)","AI-agent"],
+    rows:rows
+  });
+})();
+
+(function(){
+  var cdet=document.getElementById("c-det");
+  if(!cdet)return;
+  var cenr=document.getElementById("c-enr"),
+      csum=document.getElementById("c-sum"),
+      cact=document.getElementById("c-act"),
+      cappr=document.getElementById("c-appr"),
+      clog=document.getElementById("c-log"),
+      cout=document.getElementById("c-out");
+  var cmap={
+    det:{man:{ok:false,label:"manuell granskning",note:"Tv\u00e5 analytiker hinner inte 400 mejl per dag."},
+         rule:{ok:false,label:"regel",note:"En svartlista missar nya avs\u00e4ndare och avs\u00e4ndare som h\u00e4rmar en kund."},
+         ml:{ok:true,label:"ML-modell",note:"Modellen rangordnar mejlen s\u00e5 att de mest sannolika granskas f\u00f6rst."}},
+    enr:{none:{ok:false,label:"ingen kontext",note:"Utan kontext blir varje larm en gissning."},
+         script:{ok:true,label:"skript",note:"Snabb och billig basfakta om dom\u00e4nen."},
+         agent:{ok:true,label:"AI-agent",note:"Agenten kombinerar hotintel, tidigare \u00e4renden och avs\u00e4ndarens historik."}},
+    sum:{mall:{ok:true,label:"mall",note:"J\u00e4mn kvalitet men tar l\u00e4ngre tid \u00e4n ett utkast."},
+         llm:{ok:true,label:"LLM",note:"LLM skriver ett utkast som en m\u00e4nniska l\u00e4ser innan det skickas."},
+         ingen:{ok:false,label:"ingen sammanfattning",note:"N\u00e4sta skift tappar sammanhanget."}},
+    act:{auto:{ok:false,label:"automatisk blockering",note:"Ett falsklarm kan stoppa en legitim kund eller faktura."},
+         approve:{ok:true,label:"automation med godk\u00e4nnande",note:"Fart utan att ansvaret l\u00e4mnas ifr\u00e5n m\u00e4nniskan."},
+         man:{ok:false,label:"manuell \u00e5tg\u00e4rd",note:"Flaskhalsen \u00e4r tillbaka."}}
+  };
+  function ccalc(){
+    var v={det:cdet.value,enr:cenr.value,sum:csum.value,act:cact.value};
+    var ok=0,parts=[],notes=[];
+    ["det","enr","sum","act"].forEach(function(k){
+      var i=cmap[k][v[k]];if(i.ok)ok++;
+      parts.push(i.label);
+      notes.push("<li>"+(i.ok?"<b>OK</b> \u2013 ":"<b>Svagt</b> \u2013 ")+WS.esc(i.note)+"</li>");
+    });
+    var risk = v.act==="auto" ? 2 : (ok>=3 && (v.act!=="approve" || cappr.checked) ? 0 : 1);
+    cout.innerHTML='<div class="fb show"><b>Din kedja:</b> '+parts.join(" \u2192 ")+" "+WS.riskLabel(risk,1,2)+
+      '<ul style="margin:8px 0 0">'+notes.join("")+"</ul>"+
+      (v.act==="approve"&&!cappr.checked?'<p class="whynot">Du valde godk\u00e4nnande men slog av regeln om m\u00e4nskligt godk\u00e4nnande.</p>':"")+
+      (!clog.checked?'<p class="whynot">Utan logg g\u00e5r beslutet inte att f\u00f6lja i efterhand.</p>':"")+
+      "</div>";
+  }
+  [cdet,cenr,csum,cact,cappr,clog].forEach(function(el){el.addEventListener("change",ccalc)});
+  ccalc();
+})();
+
+(function(){
+  var det=document.getElementById("g-det"),
+      enr=document.getElementById("g-enr"),
+      sum=document.getElementById("g-sum"),
+      act=document.getElementById("g-act"),
+      appr=document.getElementById("g-appr"),
+      out=document.getElementById("g-out");
+  var info={
+    det:{man:{ok:false,note:"400 mejl per dag och tv\u00e5 analytiker \u2013 manuell granskning hinner inte."},
+         rule:{ok:false,note:"Regeln missar nya avs\u00e4ndare och avs\u00e4ndare som h\u00e4rmar en kund."},
+         ml:{ok:true,note:"Modellen rangordnar mejlen s\u00e5 att analytikerna b\u00f6rjar med de mest sannolika."}},
+    enr:{none:{ok:false,note:"Utan kontext blir varje larm en gissning."},
+         script:{ok:true,note:"Ett skript ger snabb och billig basfakta om dom\u00e4nen."},
+         agent:{ok:true,note:"Agenten kan kombinera hotintel, tidigare \u00e4renden och avs\u00e4ndarens historik."}},
+    sum:{mall:{ok:true,note:"En mall ger j\u00e4mn kvalitet men tar l\u00e4ngre tid."},
+         llm:{ok:true,note:"LLM skriver ett utkast. Analytikern m\u00e5ste l\u00e4sa det innan det skickas."},
+         ingen:{ok:false,note:"Utan sammanfattning tappar n\u00e4sta skift sammanhanget."}},
+    act:{auto:{ok:false,note:"Automatisk blockering kan stoppa en legitim kund vid falsklarm."},
+         approve:{ok:true,note:"F\u00f6rslag + godk\u00e4nnande ger fart utan att ta ansvaret fr\u00e5n m\u00e4nniskan."},
+         man:{ok:false,note:"Helt manuellt \u00e5terinf\u00f6r flaskhalsen."}}
+  };
+  function calc(){
+    var v={det:det.value,enr:enr.value,sum:sum.value,act:act.value};
+    var ok=0,tot=0,notes=[];
+    Object.keys(v).forEach(function(k){
+      tot++;var i=info[k][v[k]];
+      if(i.ok)ok++;
+      notes.push((i.ok?"<b>OK</b> \u2013 ":"<b>Svagt</b> \u2013 ")+WS.esc(i.note));
+    });
+    var risk = v.act==="auto" ? (v.det==="ml"?"Medelrisk":"H\u00f6g risk") : (ok>=3?"L\u00e5g risk":"Medelrisk");
+    var badge = risk==="L\u00e5g risk" ? WS.riskLabel(0,1,2) : (risk==="Medelrisk"?WS.riskLabel(1,1,2):WS.riskLabel(2,1,2));
+    if(v.act==="auto") badge=WS.riskLabel(2,1,2);
+    else if(ok>=3) badge=WS.riskLabel(0,1,2);
+    else badge=WS.riskLabel(1,1,2);
+
+    var tid = (v.det==="man"?180:(v.det==="rule"?60:25)) + (v.enr==="none"?35:(v.enr==="script"?8:12)) + (v.sum==="ingen"?0:(v.sum==="mall"?12:5)) + (v.act==="man"?20:4);
+    var falsklarm = v.det==="ml" ? 18 : (v.det==="rule"? 42 : 55);
+    var spar = (appr.checked?1:0)+(document.getElementById("g-log").checked?1:0);
+
+    out.innerHTML='<div class="note"><b>Simulerat utfall</b> '+badge+
+      '<ul style="margin:8px 0 0">'+notes.map(function(n){return "<li>"+n+"</li>"}).join("")+'</ul>'+
+      '<p class="hint" style="margin-top:8px">Uppskattad tid per \u00e4rende: <b>'+tid+' min</b> \u00b7 falsklarm per 100 mejl: <b>'+falsklarm+'</b> \u00b7 skyddsregler i bruk: <b>'+spar+' av 2</b>.</p>'+
+      '<p class="hint">Siffrorna \u00e4r pedagogiska uppskattningar, inte m\u00e4tningar. Riktiga v\u00e4rden m\u00e4ts i labben.</p></div>';
+  }
+  [det,enr,sum,act,appr,document.getElementById("g-log")].forEach(function(el){
+    if(el)el.addEventListener("change",calc);
+  });
+  var btn=document.getElementById("g-run");
+  if(btn)btn.addEventListener("click",calc);
+  calc();
+})();
+
+(function(){
+  if(!document.getElementById("u3-sim"))return;
+  var seed=20260518;
+  function rnd(){seed=(seed*1103515245+12345)%2147483648;return seed/2147483648}
+  var mails=[];
+  for(var i=0;i<120;i++){
+    var phish=rnd()<0.3;
+    var kw=rnd()<(phish?0.62:0.07);
+    var score=phish?(52+rnd()*48):(rnd()*72);
+    mails.push({phish:phish,kw:kw,score:score});
+  }
+  var host=document.getElementById("u3-sim");
+  host.innerHTML='<div class="card">'+
+    '<p>120 simulerade mejl ligger i minnet. 30 procent \u00e4r phishing. Tv\u00e5 s\u00e4tt att larma:</p>'+
+    '<ul><li><b>Regel:</b> larma om mejlet inneh\u00e5ller ett nyckelord (t.ex. "faktura", "konto").</li>'+
+    '<li><b>ML-modell:</b> larma om modellens po\u00e4ng \u2265 tr\u00f6skeln.</li></ul>'+
+    '<label class="field" for="thr">ML-modellens tr\u00f6skel: <span class="rangeout" id="thrv">70</span></label>'+
+    '<input type="range" id="thr" min="30" max="95" value="70" step="1">'+
+    '<p class="hint">L\u00e5g tr\u00f6skel = fler larm (fler falska). H\u00f6g tr\u00f6skel = f\u00e4rre larm (fler missade).</p>'+
+    '<div class="grid2"><div><h4>Regel</h4><div id="sim-rule"></div></div>'+
+    '<div><h4>ML-modell</h4><div id="sim-ml"></div></div></div>'+
+    '<p class="fb" id="sim-sum"></p>'+
+    '<h4>Hur felen f\u00f6r\u00e4ndras n\u00e4r tr\u00f6skeln h\u00f6js</h4>'+
+    '<div id="sim-chart"></div></div>';
+
+  function counts(fn){
+    var c={tp:0,fp:0,fn:0,tn:0};
+    mails.forEach(function(m){
+      var l=fn(m);
+      if(l&&m.phish)c.tp++;else if(l&&!m.phish)c.fp++;else if(!l&&m.phish)c.fn++;else c.tn++;
+    });
+    return c;
+  }
+  function show(el,c){
+    WS.bars(el,[
+      {label:"F\u00e5ngade hot",value:c.tp,display:c.tp,tone:"ok"},
+      {label:"Missade hot",value:c.fn,display:c.fn,tone:"bad"},
+      {label:"Falsklarm",value:c.fp,display:c.fp,tone:"warn"},
+      {label:"Korrekt tyst",value:c.tn,display:c.tn}
+    ],{max:120});
+  }
+  var ruleC=counts(function(m){return m.kw});
+  var thr=document.getElementById("thr");
+  function upd(){
+    var t=Number(thr.value);
+    document.getElementById("thrv").textContent=t;
+    var c=counts(function(m){return m.score>=t});
+    show(document.getElementById("sim-rule"),ruleC);
+    show(document.getElementById("sim-ml"),c);
+    var sent=c.tp+c.fn;
+    document.getElementById("sim-sum").className="fb show";
+    document.getElementById("sim-sum").innerHTML="<b>Vid tr\u00f6skel "+t+":</b> modellen f\u00e5ngar "+c.tp+" av "+sent+
+      " phishingmejl ("+Math.round(c.tp/sent*100)+" %) och larmar "+c.fp+" g\u00e5nger p\u00e5 legitima mejl. "+
+      "Regeln f\u00e5ngar "+ruleC.tp+" av "+sent+" och larmar "+ruleC.fp+" g\u00e5nger fel.";
+    var fp=[],fn=[];
+    for(var x=30;x<=95;x+=5){var cc=counts(function(m){return m.score>=x});fp.push([x,cc.fp]);fn.push([x,cc.fn])}
+    WS.line(document.getElementById("sim-chart"),{
+      maxY:60,maxX:95,xTicks:[0.32,0.53,0.74,1],xLabel:"tr\u00f6skel",
+      label:"Falsklarm och missade hot vid olika tr\u00f6skel",
+      series:[{name:"Falsklarm",color:"#8a5a12",points:fp,dots:true},{name:"Missade hot",color:"#a32b1c",points:fn,dots:true}]
+    });
+  }
+  thr.addEventListener("input",upd);
+  upd();
+})();
+
+(function(){
+  var wrap=document.getElementById("facit-lista");
+  if(!wrap)return;
+  [
+    ["Uppgift 1 \u2013 Vilken teknik?",'<p>R\u00e4tt rad: regel (termostat, brandlarm), automation (filskript), ML (spamfilter, transaktionsmodell), LLM (dokumentchattbot, sammanfattning), agent (s\u00f6ker i tre system).</p><p>Gr\u00e4nsen g\u00e5r vid <b>inl\u00e4rning</b> och <b>egna steg</b>. Ett system som f\u00f6ljer exakt det n\u00e5gon skrivit \u00e4r automation. Ett system som \u00e4ndrar sig av nya exempel \u00e4r ML. En LLM som bara svarar \u00e4r en LLM; f\u00f6rst n\u00e4r den f\u00e5r verktyg och delbeslut blir den en agent. Vanligt fel: att kalla spamfiltret "AI" utan att se att det l\u00e4r sig \u2013 eller att kalla en chattbot f\u00f6r agent n\u00e4r den bara formulerar text.</p>'],
+    ["Uppgift 2 – Databasen",'<p><code>security_alerts</code> har tio rader och primärnyckeln <code>alert_id</code>. <b>SELECT *</b> ger alla tio. <b>WHERE risk_level = <code>Critical</code></b> ger tre rader (103, 105, 110). <b>ORDER BY timestamp DESC</b> sätter 10:15 först; sorteringen ändrar ordningen, inte datat. <b>GROUP BY risk_level</b> med <b>COUNT(*)</b> ger fyra rader: Critical 3, High 3, Medium 2, Low 2.</p><p>Tolkning: databasen svarar exakt på frågan. En LLM kan sedan sammanfatta de öppna kritiska larmen och föreslå en åtgärd, men den hämtar fakta via en fråga – den gissar inte siffrorna. Vanligt fel: att tro att COUNT(*) räknar kolumner; den räknar rader per grupp.</p>'],
+    ["Uppgift 3 – Bygg ett AI-system",'<p><b>Enkel chatbot:</b> användare → chattgränssnitt → LLM → svar. Ingen verktygsanvändning, ingen egen planering.</p><p><b>AI-agent:</b> mål → LLM → verktyg (t.ex. databas eller MCP-verktyg) → resultat → svar. Agenten väljer steg, men bara inom sina behörigheter.</p><p><b>Agent med mänskligt godkännande:</b> agent → analys → förslag till åtgärd → människa godkänner → verktyget utför. Det är den enda rimliga modellen när åtgärden kan spärra ett konto eller stoppa drift.</p><p>En LLM är modellen, chatboten är gränssnittet och agenten är arbetsflödet. Ingen av dem kräver de andra: en LLM kan anropas från ett skript utan chatt, och en agent kan köras helt utan chattfönster. Välj lokal modell när data är känslig och hårdvaran räcker; moln när du saknar hårdvara eller behöver skalning. Vanligt fel: att kalla en chattbot för agent, eller att tro att alla LLM körs i molnet.</p>'],
+    ["Uppgift 4 \u2013 Gruppens kedja",'<p>Rekommendationen \u00e4r ML + agent (eller skript) + LLM + automation med godk\u00e4nnande, plus logg. D\u00e5 hamnar m\u00e4nniskan d\u00e4r ett fel kostar pengar eller f\u00f6rtroende, och maskinen g\u00f6r det som \u00e4r stort och tr\u00e5kigt.</p><p>Prata om det svagaste ledet: ofta \u00e4r det datan (felaktiga eller gamla tr\u00e4ningsexempel) eller beh\u00f6righeten (agenten kan l\u00e4sa f\u00f6r mycket). Ett godk\u00e4nnande hj\u00e4lper inte om ingen hinner titta \u2013 d\u00e5 blir det en gummist\u00e4mpel.</p>']
+  ].forEach(function(f){
+    var d=document.createElement("details");
+    d.innerHTML="<summary>"+f[0]+"</summary>"+f[1];
+    wrap.appendChild(d);
+  });
+})();
+
+WS.quiz(document.getElementById("quiz"),{
+  title:"Avslutande kunskapskontroll",
+  hint:"Fyra fr\u00e5gor om begreppen. Du f\u00e5r svar direkt och kan g\u00f6ra om quizet.",
+  questions:[{"text": "Vad skiljer maskininlärning från ett regelstyrt system?", "options": ["ML kräver alltid internet", "ML lär sig mönster från data i stället för att få regler skrivna", "ML är alltid snabbare", "ML används bara i spel"], "answer": 1, "why": "Regler skrivs av en människa. ML justerar sig efter exempel i träningsdatan."}, {"text": "Ett system läser företagets policydokument och skriver ett svar på svenska. Vad är det mest träffande?", "options": ["Ett regelstyrt system", "En språkmodell (LLM)", "Ett brandlarm", "En databas"], "answer": 1, "why": "Systemet tolkar och formulerar text. Det är språkmodellens arbete – även när den hämtar text från dokument (RAG)."}, {"text": "Vad gör en AI-agent som en vanlig språkmodell inte gör?", "options": ["Den skriver längre texter", "Den använder verktyg och utför flera steg mot ett mål", "Den kräver ingen data", "Den är alltid gratis"], "answer": 1, "why": "Agenten kombinerar modellen med verktyg (sökning, API:er, skript) och fattar delbeslut mellan stegen."}, {"text": "Varför bör en automatisk blockering ofta kräva mänskligt godkännande?", "options": ["För att automation är långsam", "För att ett falsklarm kan slå ut något som behövs i produktionen", "För att loggar inte får sparas", "För att AI inte får användas i säkerhetsarbete"], "answer": 1, "why": "Ett felaktigt beslut kan stoppa en betalning, en mejlleverans eller en produktionslinje. Människan står för ansvaret."}]
+});
+WS.init();
+</script>
+
+<script>
+(function(){
+  var fig=document.getElementById("as-fig");
+  if(!fig)return;
+  var st={part:"brain",model:"llm8",runtime:"lmstudio",body:"agent",tools:["db","search"],ui:true,input:"text"};
+  var M={
+    slm:{name:"Liten språkmodell (SLM)",size:"1–3B parametrar",mem:"2–4 GB",note:"Snabb och billig. Klarar enkla sammanfattningar men gässar mer."},
+    llm8:{name:"Stor språkmodell (7–8B)",size:"7–8B parametrar",mem:"8–16 GB",note:"Vanlig lokal storlek. Bra balans mellan kvalitet och krav."},
+    llm70:{name:"Stor språkmodell (70B)",size:"70B parametrar",mem:"40 GB+",note:"Hög kvalitet men kräver kraftig hårdvara – ofta server eller moln."},
+    cloud:{name:"Molnbaserad modell",size:"okänd storlek",mem:"ingen lokal",note:"Körs hos leverantören. Data lämnar datorn."}
+  };
+  var B={
+    chat:{name:"Enkel chatbot",note:"Ett samtal: fråga in, text ut. Inga egna steg."},
+    agent:{name:"AI-agent",note:"Modellen får ett mål och utför flera steg med hjälp av verktyg."},
+    multitool:{name:"Agent med flera verktyg",note:"Agenten väljer mellan flera verktyg, t.ex. databas och sökning."},
+    hitl:{name:"Agent med mänskligt godkännande",note:"Agenten föreslår – en människa godkänner innan åtgärden utförs."}
+  };
+  var T={
+    api:{name:"API-anrop",note:"Hämtar eller skickar data till en extern tjänst."},
+    mcp:{name:"MCP-verktyg",note:"Verktyg som agenten hittar via en MCP-server, med tydliga parametrar."},
+    db:{name:"Databas",note:"Ställer frågor mot t.ex. en logg- eller ärendedatabas."},
+    search:{name:"Sökfunktion",note:"Söker i dokument, hotintel eller tidigare ärenden."},
+    file:{name:"Filanalys",note:"Läser och sammanfattar filer som användaren laddar upp."}
+  };
+  var IN={text:"Text i en ruta",file:"Uppladdad fil",sensor:"Sensorvärde",api:"Data från ett API"};
+  var PART={
+    brain:["Hjärnan – språkmodellen","Modellen som tolkar och formulerar text. Den är tränad i förväg och lär sig inget nytt av dina frågor.","Bearbetar indata och gissar nästa ord, om och om igen.","En runtime som laddar modellen, och tillräckligt minne.","Modellen gör inget själv. Utan runtime finns ingen hjärna; utan agent eller gränssnitt finns ingen som använder den.","Sammanfatta larm, skriva utkast till incidentrapport, förklara en loggrad."],
+    runtime:["Runtime – där modellen laddas","Programmet som laddar modellfilen, kör den och gör den tillgänglig. LM Studio är ett exempel för lokal körning.","Laddar modellen i minnet och svarar på anrop från appen.","Modellfil, hårdvara och tillräckligt RAM/VRAM.","Appen pratar med runtime; runtimes påverkar hastighet och vilka modeller som kan köras.","Lokal runtime när data inte får lämna datorn, t.ex. vid analys av interna loggar."],
+    body:["Kroppen – chatbot eller agent","Chatboten är ett samtal. Agenten är ett arbetsflöde som kan välja steg och verktyg.","Håller i uppgiften: tolkar målet, väljer verktyg och avgör när svaret är klart.","En modell, tydliga instruktioner och – för agenten – verktyg och behörighet.","Agenten använder hjärnan för att tänka och händerna för att göra något. Utan UI kan den köras i bakgrunden.","Incidenttriage, logganalys, ärendeskapande – men bara inom tydliga behörigheter."],
+    hands:["Händerna – verktygen","Verktyg är funktioner som agenten kan anropa: söka, läsa en databas, göra ett API-anrop.","Utför en avgränsad handling och lämnar tillbaka ett resultat.","Behörighet, tydliga parametrar och ofta en beskrivning som modellen kan läsa.","Agenten väljer verktyg utifrån uppgiften. MCP gör att verktyg kan upptäckas på ett standardiserat sätt.","Slå upp en IP-adress, fråga loggdatabasen, skapa ett ärende. Skrivande verktyg kräver godkännande."],
+    mouth:["Rösten – användargränssnittet","Chatten är ett gränssnitt där en människa skickar text och får svar.","Visar frågan, skickar den vidare och visar svaret.","En modell eller agent bakom, och enligt AI Act tydlig information om att man pratar med AI.","Gränssnittet är valfritt: en agent kan köras utan chatt, och en LLM kan användas utan både chatt och agent.","SOC-assistent i chatten, eller ett API där ett annat system skickar frågan."],
+    eyes:["Ögon och öron – indata","Det systemet får in: text, filer, sensorvärden eller svar från ett API.","Avgör vad modellen kan veta något om. Utan indata gissar den.","Ett format modellen kan läsa och en källa som får användas.","Indata blir kontext i prompten. För mycket eller känslig indata ökar både kostnad och risk.","Loggrader, larm, e-postmeddelanden, sensordata – allt måste hanteras enligt dataskyddsreglerna."]
+  };
+  function on(id){return document.getElementById(id)}
+  function modelName(){return M[st.model].name}
+  function bodyName(){return B[st.body].name}
+  function toolList(){return st.tools.map(function(t){return T[t].name})}
+  function esc(s){return WS.esc(s)}
+  function select(id,opts,val){
+    return '<select id="'+id+'">'+opts.map(function(o){
+      return '<option value="'+o[0]+'"'+(o[0]===val?" selected":"")+">"+esc(o[1])+"</option>";
+    }).join("")+"</select>";
+  }
+  function panel(){
+    var p=PART[st.part],h='<h4>'+esc(p[0])+'</h4><p>'+esc(p[1])+'</p>';
+    if(st.part==="brain"){
+      h+='<label class="field" for="as-model">Modelltyp</label>'+
+        select("as-model",Object.keys(M).map(function(k){return [k,M[k].name]}),st.model)+
+        '<p class="hint" style="margin-top:8px">'+esc(M[st.model].size+" · cirka "+M[st.model].mem+" minne · "+M[st.model].note)+"</p>";
+    }
+    if(st.part==="runtime"){
+      h+='<label class="field" for="as-runtime">Runtime</label>'+
+        select("as-runtime",[["lmstudio","LM Studio (lokal)"],["cloud","Molnplattform (API)"]],st.runtime)+
+        '<p class="hint" style="margin-top:8px">'+(st.runtime==="lmstudio"?"Laddar en modellfil lokalt. Ingen data lämnar datorn, men hårdvaran sätter gränsen.":"Leverantören kör modellen. Du skickar text dit och får svar tillbaka – kontrollera avtal och dataskydd.")+"</p>";
+    }
+    if(st.part==="body"){
+      h+='<label class="field" for="as-body">Arkitektur</label>'+
+        select("as-body",Object.keys(B).map(function(k){return [k,B[k].name]}),st.body)+
+        '<p class="hint" style="margin-top:8px">'+esc(B[st.body].note)+"</p>"+
+        '<label class="checkline" style="margin-top:8px"><input type="checkbox" id="as-ui"'+(st.ui?" checked":"")+"><span>Visa ett chattgränssnitt</span></label>";
+    }
+    if(st.part==="hands"){
+      h+="<p>Verktyg agenten får använda:</p>";
+      Object.keys(T).forEach(function(k){
+        h+='<label class="checkline"><input type="checkbox" data-tool="'+k+'"'+(st.tools.indexOf(k)>=0?" checked":"")+"><span>"+esc(T[k].name)+"<span class=\"hint\"> – "+esc(T[k].note)+"</span></span></label>";
+      });
+      h+='<p class="hint">MCP är inget verktyg i sig, utan ett sätt att upptäcka och anropa verktyg via en MCP-server.</p>';
+    }
+    if(st.part==="mouth"){
+      h+='<p>Skicka en fråga och se vad systemet svarar med din konfiguration.</p>'+
+        '<label class="field" for="as-q">Fråga</label><input type="text" id="as-q" style="width:100%" value="Vad hände vid inloggningen 02:14?">'+
+        '<div class="actions"><button type="button" id="as-send">Skicka (simulerat)</button></div><div id="as-a"></div>';
+    }
+    if(st.part==="eyes"){
+      h+='<label class="field" for="as-in">Indata</label>'+
+        select("as-in",Object.keys(IN).map(function(k){return [k,IN[k]]}),st.input)+
+        '<p class="hint" style="margin-top:8px">Indata blir kontext. Utan den kan modellen bara gissa – och då är risken för hallucination hög.</p>';
+    }
+    h+='<details style="margin-top:10px"><summary>Vad gör den, vad krävs och när används den?</summary>'+
+      "<p><b>Gör:</b> "+esc(p[2])+"</p><p><b>Kräver:</b> "+esc(p[3])+"</p><p><b>Samverkar:</b> "+esc(p[4])+"</p><p><b>I cybersäkerhet:</b> "+esc(p[5])+"</p></details>";
+    on("as-panel").innerHTML=h;
+    bindPanel();
+  }
+  function bindPanel(){
+    var el;
+    if((el=on("as-model")))el.addEventListener("change",function(){st.model=el.value;render()});
+    if((el=on("as-runtime")))el.addEventListener("change",function(){st.runtime=el.value;render()});
+    if((el=on("as-body")))el.addEventListener("change",function(){st.body=el.value;render()});
+    if((el=on("as-ui")))el.addEventListener("change",function(){st.ui=el.checked;render()});
+    if((el=on("as-in")))el.addEventListener("change",function(){st.input=el.value;render()});
+    Array.prototype.forEach.call(document.querySelectorAll("[data-tool]"),function(c){
+      c.addEventListener("change",function(){
+        var k=c.getAttribute("data-tool");
+        if(c.checked){if(st.tools.indexOf(k)<0)st.tools.push(k)}else{st.tools=st.tools.filter(function(x){return x!==k})}
+        render();
+      });
+    });
+    var send=on("as-send");
+    if(send)send.addEventListener("click",answer);
+  }
+  function answer(){
+    var q=(on("as-q")||{}).value||"";
+    var a="";
+    if(st.body==="chat"&&st.tools.length===0){
+      a="“Jag har ingen tillgång till loggen, men en inloggning sker ofta med användarnamn och lösenord. Kontrollera tidsstämplar och käll-IP.”\n\n(modellen gissar – den har ingen data)";
+    }else if(st.body==="chat"&&st.tools.length>0){
+      a="“Jag är en chatbot och kan inte använda verktygen. Slå på en agent om du vill att jag ska fråga databasen.”\n\n(verktygen är valda men oanvända)";
+    }else if(st.tools.indexOf("db")>=0){
+      a="“Kl. 02:14–02:19 misslyckades 15 inloggningar mot konto bjorn från tre länder. Ett försök lyckades. Källa: login_events.”"+
+        (st.body==="hitl"?"\n\nFörslag: spärr av kontot. Status: väntar på godkännande.":"\n\nAgenten föreslår spärr av kontot.");
+    }else{
+      a="“Jag hittar ingen logg på 02:14 i det jag kan nå.”\n\n(agenten saknar databasverktyget)";
+    }
+    on("as-a").innerHTML='<p class="hint" style="margin-top:8px"><b>Du frågade:</b> '+esc(q)+'</p><pre class="code">'+esc(a)+"</pre>"+
+      (st.body==="hitl"?'<p class="hint"><b>Människan bestämmer:</b> agenten kan föreslå, men inte spärra någon själv.</p>':"");
+  }
+  function flow(){
+    var items=[["Indata: "+IN[st.input],true]];
+    if(st.ui)items.push(["Chattgränssnitt",true]);
+    items.push([bodyName(),true]);
+    items.push([modelName(),true]);
+    if(st.body==="hitl")items.push(["Människa godkänner",true]);
+    if(st.body!=="chat"&&st.tools.length)items.push([toolList().join(" + "),true]);
+    if(st.body==="chat"&&st.tools.length)items.push([toolList().join(" + "),false]);
+    items.push(["Svar / åtgärd",true]);
+    on("as-flow").innerHTML=items.map(function(it,i){
+      return (i?'<li class="arr" aria-hidden="true">→</li>':"")+'<li'+(it[1]?"":' class="off"')+">"+esc(it[0])+"</li>";
+    }).join("");
+    var sum="Din konfiguration: "+modelName()+" i "+(st.runtime==="lmstudio"?"LM Studio lokalt":"molnplattform")+", "+bodyName().toLowerCase()+
+      (st.tools.length?" med verktygen "+toolList().join(", ").toLowerCase()+".":" utan verktyg.")+
+      (st.ui?" Med chattgränssnitt.":" Utan chattgränssnitt.");
+    on("as-summary").textContent=sum;
+    var w=[];
+    if(st.model==="llm70"&&st.runtime==="lmstudio")w.push("En 70B-modell kräver oftast 40 GB+ minne. På en vanlig laptop körs den inte – välj mindre modell eller moln.");
+    if(st.runtime==="cloud")w.push("Molndrift innebär att texten lämnar datorn. Kontrollera personuppgifter, avtal och var datat lagras.");
+    if(st.body==="chat")w.push("En chatbot behöver ingen agent. Den svarar bara på det du skriver.");
+    if(st.body==="agent"&&st.tools.length===0)w.push("En agent utan verktyg är i praktiken en chatbot med lite mer instruktioner.");
+    if(st.body!=="hitl"&&(st.tools.indexOf("api")>=0||st.tools.indexOf("db")>=0))w.push("Verktyg som kan skriva eller ändra något bör ha mänskligt godkännande. Annars blir ett modellfel ett driftfel.");
+    if(!st.ui&&st.body==="chat")w.push("En chatbot utan gränssnitt är svår att använda – men en agent kan köras helt utan chatt.");
+    on("as-warn").innerHTML=w.length?'<div class="warn"><b>Att tänka på:</b><ul style="margin:6px 0 0">'+w.map(function(x){return "<li>"+esc(x)+"</li>"}).join("")+"</ul></div>":"";
+  }
+  function render(){panel();flow();scenario()}
+  function setPart(part){
+    st.part=part;
+    Array.prototype.forEach.call(document.querySelectorAll("#as-fig .hotspot"),function(b){
+      b.setAttribute("aria-pressed",b.getAttribute("data-part")===part?"true":"false");
+    });
+    panel();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("#as-fig .hotspot"),function(b){
+    b.addEventListener("click",function(){setPart(b.getAttribute("data-part"))});
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-preset]"),function(b){
+    b.addEventListener("click",function(){
+      var p=b.getAttribute("data-preset");
+      if(p==="chat")st={part:"brain",model:"llm8",runtime:"lmstudio",body:"chat",tools:[],ui:true,input:"text"};
+      if(p==="agent")st={part:"brain",model:"llm8",runtime:"lmstudio",body:"multitool",tools:["db","search"],ui:false,input:"api"};
+      if(p==="hitl")st={part:"brain",model:"llm8",runtime:"lmstudio",body:"hitl",tools:["db","api"],ui:true,input:"api"};
+      setPart("brain");flow();scenario();
+    });
+  });
+  on("as-reset").addEventListener("click",function(){
+    st={part:"brain",model:"llm8",runtime:"lmstudio",body:"agent",tools:["db","search"],ui:true,input:"text"};
+    on("as-scen").value="";setPart("brain");flow();scenario();
+  });
+  function scenario(){
+    var v=(on("as-scen")||{}).value||"",out=on("as-scenout");
+    if(!v){out.innerHTML='<p class="hint">Välj en lösning för att se skillnaden i arbetsflöde.</p>';return}
+    var s={
+      chat:{steps:["Analytiker skriver in en loggfil i chatten","Modellen läser texten och förklarar raderna","Svar i chatten – ingen åtgärd"],text:"Passar när en människa vill ha en förklaring. Modellen gör inget själv och kan inte kontrollera något.",risk:"Låg risk, liten nytta: allt arbete görs fortfarande av människan."},
+      llm:{steps:["Systemet skickar loggrader till modellen","Modellen sammanfattar till tre meningar","Sammanfattningen läggs i ärendet"],text:"Passar när någon annan redan samlat in och valt ut data. Ingen verktygsanvändning.",risk:"Medelrisk om loggarna innehåller personuppgifter – kontrollera vad som skickas."},
+      agent:{steps:["Agenten får målet “bedöm inloggningsattacken”","Agenten frågar loggdatabasen och söker i tidigare ärenden","Agenten föreslår spärr och skriver ett utkast","Analytikern läser förslaget"],text:"Passar vid volym: agenten gör flera steg och hämtar data själv.",risk:"Högre risk: agenten behöver behörighet till både loggar och ärenden."},
+      hitl:{steps:["Agenten analyserar och föreslår spärr","Förslaget går till en människa med underlag","Människan godkänner eller avslår","Först då utför verktyget åtgärden"],text:"Passar när åtgärden kan störa drift eller människor. Agenten snabbar upp analysen, människan behåller ansvaret.",risk:"Låg risk, något långsammare – men spårbart."}
+    }[v];
+    out.innerHTML='<ol class="flow" style="display:block">'+s.steps.map(function(x,i){return '<li style="display:block;margin:4px 0">'+(i+1)+". "+esc(x)+"</li>"}).join("")+"</ol>"+
+      '<p class="hint">'+esc(s.text)+"</p><p>"+WS.riskLabel(v==="agent"?1:0,1,2)+" "+esc(s.risk)+"</p>";
+  }
+  on("as-scen").addEventListener("change",scenario);
+  render();
+})();
+</script>
+<script>window.__DB_CFG=window.__DB_CFG||{};window.__DB_CFG['01']={"title":"security_alerts","intro":"Säkerhetslarm från Nordic Secure Operations ligger i en relationsdatabas. En tabell är som ett kalkylblad: kolumner beskriver vad varje rad innehåller.","tables":[{"name":"security_alerts","pk":"alert_id","cols":[["alert_id","INTEGER"],["timestamp","TEXT"],["source","TEXT"],["risk_level","TEXT"],["status","TEXT"],["description","TEXT"]],"fk":[],"rows":[[101,"08:15","Firewall","High","Open","Upprepade nekade anslutningar"],[102,"08:20","Endpoint","Medium","Investigating","Okänd process startade"],[103,"08:35","IDS","Critical","Open","SQL-injektionsförsök mot webbtjänst"],[104,"08:50","Server","Low","Closed","Misslyckad tjänsteinloggning"],[105,"09:05","Firewall","Critical","Open","Trafik mot blockerad port"],[106,"09:18","Endpoint","High","Investigating","Misstänkt PowerShell-kommando"],[107,"09:30","IDS","Medium","Closed","Portskanning från ett land"],[108,"09:44","Server","High","Open","Ny administratör skapad"],[109,"10:02","Firewall","Low","Closed","Felkonfigurerad regel"],[110,"10:15","Endpoint","Critical","Investigating","Ransomware-signatur upptäckt"]]}],"queries":[{"label":"Alla larm","sql":"SELECT * FROM security_alerts;","explain":"Hämtar alla rader och alla kolumner. Tio larm, sorterade i den ordning de sparades.","cols":["alert_id","timestamp","source","risk_level","status"],"rows":[[101,"08:15","Firewall","High","Open"],[102,"08:20","Endpoint","Medium","Investigating"],[103,"08:35","IDS","Critical","Open"],[104,"08:50","Server","Low","Closed"],[105,"09:05","Firewall","Critical","Open"],[106,"09:18","Endpoint","High","Investigating"],[107,"09:30","IDS","Medium","Closed"],[108,"09:44","Server","High","Open"],[109,"10:02","Firewall","Low","Closed"],[110,"10:15","Endpoint","Critical","Investigating"]]},{"label":"Kritiska larm","sql":"SELECT * FROM security_alerts WHERE risk_level = 'Critical';","explain":"WHERE filtrerar rader. Bara de tre larmen med risknivå Critical blir kvar. Övriga rader påverkar inte resultatet.","cols":["alert_id","timestamp","source","status"],"rows":[[103,"08:35","IDS","Open"],[105,"09:05","Firewall","Open"],[110,"10:15","Endpoint","Investigating"]]},{"label":"Senaste först","sql":"SELECT alert_id, timestamp, source FROM security_alerts ORDER BY timestamp DESC;","explain":"ORDER BY sorterar. DESC betyder fallande, så det senaste larmet hamnar överst. Själva datat ändras inte.","cols":["alert_id","timestamp","source"],"rows":[[110,"10:15","Endpoint"],[109,"10:02","Firewall"],[108,"09:44","Server"],[107,"09:30","IDS"],[106,"09:18","Endpoint"],[105,"09:05","Firewall"],[104,"08:50","Server"],[103,"08:35","IDS"],[102,"08:20","Endpoint"],[101,"08:15","Firewall"]]},{"label":"Antal per risknivå","sql":"SELECT risk_level, COUNT(*) AS antal FROM security_alerts GROUP BY risk_level ORDER BY antal DESC;","explain":"GROUP BY slår ihop rader med samma värde. COUNT(*) räknar dem. Resultatet blir fyra rader – en per risknivå – inte tio.","cols":["risk_level","antal"],"rows":[["Critical",3],["High",3],["Medium",2],["Low",2]]}],"note":"AI-steget: en agent kan läsa de öppna kritiska larmen med en SELECT, sammanfatta dem och föreslå en åtgärd. Databasen ger fakta – modellen formulerar texten."};</script>
+
+<script>
+(function(){
+  var CFG=window.__DB_CFG||{};
+  function esc(s){return WS.esc(String(s))}
+  function isNum(v){return typeof v==="number"}
+  document.querySelectorAll("[data-db]").forEach(function(host){
+    var key=host.getAttribute("data-db"),db=CFG[key];
+    if(!db)return;
+    var ti=0,qi=0,filter="",sortCol=-1,sortDir=1;
+    function tab(){return db.tables[ti]}
+    function rowsNow(){
+      var t=tab(),rows=t.rows.slice();
+      if(filter){
+        var f=filter.toLowerCase();
+        rows=rows.filter(function(r){return r.join(" ").toLowerCase().indexOf(f)>=0});
+      }
+      if(sortCol>=0){
+        rows.sort(function(a,b){
+          var x=a[sortCol],y=b[sortCol];
+          if(isNum(x)&&isNum(y))return (x-y)*sortDir;
+          return String(x).localeCompare(String(y),"sv")*sortDir;
+        });
+      }
+      return rows;
+    }
+    function tableHTML(){
+      var t=tab(),rows=rowsNow();
+      var head="<tr>"+t.cols.map(function(c,i){
+        var arrow=sortCol===i?(sortDir>0?" \u2191":" \u2193"):"";
+        return '<th data-col="'+i+'" title="Sortera">'+esc(c[0])+arrow+"</th>";
+      }).join("")+"</tr>";
+      var body=rows.length?rows.map(function(r){
+        return "<tr>"+r.map(function(v){return '<td'+(isNum(v)?' class="num"':"")+">"+(v===null?"NULL":esc(v))+"</td>"}).join("")+"</tr>";
+      }).join(""):'<tr><td colspan="'+t.cols.length+'" class="db-empty">Inga rader matchar filtret.</td></tr>';
+      return '<div class="db-scroll"><table class="tbl"><thead>'+head+"</thead><tbody data-role=\"tbody\">"+body+"</tbody></table></div>"+
+        '<p class="hint" data-role="count" style="margin:6px 0 0">'+rows.length+" av "+t.rows.length+" rader \u00b7 "+t.cols.length+" kolumner</p>";
+    }
+    function paint(){
+      host.querySelector('[data-role="tablewrap"]').innerHTML=tableHTML();
+      bindSort();
+    }
+    function bindSort(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-col]"),function(th){
+        th.addEventListener("click",function(){
+          var i=+th.getAttribute("data-col");
+          if(sortCol===i)sortDir*=-1;else{sortCol=i;sortDir=1}
+          paint();
+        });
+      });
+    }
+    function schema(){
+      var t=tab();
+      return '<ul class="schema">'+t.cols.map(function(c){
+        var key=t.pk===c[0]?' <span class="key">PK</span>':"";
+        return "<li>"+esc(c[0])+" "+esc(c[1])+key+"</li>";
+      }).join("")+"</ul>"+(t.fk&&t.fk.length?'<p class="hint" style="margin:0 0 8px">Främmande nycklar: '+t.fk.map(function(f){
+        return "<code>"+esc(f[0])+"</code> \u2192 "+esc(f[1]);
+      }).join(" \u00b7 ")+"</p>":'<p class="hint" style="margin:0 0 8px">Primärnyckel: <code>'+esc(t.pk)+"</code> identifierar varje rad.</p>");
+    }
+    function timeline(){
+      if(!db.timeline)return "";
+      var t=db.tables.filter(function(x){return x.name===db.timeline.table})[0];
+      if(!t)return "";
+      return '<h5 style="margin:10px 0 0">Tidslinje</h5><ol class="timeline">'+t.rows.map(function(r){
+        return "<li><time>"+esc(r[db.timeline.time])+"</time><b>"+esc(r[db.timeline.title])+"</b> \u00b7 "+esc(r[db.timeline.level])+"</li>";
+      }).join("")+"</ol>";
+    }
+    function featureBox(){
+      var f=db.features;
+      if(!f)return "";
+      return '<div class="featurebox"><b>Features och label</b><p class="hint">'+esc(f.prompt)+"</p>"+
+        f.items.map(function(it,i){
+          return '<label class="checkline"><input type="checkbox" data-f="'+i+'"><span>'+esc(it[0])+"</span></label>";
+        }).join("")+
+        '<div class="actions"><button type="button" data-role="fcheck">Kontrollera valen</button></div><div data-role="fout" aria-live="polite"></div></div>';
+    }
+    function render(){
+      var t=tab(),q=db.queries[qi];
+      host.innerHTML='<div class="db-head"><span class="tag">Pedagogisk databas \u00b7 syntetiska data</span><h4>'+esc(db.title)+"</h4><p class=\"hint\">"+esc(db.intro)+"</p></div>"+
+        (db.timeline?timeline():"")+
+        '<div class="db-tabs" role="group" aria-label="Tabeller">'+db.tables.map(function(x,i){
+          return '<button type="button" data-t="'+i+'" aria-pressed="'+(i===ti?"true":"false")+'">'+esc(x.name)+"</button>";
+        }).join("")+"</div>"+
+        '<div class="db-grid">'+
+          '<div class="db-box"><b>Tabell: '+esc(t.name)+"</b>"+schema()+
+            '<div class="db-tools"><input type="search" data-role="filter" placeholder="Filtrera rader\u2026" value="'+esc(filter)+'" aria-label="Filtrera tabellen"><button type="button" class="ghost" data-role="reset">\u00c5terst\u00e4ll</button></div>'+
+            '<div data-role="tablewrap">'+tableHTML()+"</div></div>"+
+          '<div class="db-box"><b>SQL-fr\u00e5gor</b><div class="sqlbtns">'+db.queries.map(function(x,i){
+            return '<button type="button" data-q="'+i+'" aria-pressed="'+(i===qi?"true":"false")+'">'+esc(x.label)+"</button>";
+          }).join("")+"</div>"+
+            '<pre class="code">'+esc(q.sql)+"</pre><p>"+esc(q.explain)+"</p>"+
+            '<p class="hint" style="margin:4px 0">F\u00f6rv\u00e4ntat resultat: <b>'+q.rows.length+" rader</b></p>"+
+            '<div class="db-scroll"><table class="tbl"><thead><tr>'+q.cols.map(function(c){return "<th>"+esc(c)+"</th>"}).join("")+"</tr></thead><tbody>"+
+            q.rows.map(function(r){return "<tr>"+r.map(function(v){return "<td"+(isNum(v)?' class="num"':"")+">"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")+
+            "</tbody></table></div></div>"+
+        "</div>"+featureBox()+'<p class="hint" style="margin:10px 0 0">'+esc(db.note)+"</p>";
+      bind();
+    }
+    function bind(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-t]"),function(b){
+        b.addEventListener("click",function(){ti=+b.getAttribute("data-t");qi=0;filter="";sortCol=-1;render()});
+      });
+      Array.prototype.forEach.call(host.querySelectorAll("[data-q]"),function(b){
+        b.addEventListener("click",function(){qi=+b.getAttribute("data-q");render()});
+      });
+      var f=host.querySelector('[data-role="filter"]');
+      if(f)f.addEventListener("input",function(){filter=f.value;paint()});
+      host.querySelector('[data-role="reset"]').addEventListener("click",function(){ti=0;qi=0;filter="";sortCol=-1;render()});
+      var fc=host.querySelector('[data-role="fcheck"]');
+      if(fc)fc.addEventListener("click",function(){
+        var f=db.features,ok=0,picked=[];
+        Array.prototype.forEach.call(host.querySelectorAll("[data-f]"),function(c){
+          var i=+c.getAttribute("data-f"),good=c.checked===!!f.items[i][1];
+          if(good)ok++;else picked.push(f.items[i][0]);
+          c.parentElement.style.background=good?"#e7f4ec":"#fbe7e3";
+        });
+        var o=host.querySelector('[data-role="fout"]');
+        o.className=ok===f.items.length?"note":"warn";
+        o.innerHTML="<b>"+ok+" av "+f.items.length+" r\u00e4tt.</b> "+(picked.length?"Justera: "+picked.map(esc).join(", ")+".":"Alla val st\u00e4mmer.")+
+          "<br>"+f.items.map(function(it){return "<span class=\"hint\">"+esc(it[0])+": "+esc(it[2])+"</span>"}).join("<br>");
+      });
+      bindSort();
+    }
+    render();
+  });
+})();
+</script>
+
+</body>
+</html>

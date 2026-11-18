@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>House Price Predictor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>House Price Predictor</h1>
+        <form id="prediction-form" method="post" action="/predict">
+            <input type="number" id="size" name="size" placeholder="Square feet" required>
+            <button type="submit">Predict Price</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            });
+            const data = await response.json();
+            document.getElementById('result').innerHTML = Estimated price: utf8{data.price}K;
+        });
+    </script>
+</body>
+</html>

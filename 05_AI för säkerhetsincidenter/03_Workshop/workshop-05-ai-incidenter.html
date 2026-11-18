@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop 05 – AI för säkerhetsincidenter · AI inom cybersäkerhet</title>
+<style>
+
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d1c19;--muted:#5c5a54;--line:#dcd8cf;
+--ok:#1f6b45;--bad:#a32b1c;--warn:#8a5a12;--soft:#efece4;--shadow:0 1px 2px rgba(0,0,0,.05)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.62 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+img,svg{max-width:100%}
+a{color:var(--dark);text-underline-offset:3px}
+a:hover{color:var(--acc)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:10px;z-index:99;border-radius:8px}
+header.top{background:var(--dark);color:#fff;padding:10px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+header.top a{color:#fff;text-decoration:none;font-weight:600;font-size:.92rem}
+header.top a:hover{color:#ffd9c9}
+header.top .kicker{font-size:.85rem;opacity:.9}
+main{max-width:1000px;margin:0 auto;padding:24px 18px 56px}
+.hero{margin:6px 0 18px}
+.eyebrow{font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--acc);font-weight:700;margin:0 0 4px}
+h1{font-size:clamp(1.55rem,3.2vw,2.2rem);line-height:1.18;margin:.1em 0 .35em;color:var(--dark)}
+.lead{font-size:1.06rem;max-width:70ch;color:#33312c;margin:.2em 0 1em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.86rem;color:var(--muted)}
+.chips b{color:var(--ink)}
+h2{font-size:1.35rem;margin:1.6em 0 .5em;color:var(--dark)}
+h3{font-size:1.06rem;margin:1.3em 0 .4em}
+h4{font-size:.98rem;margin:1em 0 .3em}
+p,li{max-width:74ch}
+ul,ol{padding-left:1.25em}
+li{margin:.25em 0}
+.goals{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:10px;padding:14px 18px;margin:16px 0 6px}
+.goals h2{margin:.1em 0 .4em;font-size:1.05rem}
+.goals ul{margin:0}
+.tabs{position:sticky;top:0;z-index:30;background:var(--bg);display:flex;gap:6px;align-items:center;flex-wrap:wrap;
+padding:10px 0;border-bottom:2px solid var(--line);margin:18px 0 6px}
+.tabs [role=tab]{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);
+color:var(--muted);border-radius:9px;padding:9px 15px}
+.tabs [role=tab]:hover{border-color:var(--acc);color:var(--ink)}
+.tabs [role=tab][aria-selected=true]{background:var(--dark);border-color:var(--dark);color:#fff}
+.tabs [role=tab]:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,th:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.timer{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:4px 8px}
+.timer .clock{font-variant-numeric:tabular-nums;font-weight:700;min-width:52px;text-align:center;color:var(--dark)}
+.timer.low .clock{color:var(--bad)}
+.timer.done .clock{color:var(--warn)}
+.timer button{font:inherit;font-size:.82rem;padding:4px 9px;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+.timer button:hover{border-color:var(--acc)}
+[role=tabpanel]{padding:8px 0 20px}
+[role=tabpanel][hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.task{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;box-shadow:var(--shadow)}
+.task>h3{margin-top:0;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.task .no{background:var(--acc);color:#fff;border-radius:7px;font-size:.8rem;padding:2px 9px;font-weight:700}
+.brief{display:grid;gap:6px;margin:10px 0 14px;font-size:.95rem}
+.brief div{display:grid;grid-template-columns:110px 1fr;gap:10px}
+.brief dt,.brief b{color:var(--muted);font-weight:600}
+.brief span{min-width:0}
+@media(max-width:520px){.brief div{grid-template-columns:1fr;gap:0}}
+.hint{font-size:.9rem;color:var(--muted);margin:.4em 0}
+.note{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+.warn{background:#fdf2e2;border:1px solid #e6c9a2;border-radius:8px;padding:10px 12px;font-size:.92rem;margin:12px 0}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--dark);background:var(--dark);color:#fff;padding:9px 16px}
+button:hover{filter:brightness(1.12)}
+button.ghost{background:transparent;color:var(--dark);border-color:var(--line)}
+button.ghost:hover{background:var(--soft)}
+button:disabled{opacity:.6;cursor:default;filter:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 4px}
+label.field{display:block;font-weight:600;font-size:.92rem;margin:10px 0 4px}
+select,input[type=number],input[type=range],input[type=search]{font:inherit}
+select,input[type=number],input[type=search]{padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--dark);height:28px}
+input[type=checkbox],input[type=radio]{accent-color:var(--dark);width:18px;height:18px}
+.rangeout{font-variant-numeric:tabular-nums;font-weight:700;color:var(--dark)}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:10px 0}
+legend{font-weight:600;font-size:.92rem;padding:0 6px}
+.checkline{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:.95rem}
+.checkline:last-child{border-bottom:0}
+.checkline input{margin-top:4px;flex:none}
+.checkline span{flex:1}
+.tablewrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.93rem;min-width:420px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-weight:600;white-space:nowrap}
+th[data-i]{cursor:pointer;user-select:none}
+th[data-i]:hover{background:#e6e2d8}
+th .arrow{opacity:.45;font-size:.8em}
+tbody tr:hover{background:#faf8f3}
+tbody tr.good{background:#eaf5ee}
+tbody tr.bad{background:#fbecea}
+.rownote{font-size:.84rem;color:var(--muted);margin-top:4px}
+.filter{margin-bottom:8px;width:min(340px,100%)}
+.fb{font-size:.93rem;margin:10px 0;padding:10px 12px;border-radius:8px;background:var(--soft)}
+.fb:empty{display:none}
+.fb.ok{background:#eaf5ee;border-left:4px solid var(--ok)}
+.fb.bad{background:#fbecea;border-left:4px solid var(--bad)}
+.fb b{color:var(--ink)}
+.whynot{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+.q{border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0;background:#fff}
+.qt{font-weight:600;margin:0 0 8px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--soft);border:1px solid var(--line);
+color:var(--ink);border-radius:8px;padding:9px 11px;font-weight:400}
+.opt:hover:not(:disabled){border-color:var(--acc)}
+.opt .k{font-weight:700;color:var(--muted);flex:none}
+.opt.correct{border-color:var(--ok);background:#e7f4ec}
+.opt.wrong{border-color:var(--bad);background:#fbe7e3}
+.opt .k{min-width:1em}
+.quizsum{font-size:.95rem;margin:12px 0 4px}
+.chart{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+.chart .grid{stroke:#e5e1d8;stroke-width:1}
+.chart .ax{font-size:11px;fill:#6b6862}
+.chart .lbl{font-size:12px;fill:#3a3833}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.86rem;color:var(--muted);margin:6px 0 0;padding:0;list-style:none}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.bars{margin:10px 0}
+.barrow{display:grid;grid-template-columns:minmax(110px,1.1fr) 2fr minmax(56px,auto);gap:10px;align-items:center;font-size:.9rem;margin:6px 0}
+.bl{color:var(--muted)}
+.btrack{background:var(--soft);border-radius:999px;height:12px;overflow:hidden}
+.bfill{display:block;height:100%;background:var(--dark);border-radius:999px;transition:width .18s ease}
+.barrow.ok .bfill{background:var(--ok)}
+.barrow.bad .bfill{background:var(--bad)}
+.barrow.warn .bfill{background:var(--warn)}
+.bv{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;margin:12px 0;font-size:.9rem}
+.cm .cmh{font-weight:600;color:var(--muted);padding:4px 6px;display:flex;align-items:center}
+.cm .cell{border-radius:8px;padding:10px;border:1px solid var(--line);background:#fff}
+.cm .cell b{display:block;font-size:1.3rem}
+.cm .cell span{font-size:.8rem;color:var(--muted)}
+.cm .tp{background:#e6f4ec;border-color:#b6ddc6}
+.cm .tn{background:#eef1f0;border-color:#cfd8d3}
+.cm .fp{background:#fdf1e2;border-color:#e8cfae}
+.cm .fn{background:#fbe8e5;border-color:#e8bcb4}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0}
+details[open]{box-shadow:var(--shadow)}
+summary{cursor:pointer;font-weight:600;color:var(--dark)}
+details[open] summary{margin-bottom:8px;border-bottom:1px solid var(--line);padding-bottom:8px}
+details .why{font-size:.95rem}
+details ul{margin:.4em 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+border-radius:999px;padding:1px 8px;background:var(--soft);color:var(--muted);vertical-align:middle}
+.tag.sim{background:#efe6f5;color:#5b3a72}
+.flow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flow li{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.85rem}
+.flow li.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.flow li b{font-weight:700}
+.stepbtns{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.stepbtns button{background:var(--card);color:var(--ink);border:1px solid var(--line);padding:6px 10px;font-size:.86rem;border-radius:8px}
+.stepbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.stepinfo{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:8px;padding:12px 14px;margin:8px 0;min-height:76px}
+.stepinfo h4{margin:0 0 4px}
+.riskbadge{display:inline-block;border-radius:6px;padding:2px 9px;font-weight:700;font-size:.85rem}
+.riskbadge.low{background:#e6f4ec;color:#1f5c3e}
+.riskbadge.mid{background:#fdf1e2;color:#7a5112}
+.riskbadge.high{background:#fbe8e5;color:#8c2417}
+footer{border-top:1px solid var(--line);margin-top:26px;padding:18px;text-align:center;color:var(--muted);font-size:.83rem}
+@media(max-width:640px){main{padding:16px 12px 40px}.tabs{padding:8px 0}.timer{width:100%;justify-content:center}.brief div{grid-template-columns:1fr}th,td{padding:6px 8px}}
+@media print{header.top,.tabs,.actions,button{display:none}body{background:#fff}[role=tabpanel][hidden]{display:block!important}main{max-width:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* --- nya interaktiva komponenter --- */
+.figure-wrap{display:grid;gap:16px;grid-template-columns:minmax(240px,0.9fr) minmax(280px,1.1fr);align-items:start}
+@media(max-width:760px){.figure-wrap{grid-template-columns:1fr}}
+.human{position:relative;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:8px}
+.human svg{display:block;width:100%;height:auto}
+.hotspot{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--dark);background:#fff;color:var(--dark);border-radius:999px;font:inherit;font-size:.72rem;font-weight:700;padding:3px 7px;line-height:1.2;cursor:pointer;white-space:nowrap}
+.hotspot[aria-pressed=true]{background:var(--dark);color:#fff}
+.hotspot:hover{border-color:var(--acc)}
+.hotspot:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:150px}
+.panel h4{margin:.1em 0 .4em}
+.flows{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:0;list-style:none}
+.flows li{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:.82rem}
+.flows li.off{opacity:.45;text-decoration:line-through}
+.flows .arr{background:none;border:0;color:var(--muted);padding:0 1px}
+.code{background:#23261f;color:#eae7df;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.5;padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:pre;margin:8px 0}
+.code .k{color:#9ec9a8}
+.code .s{color:#e6c07b}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;border-radius:0;background:var(--card);color:var(--ink);padding:6px 10px;font-size:.85rem;font-weight:600}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed=true]{background:var(--dark);color:#fff}
+.chips2{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;padding:0;list-style:none}
+.chips2 button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.85rem}
+.chips2 button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.metricgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin:10px 0}
+.metric{background:var(--soft);border-radius:9px;padding:8px 10px}
+.metric b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.metric span{font-size:.78rem;color:var(--muted)}
+.modelgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:10px 0}
+.modelcard{text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-weight:600;font-size:.9rem}
+.modelcard small{display:block;font-weight:400;color:var(--muted);font-size:.78rem;margin-top:3px}
+.modelcard[aria-pressed=true]{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
+.cards3{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:10px 0}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.88rem}
+.mini h5{margin:0 0 4px;font-size:.9rem}
+.legendline{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin:4px 0 0}
+
+/* --- databasvy --- */
+.db{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--soft);margin:12px 0}
+.db-head h4{margin:0 0 4px}
+.db-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.db-tabs button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 10px;font-size:.85rem;font-weight:600}
+.db-tabs button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-grid{display:grid;gap:12px;grid-template-columns:minmax(280px,1fr) minmax(280px,1fr)}
+@media(max-width:820px){.db-grid{grid-template-columns:1fr}}
+.db-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.schema{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px;padding:0;list-style:none}
+.schema li{font-size:.75rem;background:var(--soft);border-radius:6px;padding:2px 6px;font-family:ui-monospace,Consolas,monospace}
+.schema .key{color:var(--dark);font-weight:700}
+.db-tools{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.db-tools input{flex:1;min-width:120px;border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;font-size:.85rem;background:var(--card);color:var(--ink)}
+.db-tools button{font-size:.8rem;padding:4px 9px}
+.db-scroll{overflow-x:auto}
+.db .tbl{font-size:.82rem;min-width:0}
+.db .tbl th{white-space:nowrap;cursor:pointer}
+.db .tbl td{white-space:nowrap}
+.db .tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.sqlbtns{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 8px}
+.sqlbtns button{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:4px 9px;font-size:.8rem}
+.sqlbtns button[aria-pressed=true]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.db-empty{padding:10px;color:var(--muted);font-size:.85rem}
+.timeline{list-style:none;margin:8px 0;padding:0 0 0 14px;border-left:3px solid var(--acc)}
+.timeline li{margin:0 0 6px;font-size:.85rem;position:relative}
+.timeline li:before{content:"";position:absolute;left:-20px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.timeline time{font-weight:700;margin-right:6px}
+.featurebox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px}
+.featurebox .checkline{margin:0 0 2px}
+.fitgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:10px 0}
+.fitgrid .mini svg{width:100%;height:auto;display:block}
+.facitbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.facitbar .hint{margin:0}
+
+:root{--dark:#1f3d2b;--dark2:#152b1e;--acc:#a4662a;--acc2:#82501f;--bg:#f7f3ea;--soft:#ece3d3}
+/* ===== Extra labb med avancerad grafik (tillagt) ===== */
+.lab{margin:34px 0 8px;border-radius:16px;overflow:hidden;border:1px solid #1d2b45;
+background:radial-gradient(1200px 520px at 12% -12%,#172c50 0%,#0b1220 46%,#070c16 100%);
+color:#dbe7ff;box-shadow:0 18px 46px rgba(8,18,38,.28);padding:20px 0 0}
+.lab-eyebrow{margin:0 18px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#6ff2d9;font-weight:700}
+.lab h2{margin:.25em 18px .3em;color:#f2f7ff;font-size:clamp(1.25rem,2.4vw,1.6rem)}
+.lab-lead{margin:0 18px 16px;color:#a8bcd8;max-width:78ch;font-size:.98rem}
+.lab-shell{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.95fr);gap:14px;padding:0 18px 18px}
+@media(max-width:860px){.lab-shell{grid-template-columns:1fr}}
+.lab-stage{position:relative;border-radius:13px;border:1px solid #1e3355;background:#060b14;overflow:hidden;align-self:start}
+.lab-stage canvas{display:block;width:100%;height:auto}
+.lab-hud{display:flex;gap:8px;flex-wrap:wrap;padding:8px 10px;border-top:1px solid #16253d;background:#08111f;font-size:.74rem}
+.lab-hud span{background:rgba(10,22,40,.9);border:1px solid #23406b;border-radius:999px;padding:3px 10px;color:#a9c6ee}
+.lab-hud b{color:#7ff2d6;font-variant-numeric:tabular-nums}
+.lab-side{display:grid;gap:10px;align-content:start}
+.lab-card{background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:12px;padding:12px 13px}
+.lab-card>b{display:block;font-size:.9rem;color:#eaf2ff;margin-bottom:6px}
+.lab label{display:block;font-size:.8rem;color:#a8bcd8;margin:9px 0 2px;font-weight:600}
+.lab output{color:#7ff2d6;font-weight:700;font-variant-numeric:tabular-nums}
+.lab input[type=range]{width:100%;accent-color:#38e1c4;height:26px}
+.lab input[type=checkbox]{accent-color:#38e1c4;width:17px;height:17px;flex:none}
+.lab select{width:100%;padding:7px 9px;border-radius:8px;border:1px solid #26456f;background:#0b1524;color:#dbe7ff;font:inherit;font-size:.88rem}
+.lab button{background:linear-gradient(180deg,#1a5cc8,#123f96);border:1px solid #2f6bff;color:#eef4ff;
+padding:8px 14px;border-radius:9px;font-size:.88rem;font-weight:600}
+.lab button:hover{filter:brightness(1.15)}
+.lab button.ghost{background:transparent;border-color:#26456f;color:#a9c6ee}
+.lab .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lab .readout{font-size:.85rem;line-height:1.55;color:#c6d7f2;margin:6px 0}
+.lab .readout b{color:#fff}
+.lab .verdict{border-radius:9px;padding:8px 10px;font-size:.8rem;font-weight:700;line-height:1.4;
+background:rgba(120,150,190,.14);border:1px solid rgba(120,150,190,.3);color:#c6d7f2;margin-top:8px}
+.lab .verdict.good{background:rgba(31,140,90,.20);border-color:#2b8a5f;color:#93f2bd}
+.lab .verdict.mid{background:rgba(160,110,25,.20);border-color:#a87a2c;color:#ffd79a}
+.lab .verdict.bad{background:rgba(180,50,35,.22);border-color:#b5452f;color:#ffb3a7}
+.lab .lab-q ul{margin:4px 0 0;padding-left:1.15em;font-size:.85rem;color:#a8bcd8}
+.lab .lab-q li{margin:5px 0;max-width:none}
+.lab .lab-bar{height:11px;border-radius:999px;background:#0d1b2e;border:1px solid #1e3355;overflow:hidden;margin:8px 0}
+.lab .lab-bar>span{display:block;height:100%;width:0;background:#38e1c4;transition:width .2s ease,background .2s ease}
+.lab .metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem;color:#a8bcd8}
+.lab .metricgrid div{background:rgba(6,14,26,.85);border:1px solid #1b2f4d;border-radius:8px;padding:6px 8px}
+.lab .metricgrid b{display:block;color:#7ff2d6;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.lab .lab-how{margin:0 18px 18px;background:rgba(9,19,34,.82);border:1px solid #1e3355;border-radius:10px;padding:10px 14px;color:#c6d7f2}
+.lab .lab-how summary{color:#7ff2d6;font-weight:700;font-size:.9rem}
+.lab .lab-how ol{margin:8px 0 0;padding-left:1.3em;font-size:.86rem;color:#a8bcd8}
+.lab .lab-how li{margin:4px 0;max-width:none}
+@media(max-width:600px){.lab{padding-top:14px}.lab-shell{padding:0 12px 14px}.lab h2,.lab-lead,.lab-eyebrow,.lab-how{margin-left:12px;margin-right:12px}}
+@media print{.lab{box-shadow:none;background:#fff;color:#111;border-color:#ccc}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Hoppa till innehåll</a>
+<header class="top">
+  <a href="../../index.html" title="Öppnar kursens startsida">&#8592; Alla workshoppar</a>
+  <span class="kicker">Lektion 05 · Incidenter</span>
+</header>
+<main id="main">
+  <div class="hero">
+    <p class="eyebrow">AI inom cybersäkerhet · Workshop 05</p>
+    <h1>Workshop 05 – AI för säkerhetsincidenter</h1>
+    <p class="lead">Incidenter avgörs av kontext, inte av enstaka larm. Här triagerar du en inloggningslogg, ställer en tröskel och avgör vad en AI-agent får göra klockan 02:40.</p>
+    <ul class="chips"><li><b>Tid:</b> ca 60 min</li><li><b>Individuellt:</b> 27 min</li><li><b>Grupp:</b> 18 min</li><li><b>Facit och quiz:</b> 15 min</li></ul>
+  </div>
+  <section class="goals" aria-labelledby="mal">
+    <h2 id="mal">Efter workshopen kan du</h2>
+    <ul><li>skilja en avvikelse från en incident med hjälp av loggar och kontext</li><li>sätta en tröskel för larm och förklara hur den påverkar falsklarm och missade incidenter</li><li>prioritera incidenter efter påverkan på människor, produktion och data</li><li>avgöra vilka åtgärder en AI-agent får vidta själv och vilka som kräver godkännande</li></ul>
+  </section>
+  <nav class="tabs" role="tablist" aria-label="Workshopens tre delar">
+    <button type="button" role="tab" id="tab-ind" aria-controls="panel-ind" aria-selected="true" data-panel="ind">1. Individuellt arbete</button>
+    <button type="button" role="tab" id="tab-grp" aria-controls="panel-grp" aria-selected="false" tabindex="-1" data-panel="grp">2. Grupparbete</button>
+    <button type="button" role="tab" id="tab-fac" aria-controls="panel-fac" aria-selected="false" tabindex="-1" data-panel="fac">3. Facit</button>
+    <div class="timer" id="timer" data-minutes="60">
+      <span class="clock" id="tOut" aria-live="off">60:00</span>
+      <button type="button" id="tStart" aria-pressed="false" title="Starta eller pausa timern">Start</button>
+      <button type="button" id="tReset" title="Nollställ timern">Nollställ</button>
+    </div>
+  </nav>
+  <noscript><p class="warn">JavaScript är avstängt. Flikar, simuleringar och facit kräver JavaScript. Slå på det i webbläsaren och ladda om sidan.</p></noscript>
+  <section id="panel-ind" role="tabpanel" aria-labelledby="tab-ind" tabindex="0">
+
+
+<p>En incident börjar sällan med ett tydligt larm. Den börjar med ett värde som avviker, ett konto
+som försöker logga in för många gånger eller en givare som beter sig fel. Här tränar du triage:
+hitta, bedöma och välja åtgärd – med simulerade loggar som ligger i filen.</p>
+
+<details class="card">
+  <summary>Begrepp du möter här</summary>
+  <ul>
+    <li><b>Incident</b> – en händelse som redan påverkat eller kan påverka säkerheten.</li>
+    <li><b>Triage</b> – att snabbt sortera: vad är allvarligt, vad kan vänta?</li>
+    <li><b>Anomalidetektering</b> – att hitta det som avviker från det normala.</li>
+    <li><b>Falsklarm (FP)</b> – larm utan hot. <b>Missat hot (FN)</b> – hot utan larm.</li>
+    <li><b>Människa i loopen</b> – en person godkänner innan systemet agerar.</li>
+    <li><b>LLM</b> – språkmodell som formulerar text utifrån en instruktion.</li>
+    <li><b>RAG</b> – modellen hämtar relevanta dokument först och svarar utifrån dem.</li>
+    <li><b>Kontextfönster</b> – hur mycket text modellen kan ta hänsyn till samtidigt.</li>
+  </ul>
+</details>
+
+
+<p>Tre uppgifter, cirka 27 minuter. Loggarna är syntetiska och liknar dem i kursens notebook, men innehåller inga riktiga konton.</p>
+<article class="task" id="u1">
+  <h3><span class="no">Uppgift 1</span> Från händelse till incident</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Följ tio säkerhetshändelser, koppla dem till incidenter och se vilka åtgärder som väntar på godkännande.</span></div>
+    <div><dt>Varför?</dt><span>Ett larm är en händelse. En incident är flera händelser som hör ihop och ett ärende med ansvarig åtgärd.</span></div>
+    <div><dt>Hur?</dt><span>Läs tidslinjen, byt tabell och kör SQL-frågorna. Jämför öppna incidenter med åtgärder som är Pending.</span></div>
+    <div><dt>Observera</dt><span>Vilka händelser hör ihop? Vilka åtgärder får inte utföras automatiskt? Vad visar JOIN mellan tre tabeller?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna förklara varför en kritisk åtgärd kräver mänskligt godkännande och hur AI-agenten får sitt underlag.</span></div>
+  </dl>
+  <div class="db" data-db="05"></div>
+</article>
+<article class="task" id="u2">
+  <h3><span class="no">Uppgift 2</span> RAG och LLM-inställningar</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Följ hur ett dokument blir ett svar med RAG. Ändra sedan temperature, top-p, max tokens och kontextfönster.</span></div>
+    <div><dt>Varför?</dt><span>En LLM kan bara använda det som finns i kontexten. RAG hämtar underlag – parametrarna styr hur svaret formuleras.</span></div>
+    <div><dt>Hur?</dt><span>Klicka igenom RAG-stegen och ändra sökningens storlek. Justera sedan parametrarna och läs det simulerade svaret.</span></div>
+    <div><dt>Observera</dt><span>När tappar svaret fakta? Vad händer med variationen vid hög temperature? Vad ryms i kontextfönstret?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska kunna förklara chunking, embeddings och retrieval – och varför RAG inte garanterar ett sant svar.</span></div>
+  </dl>
+  
+<div class="card">
+  <h4 style="margin-top:0">Från dokument till svar – klicka på varje steg</h4>
+  <ol class="flows" id="rg-flow">
+    <li><button type="button" class="modelcard" data-rg="0" aria-pressed="true" style="padding:4px 8px">1 Dokument</button></li>
+    <li class="arr" aria-hidden="true">→</li>
+    <li><button type="button" class="modelcard" data-rg="1" aria-pressed="false" style="padding:4px 8px">2 Chunking</button></li>
+    <li class="arr" aria-hidden="true">→</li>
+    <li><button type="button" class="modelcard" data-rg="2" aria-pressed="false" style="padding:4px 8px">3 Embeddings</button></li>
+    <li class="arr" aria-hidden="true">→</li>
+    <li><button type="button" class="modelcard" data-rg="3" aria-pressed="false" style="padding:4px 8px">4 Vektor-DB</button></li>
+    <li class="arr" aria-hidden="true">→</li>
+    <li><button type="button" class="modelcard" data-rg="4" aria-pressed="false" style="padding:4px 8px">5 Sökning</button></li>
+    <li class="arr" aria-hidden="true">→</li>
+    <li><button type="button" class="modelcard" data-rg="5" aria-pressed="false" style="padding:4px 8px">6 Kontext</button></li>
+    <li class="arr" aria-hidden="true">→</li>
+    <li><button type="button" class="modelcard" data-rg="6" aria-pressed="false" style="padding:4px 8px">7 LLM &amp; svar</button></li>
+  </ol>
+  <div class="panel" id="rg-panel" aria-live="polite"></div>
+</div>
+<div class="grid2">
+  <div class="card">
+    <h4 style="margin-top:0">Ställ in sökningen</h4>
+    <label class="field" for="rg-chunk">Chunkstorlek: <b id="rg-chunkv">400</b> tokens</label>
+    <input type="range" id="rg-chunk" min="100" max="1200" value="400" step="50" style="width:100%">
+    <label class="field" for="rg-topk">Antal träffar (top-k): <b id="rg-topkv">3</b></label>
+    <input type="range" id="rg-topk" min="1" max="8" value="3" step="1" style="width:100%">
+    <label class="field" for="rg-ctx">Kontextfönster: <b id="rg-ctxv">8 000</b> tokens</label>
+    <input type="range" id="rg-ctx" min="2000" max="32000" value="8000" step="1000" style="width:100%">
+    <p class="hint">Syntetisk incidentrapport med fem fakta: tid 02:14, 15 misslyckade inloggningar, konto <i>bjorn</i>, källa NL, ett lyckat försök.</p>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Svar från modellen (simulerat)</h4>
+    <div class="metricgrid">
+      <div class="metric"><b id="rg-cov">–</b><span>Relevans i kontexten</span></div>
+      <div class="metric"><b id="rg-facts">–</b><span>Fakta med i svaret</span></div>
+      <div class="metric"><b id="rg-risk">–</b><span>Risk för påhitt</span></div>
+    </div>
+    <pre class="code" id="rg-answer"></pre>
+    <div id="rg-note" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <h4 style="margin-top:0">Parametrar för en incident­sammanfattning</h4>
+    <label class="field" for="lp-temp">Temperature: <b id="lp-tempv">0,2</b></label>
+    <input type="range" id="lp-temp" min="0" max="150" value="20" step="5" style="width:100%">
+    <label class="field" for="lp-top">Top-p: <b id="lp-topv">0,90</b></label>
+    <input type="range" id="lp-top" min="10" max="100" value="90" step="5" style="width:100%">
+    <label class="field" for="lp-max">Max tokens: <b id="lp-maxv">300</b></label>
+    <input type="range" id="lp-max" min="50" max="1000" value="300" step="25" style="width:100%">
+    <label class="field" for="lp-ctx">Context window: <b id="lp-ctxv">8 000</b> tokens</label>
+    <input type="range" id="lp-ctx" min="2000" max="32000" value="8000" step="1000" style="width:100%">
+    <div class="actions"><button type="button" class="ghost" id="lp-reset">Återställ</button></div>
+    <p class="hint">Simulering. Olika modeller och tjänster har olika parametrar och reagerar olika – temperature 1,0 betyder inte samma sak överallt.</p>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Simulerat svar</h4>
+    <div id="lp-out" aria-live="polite"></div>
+    <pre class="code" id="lp-text"></pre>
+    <p class="hint">Underlaget har fem fakta: tid 02:14, 15 misslyckade försök, konto bjorn, källa NL, ett lyckat försök. Rapporten är cirka 2 400 tokens.</p>
+  </div>
+</div>
+
+</article>
+<article class="task" id="u3">
+  <h3><span class="no">Uppgift 3</span> Prioritera och agera</h3>
+  <dl class="brief">
+    <div><dt>Vad?</dt><span>Sätt prioritet på fem incidenter och välj första åtgärd för PLC-incidenten.</span></div>
+    <div><dt>Varför?</dt><span>Prioritering och första åtgärd är det som avgör om incidenten blir en fotnot eller en rubrik.</span></div>
+    <div><dt>Hur?</dt><span>Välj prioritet per rad, tryck <b>Kontrollera</b> och pröva sedan åtgärdslistan.</span></div>
+    <div><dt>Observera</dt><span>Vilken incident påverkar människor? Vilken kan vänta till morgondagen?</span></div>
+    <div><dt>Förväntat</dt><span>Du ska prioritera OT-incidenten högst och välja isolering före fullstopp om ingen är i fara.</span></div>
+  </dl>
+  <div id="u3-prio"></div>
+</article>
+
+    <section class="card" id="quiz">
+      <noscript><p class="warn">Quizet kräver JavaScript.</p></noscript>
+    </section>
+  </section>
+  <section id="panel-grp" role="tabpanel" aria-labelledby="tab-grp" tabindex="0" hidden>
+
+<h2>Uppgift 4 – AI-agenten föreslår en åtgärd</h2>
+<div class="task">
+  <h3><span class="no">Gruppuppgift</span> Fabriken, natten och agenten</h3>
+  <p>Kl. 02:40 larmar anomalimodellen: ett PLC i fabriken tar emot kommandon från en dator i
+  kontorsnätet. En AI-agent har redan samlat loggar, jämfört med historiken och skrivit:
+  <em>"Blockera kontots åtkomst och stäng av produktionslinjen."</em> Gruppen är ansvarig.</p>
+  <dl class="brief">
+    <div><dt>Tid</dt><span>15 minuter beslut, 5 minuter redovisning.</span></div>
+    <div><dt>Roller</dt><span>Ordförande, skeptiker, sekreterare, rapportör.</span></div>
+    <div><dt>Krav</dt><span>Ett beslut per fråga och en mening om varför.</span></div>
+  </dl>
+</div>
+<div class="card">
+  <label class="field" for="g-1">1. Vad får agenten göra själv?</label>
+  <select id="g-1">
+    <option value="read" selected>Läsa loggar och skriva ett förslag</option>
+    <option value="block">Blockera kontot automatiskt</option>
+    <option value="stop">Stänga av produktionslinjen automatiskt</option>
+  </select>
+  <label class="field" for="g-2">2. Vem godkänner åtgärden?</label>
+  <select id="g-2">
+    <option value="soc" selected>Analytiker i SOC, med drifttekniker som rådgivare</option>
+    <option value="agent">Ingen – agenten är snabbare</option>
+    <option value="chef">Fabrikschef, även om det tar en timme</option>
+  </select>
+  <label class="field" for="g-3">3. Vad ska loggas?</label>
+  <select id="g-3">
+    <option value="all" selected>Agentens underlag, förslag, godkännande och åtgärd</option>
+    <option value="action">Bara åtgärden</option>
+    <option value="none">Inget – loggar kan läcka</option>
+  </select>
+  <div class="actions"><button type="button" id="g-run">Visa konsekvenser</button></div>
+  <div id="g-out" aria-live="polite"></div>
+</div>
+<h3>Redovisa på 2 minuter</h3>
+<ol><li>Vad fick agenten göra – och varför just det?</li><li>Vad händer om agenten har fel klockan 02:40?</li><li>Vilket underlag hade ni velat se innan ni godkände?</li></ol>
+
+  </section>
+  <section id="panel-fac" role="tabpanel" aria-labelledby="tab-fac" tabindex="0" hidden>
+    <div class="facitbar">
+      <button type="button" id="facOpenAll">Öppna alla facit</button>
+      <button type="button" class="ghost" id="facCloseAll">Fäll ihop alla</button>
+      <span class="hint">Facit kan öppnas när som helst – du behöver inte svara först.</span>
+    </div>
+
+<p>Öppna en uppgift i taget och jämför med ditt eget svar.</p>
+<div id="facit-lista"></div>
+<h2>Kom ihåg</h2>
+<ul>
+  <li>Ett larm är en fråga, inte ett svar. Kontext avgör om det är en incident.</li>
+  <li>Tröskeln styr vem som får arbeta: för lågt ger larmtrötthet, för högt ger tysta missar.</li>
+  <li>Prioritera efter påverkan: människor först, sedan produktion, sedan data.</li>
+  <li>En agent får föreslå mycket – men åtgärder som stoppar drift kräver en människa.</li>
+</ul>
+
+  </section>
+
+<script>(function(){if(!window.CanvasRenderingContext2D||!CanvasRenderingContext2D.prototype||CanvasRenderingContext2D.prototype.roundRect)return;
+CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){r=Math.min(typeof r==="number"?r:0,w/2,h/2);
+this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);
+this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this;};})();</script>
+<section class="lab" id="lab-extra-5" aria-labelledby="lab5-h">
+  <p class="lab-eyebrow">Extra labb · avancerad grafik · incidentrespons</p>
+  <h2 id="lab5-h">Incidentkedjan – hur snabbt AI får stoppa ett angrepp</h2>
+  <p class="lab-lead">En attack rör sig genom fem faser. Din automationsnivå avgör hur tidigt den upptäcks, och dina playbooks avgör hur långt den hinner. Men automation har ett pris: för aggressiva regler isolerar även friska maskiner.</p>
+  <div class="lab-shell">
+    <div class="lab-stage">
+      <canvas id="lab5cv" width="960" height="520" role="img" aria-label="Tidslinje med fem incidentfaser och en puls som rör sig genom kedjan"></canvas>
+      <div class="lab-hud">
+        <span>MTTD <b id="lab5mttd">–</b></span>
+        <span>MTTR <b id="lab5mttr">–</b></span>
+        <span>Påverkade system <b id="lab5sys">–</b></span>
+        <span>Falska isoleringar <b id="lab5false">0</b></span>
+      </div>
+    </div>
+    <div class="lab-side">
+      <div class="lab-card">
+        <label for="lab5auto">Automation i AI-assistenten <output id="lab5autov">50 %</output></label>
+        <input type="range" id="lab5auto" min="0" max="100" value="50">
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="lab5iso" checked> Playbook: isolera värd automatiskt</label>
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="lab5blk" checked> Playbook: blockera käll-IP</label>
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="lab5bak" checked> Playbook: återställ från backup</label>
+        <div class="actions">
+          <button type="button" id="lab5start">Starta incident</button>
+          <button type="button" class="ghost" id="lab5reset">Återställ</button>
+        </div>
+      </div>
+      <div class="lab-card">
+        <div class="readout" id="lab5read">Ingen incident pågår.</div>
+        <div class="verdict mid" id="lab5verdict">Starta en incident för att se kedjan.</div>
+      </div>
+      <div class="lab-card lab-q">
+        <b>Diskutera i grupp</b>
+        <ul>
+          <li>Vilken fas är billigast att stoppa? Varför?</li>
+          <li>När är automatisk isolering farligare än attacken?</li>
+          <li>Vad måste vara dokumenterat innan en playbook får köra själv?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <details class="lab-how">
+    <summary>Så gör du – 10 min individuellt, 15 min i grupp</summary>
+    <ol>
+      <li>Kör med 0 % automation och alla playbooks på. Notera MTTD och antal påverkade system.</li>
+      <li>Höj automationen till 100 % och kör igen. Vad blir bättre – och vad blir sämre?</li>
+      <li>Stäng av ”isolera värd” men behåll hög automation. Jämför spridningen.</li>
+      <li>Skriv ner den kombination du skulle rekommendera till en fabrik med dygnet-runt-drift.</li>
+    </ol>
+  </details>
+</section>
+<script>
+(function(){
+  var cv=document.getElementById("lab5cv"),cx=cv.getContext("2d");
+  var W=960,H=520,$=function(i){return document.getElementById(i)};
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var STAGES=["Initial åtkomst","Upptäckt","Spridning","Utpressning","Återställning"];
+  var st={auto:50,run:false,prog:0,t:0,mttd:null,mttr:null,sys:0,falseIso:0,contained:false,shock:0,status:"idle"};
+
+  function compute(){
+    var auto=st.auto/100, iso=$("lab5iso").checked, blk=$("lab5blk").checked, bak=$("lab5bak").checked;
+    var det=0.60-auto*0.42;
+    st.det=det;
+    return {auto:auto,det:det,iso:iso,blk:blk,bak:bak};
+  }
+
+  function start(){
+    compute();
+    st.run=true;st.prog=0;st.t=0;st.contained=false;st.shock=0;
+    st.mttd=null;st.mttr=null;st.sys=1;
+    st.falseIso=st.auto>55&&$("lab5iso").checked?Math.floor(Math.random()*Math.max(1,Math.round((st.auto-40)/22))):0;
+    st.status="running";
+  }
+  function finish(){
+    st.run=false;
+    var c=compute();
+    st.mttd=Math.round(c.det*60);
+    var playbooks=(c.iso?1:0)+(c.blk?1:0)+(c.bak?1:0);
+    st.mttr=Math.max(12,Math.round(190-st.auto*1.3-playbooks*18));
+    st.sys=st.contained?(c.iso?2:3):6;
+    st.status="done";
+  }
+
+  function step(dt){
+    if(!st.run)return;
+    st.t+=dt;
+    var c=compute();
+    st.prog=Math.min(1,st.t/16);
+    if(!st.contained&&st.prog>=c.det){
+      st.contained=true;st.shock=1;
+    }
+    if(st.prog>=1)finish();
+  }
+
+  function nodePos(i){return {x:110+i*((W-220)/4),y:250};}
+
+  function draw(){
+    var i,t=st.t,c=compute();
+    var g=cx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,"#070d18");g.addColorStop(1,"#0b1526");
+    cx.fillStyle=g;cx.fillRect(0,0,W,H);
+
+    // bakgrundsraster
+    cx.strokeStyle="rgba(90,140,210,.08)";cx.lineWidth=1;
+    for(i=0;i<10;i++){var y=50+i*45;cx.beginPath();cx.moveTo(40,y);cx.lineTo(W-40,y);cx.stroke();}
+
+    // kedjelinje
+    cx.beginPath();cx.moveTo(nodePos(0).x,nodePos(0).y);cx.lineTo(nodePos(4).x,nodePos(4).y);
+    cx.strokeStyle="rgba(120,170,255,.22)";cx.lineWidth=8;cx.lineCap="round";cx.stroke();
+
+    // pågående fara
+    if(st.status!=="idle"){
+      var endProg=st.contained?Math.min(st.prog,c.det):st.prog;
+      cx.beginPath();cx.moveTo(nodePos(0).x,nodePos(0).y);
+      cx.lineTo(nodePos(0).x+(nodePos(4).x-nodePos(0).x)*endProg,nodePos(0).y);
+      cx.strokeStyle=st.contained?"rgba(255,196,90,.75)":"rgba(255,70,70,.8)";cx.lineWidth=8;cx.lineCap="round";cx.stroke();
+    }
+
+    // noder
+    for(i=0;i<5;i++){
+      var p=nodePos(i),reached=st.prog>=(i/4)*1.0+0.001&&st.status!=="idle";
+      var hit=reached&&(!st.contained||i<=Math.floor(c.det*4));
+      cx.beginPath();cx.arc(p.x,p.y,27,0,6.284);
+      cx.fillStyle=hit?"rgba(255,80,80,.16)":"rgba(12,26,44,.9)";
+      cx.strokeStyle=hit?"rgba(255,90,90,.85)":"rgba(120,170,255,.35)";
+      cx.lineWidth=2.4;cx.fill();cx.stroke();
+      cx.beginPath();cx.arc(p.x,p.y,27,0,6.284);
+      cx.fillStyle=hit?"rgba(255,90,90,.16)":"rgba(120,170,255,.06)";cx.fill();
+      cx.fillStyle=hit?"#ffb3a7":"rgba(190,215,250,.85)";
+      cx.font="700 13px system-ui,Segoe UI,Arial";cx.textAlign="center";
+      cx.fillText(String(i+1),p.x,p.y+5);
+      cx.font="600 10px system-ui,Segoe UI,Arial";
+      cx.fillText(STAGES[i].toUpperCase(),p.x,p.y+48);
+      if(st.contained&&i===Math.floor(c.det*4)+ (c.det*4%1>0.5?1:0)){
+        cx.beginPath();cx.arc(p.x,p.y,30+Math.sin(t*3)*3,0,6.284);
+        cx.strokeStyle="rgba(120,230,255,.55)";cx.lineWidth=2;cx.stroke();
+      }
+    }
+
+    // puls
+    if(st.run){
+      var pp=st.prog,cx0=nodePos(0).x+(nodePos(4).x-nodePos(0).x)*pp;
+      cx.beginPath();cx.arc(cx0,nodePos(0).y,10,0,6.284);
+      cx.fillStyle="#ff6b6b";cx.shadowColor="#ff4d4d";cx.shadowBlur=26;cx.fill();cx.shadowBlur=0;
+      cx.beginPath();cx.arc(cx0,nodePos(0).y,22,0,6.284);
+      cx.strokeStyle="rgba(255,80,80,.35)";cx.lineWidth=2;cx.stroke();
+    }
+
+    // inneslutningsvåg
+    if(st.shock>0){
+      var k=1-st.shock;
+      cx.beginPath();cx.arc(nodePos(Math.round(c.det*4)).x,nodePos(0).y,30+k*140,0,6.284);
+      cx.strokeStyle="rgba(120,230,255,"+(st.shock*0.7)+")";cx.lineWidth=3;cx.stroke();
+      st.shock-=0.012;
+    }
+
+    // statusfält
+    cx.fillStyle="rgba(190,215,250,.8)";cx.font="600 12px system-ui,Segoe UI,Arial";cx.textAlign="left";
+    cx.fillText(st.status==="idle"?"Redo – starta en incident":st.contained?"Innesluten":"Angrepp pågår",40,H-40);
+    readout();
+  }
+
+  function readout(){
+    var c=compute();
+    if(st.status==="idle"){
+      $("lab5read").textContent="Ingen incident pågår. Ställ in automation och playbooks och tryck på Starta incident.";
+      $("lab5verdict").className="verdict mid";
+      $("lab5verdict").textContent="Starta en incident för att se kedjan.";
+      $("lab5mttd").textContent="–";$("lab5mttr").textContent="–";$("lab5sys").textContent="–";$("lab5false").textContent="0";
+      return;
+    }
+    $("lab5mttd").textContent=Math.round(c.det*60)+" min";
+    $("lab5mttr").textContent=st.mttr?st.mttr+" min":Math.round(Math.max(12,190-st.auto*1.3)*1)+" min";
+    $("lab5sys").textContent=st.contained?(c.iso?2:3):Math.min(6,1+Math.round(st.prog*5));
+    $("lab5false").textContent=st.falseIso;
+    var v=$("lab5verdict");
+    if(st.status==="running"){
+      v.className="verdict mid";
+      v.textContent=st.contained?"AI-assistenten har inneslutit incidenten – nu börjar återställningen.":"Angreppet rör sig genom nätet.";
+      $("lab5read").innerHTML="Upptäckt efter <b>"+Math.round(c.det*60)+" min</b> med <b>"+st.auto+" %</b> automation. "+
+        "Playbooks: "+((c.iso?"isolera värd, ":"")+(c.blk?"blockera IP, ":"")+(c.bak?"återställ ":"")||"inga")+".";
+      return;
+    }
+    v.className=st.sys<=2&&st.falseIso===0?"verdict good":st.sys>=5?"verdict bad":"verdict mid";
+    v.textContent=st.sys<=2?"Snabb inneslutning med liten påverkan.":st.sys>=5?"Angreppet hann sprida sig långt innan det stoppades.":"Incidenten stoppades men kostade tid och system.";
+    $("lab5read").innerHTML="Resultat: upptäckt efter <b>"+Math.round(c.det*60)+" min</b>, återställning <b>"+st.mttr+" min</b>, "+
+      "<b>"+st.sys+"</b> påverkade system, <b>"+st.falseIso+"</b> falska isoleringar. "+
+      "Hög automation ger snabb upptäckt – men ökar risken att friska maskiner kopplas bort.";
+  }
+
+  function loop(ts){
+    var now=ts||performance.now();
+    if(!loop.last)loop.last=now;
+    var dt=Math.min(0.05,(now-loop.last)/1000);loop.last=now;
+    st.t+=dt*0.6;
+    step(dt);
+    draw();requestAnimationFrame(loop);
+  }
+
+  $("lab5auto").addEventListener("input",function(){st.auto=+this.value;$("lab5autov").textContent=this.value+" %";});
+  $("lab5start").addEventListener("click",start);
+  $("lab5reset").addEventListener("click",function(){st.status="idle";st.run=false;st.prog=0;st.t=0;st.contained=false;st.sys=0;st.falseIso=0;});
+  loop();
+})();
+</script>
+
+</main>
+
+
+<script>
+var WS=(function(){
+"use strict";
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(n,d){if(!isFinite(n))return "\u2013";return n.toFixed(d==null?2:d).replace(".",",")}
+function num(v){return Number(String(v).replace(",","."))}
+
+/* ---------- flikar ---------- */
+function initTabs(){
+  var btns=$$('.tabs [role="tab"]');
+  if(!btns.length)return;
+  function show(id,setHash){
+    btns.forEach(function(b){
+      var on=b.getAttribute("data-panel")===id;
+      b.setAttribute("aria-selected",on?"true":"false");
+      b.tabIndex=on?0:-1;
+    });
+    $$('[role="tabpanel"]').forEach(function(p){p.hidden=p.id!=="panel-"+id});
+    if(setHash){try{history.replaceState(null,"","#"+id)}catch(e){}}
+  }
+  btns.forEach(function(b,i){
+    b.addEventListener("click",function(){show(b.getAttribute("data-panel"),true)});
+    b.addEventListener("keydown",function(e){
+      var n=null;
+      if(e.key==="ArrowRight")n=(i+1)%btns.length;
+      if(e.key==="ArrowLeft")n=(i-1+btns.length)%btns.length;
+      if(e.key==="Home")n=0;
+      if(e.key==="End")n=btns.length-1;
+      if(n!==null){e.preventDefault();btns[n].focus();show(btns[n].getAttribute("data-panel"),true)}
+    });
+  });
+  var h=(location.hash||"").replace("#","");
+  var ok=btns.some(function(b){return b.getAttribute("data-panel")===h});
+  show(ok?h:"ind",false);
+}
+
+/* ---------- timer ---------- */
+function initTimer(){
+  var box=$("#timer"); if(!box)return;
+  var total=(parseInt(box.getAttribute("data-minutes"),10)||60)*60;
+  var left=total,id=null;
+  var out=$("#tOut"),st=$("#tStart"),rs=$("#tReset");
+  function paint(){
+    var m=Math.floor(left/60),s=left%60;
+    out.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    box.classList.toggle("low",left>0&&left<=300);
+  }
+  function stop(){
+    if(id){clearInterval(id);id=null}
+    st.textContent=left===0?"Klar":"Forts\u00e4tt";
+    st.setAttribute("aria-pressed","false");
+  }
+  st.addEventListener("click",function(){
+    if(id){stop();return}
+    if(left===0){left=total;box.classList.remove("done");paint()}
+    id=setInterval(function(){
+      if(left>0){left--;paint()}
+      if(left===0){stop();box.classList.add("done");st.textContent="Klar"}
+    },1000);
+    st.textContent="Pausa";st.setAttribute("aria-pressed","true");
+  });
+  rs.addEventListener("click",function(){
+    stop();left=total;box.classList.remove("done");paint();st.textContent="Start";
+  });
+  paint();
+}
+
+/* ---------- quiz ---------- */
+function quiz(host,cfg){
+  if(!host)return;
+  var qs=cfg.questions||[];
+  host.innerHTML="";
+  var h=document.createElement("h3");h.textContent=cfg.title||"Avslutande kunskapskontroll";host.appendChild(h);
+  if(cfg.hint){var p=document.createElement("p");p.className="hint";p.textContent=cfg.hint;host.appendChild(p)}
+  var answered=0,right=0;
+  var status=document.createElement("p");status.className="quizsum";
+  var retry=document.createElement("button");
+  retry.type="button";retry.className="ghost";retry.textContent="G\u00f6r om quizet";retry.hidden=true;
+  retry.addEventListener("click",function(){quiz(host,cfg);host.scrollIntoView({block:"center"})});
+  qs.forEach(function(q,i){
+    var wrap=document.createElement("div");wrap.className="q";
+    var qt=document.createElement("p");qt.className="qt";qt.textContent=(i+1)+". "+q.text;wrap.appendChild(qt);
+    var opts=document.createElement("div");opts.className="opts";wrap.appendChild(opts);
+    var fb=document.createElement("p");fb.className="fb";fb.hidden=true;wrap.appendChild(fb);
+    q.options.forEach(function(o,j){
+      var b=document.createElement("button");b.type="button";b.className="opt";
+      b.innerHTML='<span class="k">'+String.fromCharCode(65+j)+'</span><span>'+esc(o)+'</span>';
+      b.addEventListener("click",function(){
+        if(wrap.getAttribute("data-done")==="1")return;
+        wrap.setAttribute("data-done","1");answered++;
+        $$(".opt",opts).forEach(function(x,k){x.disabled=true;if(k===q.answer)x.classList.add("correct")});
+        var good=j===q.answer;
+        if(good){right++}else{b.classList.add("wrong")}
+        fb.hidden=false;fb.className="fb "+(good?"ok":"bad");
+        fb.innerHTML="<b>"+(good?"R\u00e4tt.":"Fel.")+"</b> "+esc(q.why||"");
+        if(!good){var s=document.createElement("span");s.className="whynot";s.textContent="R\u00e4tt svar: "+q.options[q.answer]+".";fb.appendChild(s)}
+        status.textContent=answered+" av "+qs.length+" besvarade \u00b7 "+right+" r\u00e4tt";
+        if(answered===qs.length){
+          status.innerHTML="<b>Resultat: "+right+" av "+qs.length+" r\u00e4tt.</b> "+(right===qs.length?"Mycket bra \u2013 du kan begreppen.":"L\u00e4s f\u00f6rklaringarna och g\u00f6r om quizet om du vill.");
+          retry.hidden=false;
+        }
+      });
+      opts.appendChild(b);
+    });
+    host.appendChild(wrap);
+  });
+  status.textContent="0 av "+qs.length+" besvarade";
+  host.appendChild(status);
+  host.appendChild(retry);
+}
+
+/* ---------- klassificering med dropdown ---------- */
+function classify(host,cfg){
+  if(!host)return;
+  var rows=cfg.rows||[],opts=cfg.options||[];
+  var t=document.createElement("table");
+  t.innerHTML='<thead><tr><th scope="col">'+esc(cfg.col1||"System")+'</th><th scope="col">'+esc(cfg.col2||"Din bed\u00f6mning")+'</th></tr></thead>';
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  rows.forEach(function(r){
+    var tr=document.createElement("tr");
+    var td=document.createElement("td");td.textContent=r.text;
+    var note=document.createElement("div");note.className="rownote";note.hidden=true;td.appendChild(note);
+    var td2=document.createElement("td");
+    var sel=document.createElement("select");
+    sel.setAttribute("aria-label","Bed\u00f6mning f\u00f6r: "+r.text);
+    sel.innerHTML='<option value="">\u2013 v\u00e4lj \u2013</option>'+opts.map(function(o,i){return '<option value="'+i+'">'+esc(o)+'</option>'}).join("");
+    td2.appendChild(sel);tr.appendChild(td);tr.appendChild(td2);tb.appendChild(tr);
+  });
+  var btn=document.createElement("button");btn.type="button";btn.textContent=cfg.btn||"Kontrollera mina svar";
+  var out=document.createElement("p");out.className="fb";
+  btn.addEventListener("click",function(){
+    var ok=0,missing=0;
+    Array.prototype.forEach.call(tb.rows,function(tr,i){
+      var sel=$("select",tr),v=sel.value===""?null:Number(sel.value);
+      var good=v===rows[i].correct;if(good){ok++}if(v===null){missing++}
+      tr.classList.toggle("good",good);tr.classList.toggle("bad",!good&&v!==null);
+      var n=$(".rownote",tr);
+      if(n){n.hidden=false;n.innerHTML="<b>"+(good?"R\u00e4tt":(v===null?"Inget val":"R\u00e4tt svar: "+esc(opts[rows[i].correct])))+"</b> "+(rows[i].note||"")}
+    });
+    out.className="fb show "+(ok===rows.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+rows.length+" r\u00e4tt.</b> "+(ok===rows.length?"Bra \u2013 du ser m\u00f6nstret.":"L\u00e4s radens f\u00f6rklaring och justera"+(missing?" ("+missing+" rad(er) utan val)":"")+".");
+  });
+  host.appendChild(t);host.appendChild(btn);host.appendChild(out);
+}
+
+/* ---------- tabell med sortering och filter ---------- */
+function sortTable(host,cfg){
+  if(!host)return;
+  var cols=cfg.cols||[],rows=(cfg.rows||[]).slice();
+  var wrap=document.createElement("div");wrap.className="tablewrap";
+  var filter=null;
+  if(cfg.filter){
+    filter=document.createElement("input");filter.type="search";filter.className="filter";
+    filter.placeholder=cfg.filterPlaceholder||"Filtrera \u2026";
+    filter.setAttribute("aria-label","Filtrera tabellen");
+    wrap.appendChild(filter);
+  }
+  var t=document.createElement("table");
+  var thead=document.createElement("thead"),htr=document.createElement("tr");
+  cols.forEach(function(c,i){
+    var th=document.createElement("th");th.scope="col";th.setAttribute("data-i",i);th.tabIndex=0;
+    th.innerHTML=esc(c)+' <span class="arrow" aria-hidden="true">\u2195</span>';
+    function sort(){
+      var dir=th.getAttribute("data-dir")==="asc"?"desc":"asc";th.setAttribute("data-dir",dir);
+      rows.sort(function(a,b){
+        var x=a[i],y=b[i];
+        var nx=parseFloat(String(x).replace(/\s/g,"").replace(",",".")),ny=parseFloat(String(y).replace(/\s/g,"").replace(",","."));
+        var both=isFinite(nx)&&isFinite(ny)&&String(x).replace(/[^0-9]/g,"")!==""&&String(y).replace(/[^0-9]/g,"")!=="";
+        if(both)return dir==="asc"?nx-ny:ny-nx;
+        return dir==="asc"?String(x).localeCompare(String(y),"sv"):String(y).localeCompare(String(x),"sv");
+      });
+      render();
+    }
+    th.addEventListener("click",sort);
+    th.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();sort()}});
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr);t.appendChild(thead);
+  var tb=document.createElement("tbody");t.appendChild(tb);
+  function render(){
+    tb.innerHTML="";
+    var q=filter?filter.value.toLowerCase():"";
+    rows.forEach(function(r){
+      if(q&&r.join(" ").toLowerCase().indexOf(q)<0)return;
+      var tr=document.createElement("tr");
+      r.forEach(function(c){var td=document.createElement("td");td.innerHTML=c;tr.appendChild(td)});
+      tb.appendChild(tr);
+    });
+  }
+  wrap.appendChild(t);host.appendChild(wrap);
+  if(filter)filter.addEventListener("input",render);
+  render();
+}
+
+/* ---------- stapeldiagram ---------- */
+function bars(host,items,opt){
+  if(!host)return;
+  opt=opt||{};host.innerHTML="";
+  var max=opt.max||Math.max.apply(null,items.map(function(i){return Math.abs(i.value)}).concat([1]));
+  var box=document.createElement("div");box.className="bars";
+  items.forEach(function(it){
+    var row=document.createElement("div");row.className="barrow"+(it.tone?" "+it.tone:"");
+    var pct=Math.max(0,Math.min(100,Math.abs(it.value)/max*100));
+    row.innerHTML='<span class="bl">'+esc(it.label)+'</span><span class="btrack"><span class="bfill" style="width:'+pct.toFixed(1)+'%"></span></span><span class="bv">'+esc(it.display!=null?it.display:it.value)+'</span>';
+    box.appendChild(row);
+  });
+  host.appendChild(box);
+  if(opt.caption){var p=document.createElement("p");p.className="hint";p.textContent=opt.caption;host.appendChild(p)}
+}
+
+/* ---------- linjediagram i ren SVG ---------- */
+function line(host,cfg){
+  if(!host)return;
+  var W=560,H=250,L=46,R=14,T=14,B=34;
+  var maxY=cfg.maxY||1,maxX=cfg.maxX||1;
+  function X(v){return L+(v/maxX)*(W-L-R)}
+  function Y(v){return H-B-(v/maxY)*(H-T-B)}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" class="chart" role="img" aria-label="'+esc(cfg.label||"Diagram")+'">';
+  for(var i=0;i<=4;i++){
+    var y=T+i*(H-T-B)/4;
+    s+='<line class="grid" x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'"/>';
+    s+='<text class="ax" x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+fmt(maxY*(1-i/4),maxY<=1?1:0)+'</text>';
+  }
+  (cfg.xTicks||[0,0.5,1]).forEach(function(t){
+    s+='<text class="ax" x="'+X(t*maxX)+'" y="'+(H-12)+'" text-anchor="middle">'+fmt(t*maxX,0)+'</text>';
+  });
+  (cfg.hlines||[]).forEach(function(hl){
+    s+='<line x1="'+L+'" y1="'+Y(hl.y).toFixed(1)+'" x2="'+(W-R)+'" y2="'+Y(hl.y).toFixed(1)+'" stroke="'+hl.color+'" stroke-width="1.5" stroke-dasharray="5 4"><title>'+esc(hl.label||"")+'</title></line>';
+  });
+  (cfg.series||[]).forEach(function(ser){
+    var pts=ser.points.map(function(p){return X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)}).join(" ");
+    if(!ser.onlyDots){s+='<polyline points="'+pts+'" fill="none" stroke="'+ser.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';}
+    if(ser.dots){ser.points.forEach(function(p){
+      s+='<circle cx="'+X(p[0]).toFixed(1)+'" cy="'+Y(p[1]).toFixed(1)+'" r="3.5" fill="'+ser.color+'"><title>'+esc(ser.name)+": "+fmt(p[1],2)+'</title></circle>';
+    })}
+    if(ser.fill){
+      s+='<polygon points="'+X(ser.points[0][0]).toFixed(1)+','+Y(0)+' '+pts+' '+X(ser.points[ser.points.length-1][0]).toFixed(1)+','+Y(0)+'" fill="'+ser.color+'" opacity="0.08"/>';
+    }
+  });
+  if(cfg.xLabel)s+='<text class="lbl" x="'+(L+(W-L-R)/2)+'" y="'+(H-1)+'" text-anchor="middle">'+esc(cfg.xLabel)+'</text>';
+  s+="</svg>";
+  host.innerHTML=s;
+  if((cfg.series||[]).length){
+    var ul=document.createElement("ul");ul.className="legend";
+    cfg.series.forEach(function(ser){var li=document.createElement("li");li.innerHTML='<i style="background:'+ser.color+'"></i>'+esc(ser.name);ul.appendChild(li)});
+    host.appendChild(ul);
+  }
+}
+
+/* ---------- confusion matrix ---------- */
+function cm(host,c){
+  if(!host)return;
+  host.innerHTML='<div class="cm">'+
+    '<div class="cmh"></div><div class="cmh">Modellen larmar</div><div class="cmh">Modellen \u00e4r tyst</div>'+
+    '<div class="cmh">Verkligt hot</div><div class="cell tp"><b>'+c.tp+'</b><span>TP \u2013 f\u00e5ngat hot</span></div><div class="cell fn"><b>'+c.fn+'</b><span>FN \u2013 missat hot</span></div>'+
+    '<div class="cmh">Verkligt normalt</div><div class="cell fp"><b>'+c.fp+'</b><span>FP \u2013 falsklarm</span></div><div class="cell tn"><b>'+c.tn+'</b><span>TN \u2013 korrekt tyst</span></div>'+
+    '</div>';
+}
+
+/* ---------- sm\u00e5hj\u00e4lp ---------- */
+function metric(tp,fp,fn){
+  var p=tp+fp?tp/(tp+fp):0, r=tp+fn?tp/(tp+fn):0;
+  return {precision:p,recall:r,f1:(p+r)?2*p*r/(p+r):0};
+}
+function riskLabel(v,lo,hi){
+  var t=v<lo?"low":(v<hi?"mid":"high");
+  var txt=t==="low"?"L\u00e5g risk":(t==="mid"?"Medelrisk":"H\u00f6g risk");
+  return '<span class="riskbadge '+t+'">'+txt+"</span>";
+}
+function facit(host,items){
+  if(!host)return;
+  items.forEach(function(f){
+    var d=document.createElement("details");
+    d.innerHTML="<summary>"+f[0]+"</summary>"+f[1];
+    host.appendChild(d);
+  });
+}
+function init(){initTabs();initTimer()}
+return {$,$$,esc,fmt,num,quiz,classify,sortTable,bars,line,cm,metric,riskLabel,facit,init:init};
+})();
+(function(){
+  var open=document.getElementById("facOpenAll"),close=document.getElementById("facCloseAll");
+  function all(v){Array.prototype.forEach.call(document.querySelectorAll("#panel-fac details"),function(d){d.open=v})}
+  if(open)open.addEventListener("click",function(){all(true)});
+  if(close)close.addEventListener("click",function(){all(false)});
+})();
+</script>
+
+
+<script>
+(function(){
+  var host=document.getElementById("u1-tri");
+  if(!host)return;
+  var rows=[
+    {u:"anna",f:3,m:45,c:1,ok:true,why:"F\u00e5 misslyckade f\u00f6rs\u00f6k, ett land, lyckad inloggning \u2013 normalt."},
+    {u:"bjorn",f:12,m:4,c:3,ok:false,why:"Tolv f\u00f6rs\u00f6k p\u00e5 fyra minuter fr\u00e5n tre l\u00e4nder \u2013 spridningsattack."},
+    {u:"carl",f:8,m:3,c:1,ok:true,why:"F\u00e5r se ut som ett hot, men kommer fr\u00e5n k\u00e4nt VPN under resa. Kontext avg\u00f6r."},
+    {u:"dana",f:40,m:2,c:5,ok:false,why:"40 f\u00f6rs\u00f6k fr\u00e5n fem l\u00e4nder \u2013 maskinell gissning."},
+    {u:"erik",f:5,m:60,c:1,ok:true,why:"Gl\u00f6mt l\u00f6senord, l\u00e5ngsamt och lokalt."},
+    {u:"fatima",f:25,m:6,c:2,ok:false,why:"M\u00e5nga f\u00f6rs\u00f6k fr\u00e5n kontorets IP \u2013 kan vara ett kapat konto."},
+    {u:"gustav",f:2,m:120,c:1,ok:true,why:"Tv\u00e5 f\u00f6rs\u00f6k, l\u00e5ng tid emellan."},
+    {u:"hanna",f:15,m:5,c:1,ok:true,why:"Tj\u00e4nstekonto med gammalt l\u00f6senord \u2013 st\u00e4da i konfigurationen, inte en attack."},
+    {u:"ivan",f:9,m:2,c:4,ok:false,why:"Nio f\u00f6rs\u00f6k p\u00e5tv\u00e5 minuter fr\u00e5n fyra l\u00e4nder."},
+    {u:"johan",f:4,m:30,c:2,ok:true,why:"Fyra f\u00f6rs\u00f6k under en halvtimme \u2013 normalt slarv."}
+  ];
+  var wrap=document.createElement("div");wrap.className="card";
+  wrap.innerHTML='<p>Tio konton under samma timme. Kryssa f\u00f6r de konton du bed\u00f6mer som misst\u00e4nkta och tryck <b>Kontrollera</b>.</p><div class="tablewrap"><table><thead><tr><th>Konto</th><th>Misslyckade</th><th>Minuter</th><th>L\u00e4nder</th><th>Misst\u00e4nkt</th></tr></thead><tbody id="t-body"></tbody></table></div><div class="actions"><button type="button" id="t-run">Kontrollera</button></div><div id="t-out" aria-live="polite"></div>';
+  host.appendChild(wrap);
+  var body=document.getElementById("t-body");
+  rows.forEach(function(r,i){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+r.u+"</td><td>"+r.f+"</td><td>"+r.m+"</td><td>"+r.c+"</td><td><input type=\"checkbox\" id=\"t-"+i+"\" aria-label=\"Misst\u00e4nkt konto "+r.u+"\"></td>";
+    body.appendChild(tr);
+  });
+  document.getElementById("t-run").addEventListener("click",function(){
+    var ok=0;
+    rows.forEach(function(r,i){
+      var c=document.getElementById("t-"+i),good=(!c.checked)===r.ok;
+      if(good)ok++;
+      var tr=c.closest("tr");tr.style.background=good?"#e7f4ec":"#fbe7e3";
+      var td=tr.cells[4];
+      if(!tr.querySelector(".rownote")){var n=document.createElement("div");n.className="rownote";td.appendChild(n)}
+      tr.querySelector(".rownote").textContent=r.why;
+    });
+    var out=document.getElementById("t-out");out.className="fb show "+(ok===rows.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+rows.length+" r\u00e4tt.</b> "+(ok===rows.length?"Du l\u00e4ser loggen med kontext, inte bara siffror.":"Titta p\u00e5 raderna med r\u00f6d markering: tid, antal och l\u00e4nder tillsammans avg\u00f6r.");
+  });
+})();
+
+(function(){
+  var host=document.getElementById("u2-thr");
+  if(!host)return;
+  var seed=20260526;
+  function rnd(){seed=(seed*1103515245+12345)%2147483648;return seed/2147483648}
+  var accounts=[];
+  for(var i=0;i<80;i++){
+    var bad=rnd()<0.15;
+    accounts.push({bad:bad,f:bad?(14+Math.floor(rnd()*26)):Math.floor(rnd()*13)});
+  }
+  host.innerHTML='<div class="card"><p>80 konton, 12 av dem attackeras. Larmtr\u00f6skel: larma n\u00e4r ett konto har minst N misslyckade f\u00f6rs\u00f6k inom tio minuter.</p>'+
+    '<label class="field" for="n">N = <span class="rangeout" id="nv">10</span></label><input type="range" id="n" min="1" max="30" value="10">'+
+    '<div id="nbars"></div><p class="fb" id="nsum"></p></div>';
+  function run(){
+    var n=Number(document.getElementById("n").value);
+    document.getElementById("nv").textContent=n;
+    var c={tp:0,fp:0,fn:0,tn:0};
+    accounts.forEach(function(a){
+      var l=a.f>=n;
+      if(l&&a.bad)c.tp++;else if(l&&!a.bad)c.fp++;else if(!l&&a.bad)c.fn++;else c.tn++;
+    });
+    var m=WS.metric(c.tp,c.fp,c.fn);
+    WS.bars(document.getElementById("nbars"),[
+      {label:"F\u00e5ngade attacker",value:c.tp,display:c.tp,tone:"ok"},
+      {label:"Missade attacker",value:c.fn,display:c.fn,tone:"bad"},
+      {label:"Falsklarm",value:c.fp,display:c.fp,tone:"warn"},
+      {label:"Tysta konton",value:c.tn,display:c.tn}
+    ],{max:80});
+    document.getElementById("nsum").className="fb show";
+    document.getElementById("nsum").innerHTML="<b>N = "+n+":</b> "+c.tp+" av 12 attacker f\u00e5ngas, "+c.fp+" falsklarm. "+
+      "Precision "+WS.fmt(m.precision,2)+", recall "+WS.fmt(m.recall,2)+", F1 "+WS.fmt(m.f1,2)+". "+
+      (c.fp>15?"Fler \u00e4n 15 falsklarm per timme g\u00e5r inte att granska.":"Hanterbar m\u00e4ngd larm.");
+  }
+  document.getElementById("n").addEventListener("input",run);run();
+})();
+
+(function(){
+  var host=document.getElementById("u3-prio");
+  if(!host)return;
+  var items=[
+    {t:"Misst\u00e4nkt inloggning p\u00e5 VD-kontot fr\u00e5n nytt land, MFA godk\u00e4nt",right:"hog",why:"Konto med h\u00f6g beh\u00f6righet och godk\u00e4nd MFA kan betyda att n\u00e5gon har kontots telefon."},
+    {t:"Tv\u00e5 falska antiviruslarm p\u00e5 en testserver",right:"lag",why:"Ingen p\u00e5verkan p\u00e5 drift eller data. St\u00e4da i k\u00f6n."},
+    {t:"Ok\u00e4nda kommandon mot en PLC i fabriken nattetid",right:"hog",why:"OT-kommandon kan p\u00e5verka fysisk process och m\u00e4nniskor."},
+    {t:"Anst\u00e4lld klickade p\u00e5 en phishingl\u00e4nk, ingen inloggning skedde",right:"medel",why:"Inget intr\u00e4ngt \u00e4n, men kontot m\u00e5ste kontrolleras och l\u00f6senordet bytas."},
+    {t:"Gammal server med k\u00e4nd s\u00e5rbarhet, ingen exponering mot internet",right:"lag",why:"Åtg\u00e4rda vid n\u00e4sta underh\u00e5llsf\u00f6nster, inte i natt."}
+  ];
+  var wrap=document.createElement("div");wrap.className="card";
+  wrap.innerHTML='<p>S\u00e4tt prioritet p\u00e5 fem incidenter och tryck <b>Kontrollera</b>.</p><div class="tablewrap"><table><thead><tr><th>Incident</th><th>Prioritet</th></tr></thead><tbody id="p-body"></tbody></table></div><div class="actions"><button type="button" id="p-run">Kontrollera</button></div><div id="p-out" aria-live="polite"></div>'+
+    '<h4 style="margin-top:18px">En av incidenterna \u2013 v\u00e4lj \u00e5tg\u00e4rd</h4><p>PLC-incidenten: vad g\u00f6r ni f\u00f6rst?</p>'+
+    '<select id="p-act"><option value="stop">St\u00e4ng av PLC:n direkt</option><option value="iso" selected>Isolera OT-n\u00e4tet och kontakta drifttekniker</option><option value="wait">V\u00e4nta och se om kommandona upprepas</option></select>'+
+    '<div id="p-actout" class="fb show"></div>';
+  host.appendChild(wrap);
+  var body=document.getElementById("p-body");
+  items.forEach(function(it,i){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+it.t+"<div class=\"rownote\" id=\"pn-"+i+"\" hidden></div></td><td><select id=\"p-"+i+"\" aria-label=\"Prioritet f\u00f6r incident "+(i+1)+"\"><option value=\"\">\u2013 v\u00e4lj \u2013</option><option value=\"hog\">H\u00f6g</option><option value=\"medel\">Medel</option><option value=\"lag\">L\u00e5g</option></select></td>";
+    body.appendChild(tr);
+  });
+  document.getElementById("p-run").addEventListener("click",function(){
+    var ok=0;
+    items.forEach(function(it,i){
+      var s=document.getElementById("p-"+i),good=s.value===it.right;if(good)ok++;
+      var n=document.getElementById("pn-"+i);n.hidden=false;
+      n.innerHTML="<b>"+(good?"R\u00e4tt":("R\u00e4tt svar: "+(it.right==="hog"?"H\u00f6g":it.right==="medel"?"Medel":"L\u00e5g")))+"</b> \u2013 "+it.why;
+      s.closest("tr").style.background=good?"#e7f4ec":"#fbe7e3";
+    });
+    var out=document.getElementById("p-out");out.className="fb show "+(ok===items.length?"ok":"bad");
+    out.innerHTML="<b>"+ok+" av "+items.length+" r\u00e4tt.</b> "+(ok===items.length?"Du prioriterar efter p\u00e5verkan.":"M\u00e4nniskor f\u00f6rst, sedan produktion, sedan data.");
+  });
+  function act(){
+    var v=document.getElementById("p-act").value,out=document.getElementById("p-actout");
+    if(v==="stop"){out.className="fb show bad";out.innerHTML="<b>H\u00e5rt stopp.</b> Du stoppar kommandona, men ocks\u00e5 produktionen. Om det inte finns fara f\u00f6r m\u00e4nniskor kan ett isolerat OT-n\u00e4t ge samma skydd snabbare."}
+    else if(v==="iso"){out.className="fb show ok";out.innerHTML="<b>Rimligt f\u00f6rstasteg.</b> Isolering stoppar trafiken, bevarar bevis och l\u00e5ter driftteknikern bed\u00f6ma om linjen kan k\u00f6ra vidare."}
+    else{out.className="fb show bad";out.innerHTML="<b>Riskabelt.</b> Ok\u00e4nda kommandon mot en PLC upprepas ofta. Att v\u00e4nta ger angriparen tid."}
+  }
+  document.getElementById("p-act").addEventListener("change",act);act();
+})();
+
+(function(){
+  var g1=document.getElementById("g-1");
+  if(!g1)return;
+  var g2=document.getElementById("g-2"),g3=document.getElementById("g-3"),out=document.getElementById("g-out");
+  function calc(){
+    var risk=1,notes=[],mins=0;
+    if(g1.value==="read"){notes.push("Agenten samlar och f\u00f6resl\u00e5r \u2013 m\u00e4nniskan beh\u00e5ller ansvaret.");mins=8}
+    if(g1.value==="block"){risk=1;notes.push("Kontoblockering \u00e4r oftast \u00e5terst\u00e4llbar, men kan sl\u00e5 ut en tj\u00e4nstekonto-integration.");mins=4}
+    if(g1.value==="stop"){risk=2;notes.push("Att l\u00e5ta agenten stoppa linjen g\u00f6r ett falsklarm till ett produktionsstopp.");mins=2}
+    if(g2.value==="soc"){notes.push("Analytiker med drifttekniker som r\u00e5dgivare ger b\u00e5de s\u00e4kerhets- och produktionskunskap.")}
+    if(g2.value==="agent"){risk=2;notes.push("Utan m\u00e4nskligt godk\u00e4nnande finns ingen som kan v\u00e4ga in det som inte st\u00e5r i loggen.")}
+    if(g2.value==="chef"){risk=Math.max(risk,1);mins+=55;notes.push("R\u00e4tt ansvar men l\u00e5ng v\u00e4ntan \u2013 en timme \u00e4r l\u00e5ng tid i en aktiv incident.")}
+    if(g3.value==="all"){notes.push("Full sp\u00e5rbarhet: underlag, f\u00f6rslag, godk\u00e4nnande och \u00e5tg\u00e4rd.")}
+    if(g3.value==="action"){risk=Math.max(risk,1);notes.push("Bara \u00e5tg\u00e4rden loggas \u2013 d\u00e5 g\u00e5r det inte att f\u00f6rst\u00e5 varf\u00f6r agenten f\u00f6reslog den.")}
+    if(g3.value==="none"){risk=2;notes.push("Utan logg finns ingen utredning och ingen l\u00e4rdom.")}
+    out.innerHTML='<div class="note"><b>Simulerat utfall</b> '+WS.riskLabel(risk,1,2)+
+      '<ul style="margin:8px 0 0">'+notes.map(function(n){return "<li>"+n+"</li>"}).join("")+"</ul>"+
+      '<p class="hint">Uppskattad tid till beslut: <b>'+mins+" min</b>. Siffrorna \u00e4r pedagogiska.</p></div>";
+  }
+  [g1,g2,g3].forEach(function(e){e.addEventListener("change",calc)});
+  document.getElementById("g-run").addEventListener("click",calc);calc();
+})();
+
+WS.facit(document.getElementById("facit-lista"),[
+  ["Uppgift 1 – Händelser och incidenter",'<p>Tio händelser, sex incidenter och åtta åtgärder. Fyra incidenter är öppna (501, 503, 505, 506) och fyra åtgärder väntar på godkännande (isolate device, block process, isolate host, quarantine file). Den kritiska kedjan Malware alert → Block process/Quarantine file visar varför en människa måste godkänna: en automatisk blockering kan stoppa en legitim process.</p><p><b>SQL:</b> JOIN incidents → security_events ger fyra öppna incidenter med allvarlighetsgrad. JOIN response_actions → incidents ger de väntande åtgärderna. Den dubbla JOIN:en security_events → incidents → response_actions ger fyra rader för kritiska händelser och visar hela underlaget en agent behöver.</p><p>AI-agenten får läsa, sammanfatta och föreslå. Statusen <code>Pending</code> är spärren: först när en människa godkänt får verktyget utföra åtgärden. Tolkning: databasen ger spårbarhet, modellen ger språk – ansvaret ligger kvar hos människan.</p>'],
+    ["Uppgift 2 – RAG och LLM-parametrar",'<p><b>RAG:</b> dokument → chunking → embeddings → vektordatabas → similarity search → relevant kontext → LLM → svar. Chunks är bitar av dokumentet; för stora blandar de ihop ämnen, för små tappar de sammanhang. Embeddings beskriver betydelse som vektorer. Vektordatabasen hittar de närmaste träffarna, och metadata som källa och datum följer med. RAG minskar påhitt men garanterar inte sanning: hittas inget relevant är rätt svar ofta ”jag vet inte”.</p><p><b>Parametrar:</b> temperature styr variation, top-p begränsar urvalet av ord, max tokens styr svarets längd och context window hur mycket underlag som får plats. Låg temperature och tillräckligt kontextfönster ger en stabil sammanfattning. Hög temperature ökar risken för påhittade detaljer, och för litet kontextfönster klipper bort fakta utan att det syns.</p><p>Olika modeller och tjänster har olika parametrar; temperature 1,0 betyder inte samma sak överallt. Siffrorna i simuleringen är pedagogiska, inte mätningar.</p>'],
+    ["Uppgift 3 \u2013 Prioritering",'<p>H\u00f6gst: VD-kontot och PLC-kommandona. Medel: phishingklicket utan inloggning. L\u00e5gt: testservern och den oexponerade servern.</p><p>F\u00f6rsta \u00e5tg\u00e4rden p\u00e5 PLC-incidenten \u00e4r att isolera OT-n\u00e4tet och kalla in drifttekniker \u2013 det stoppar trafiken och bevarar bevis utan att stanna produktionen i on\u00f6dan.</p>'],
+  ["Uppgift 4 \u2013 Agenten",'<p>Rekommendationen: agenten f\u00e5r l\u00e4sa och f\u00f6resl\u00e5, analytiker godk\u00e4nner tillsammans med drifttekniker, och allt loggas \u2013 underlag, f\u00f6rslag, godk\u00e4nnande och \u00e5tg\u00e4rd.</p><p>Varf\u00f6r inte l\u00e5ta agenten stoppa linjen? Klockan 02:40 finns ingen som ser om ett stopp skadar en p\u00e5g\u00e5ende process. F\u00f6rslaget kan vara r\u00e4tt \u2013 men ansvaret kan inte delegeras till en modell.</p>']
+]);
+
+WS.quiz(document.getElementById("quiz"),{
+  title:"Avslutande kunskapskontroll",
+  hint:"Fyra fr\u00e5gor om triage, tr\u00f6sklar och ansvar.",
+  questions:[{"text": "Vad är skillnaden mellan en avvikelse och en incident?", "options": ["Ingen, det är samma sak", "En avvikelse är ett värde som sticker ut; en incident har påverkat eller kan påverka säkerheten", "En incident är alltid ett virus", "En avvikelse är alltid ett falsklarm"], "answer": 1, "why": "Avvikelsen är signalen. Först när den kopplas till påverkan – data, drift eller människor – blir den en incident."}, {"text": "Du sänker tröskeln för inloggningslarm. Vad händer?", "options": ["Fler larm, fler falska men färre missade", "Färre larm och färre missade", "Ingen skillnad", "Alla larm blir sanna"], "answer": 0, "why": "Lägre tröskel fångar mer men larmar också på normala händelser. Analytikerna får mer att göra."}, {"text": "Vilken incident ska prioriteras högst?", "options": ["Två falska antiviruslarm på en testserver", "Okända kommandon mot en PLC i produktion", "En anställd klickade på en länk utan att logga in", "En gammal server utan exponering"], "answer": 1, "why": "OT-kommandon i produktion kan påverka fysisk process och människor. Det väger tyngst."}, {"text": "Varför ska en AI-agent inte själv få stänga av en produktionslinje?", "options": ["Agenter får aldrig läsa loggar", "Ett felaktigt beslut kan stoppa produktion och skada människor – ansvaret måste vara mänskligt", "Det tar för lång tid", "Det kräver internet"], "answer": 1, "why": "Agenten kan ha rätt ofta, men konsekvensen av ett fel är stor och oåterkallelig. Därför krävs godkännande och logg."}]
+});
+WS.init();
+</script>
+
+<script>
+(function(){
+  var flow=document.getElementById("rg-flow");
+  if(!flow)return;
+  var D=[
+    ["Dokument","Incidentrapporten och tidigare ärenden ligger som text. RAG ändrar inte modellen – den hämtar text som modellen får läsa just nu.","Dokumenten måste vara läsbara och aktuella. En gammal rutin ger ett gammalt svar."],
+    ["Chunking","Dokumentet delas i bitar (chunks). För stora bitar blandar ihop ämnen, för små tappar sammanhang.","Överlapp mellan bitar hjälper men kostar plats. Metadata som källa och datum följer med varje chunk."],
+    ["Embeddings","Varje chunk görs om till en vektor – en lista tal som beskriver betydelsen. Liknande text får liknande vektorer.","Embeddings skapas av en separat modell. De är inte samma sak som den generativa LLM:en."],
+    ["Vektor-DB","Lagrar vektorer och metadata och kan snabbt hitta de närmaste grannarna.","Exempel: Qdrant (kan köras själv eller hos leverantör) eller en hanterad molntjänst som Upstash. Känslig text i en extern tjänst kräver avtal och kontroll."],
+    ["Sökning","Frågan görs om till en vektor och jämförs med chunkarna. top-k styr hur många träffar som plockas upp.","För få träffar ger missat underlag. För många fyller kontexten med ointressant text."],
+    ["Kontext","De valda chunkarna läggs in i prompten tillsammans med frågan.","Allt måste rymmas i modellens kontextfönster. Annars kapas texten – ofta utan att användaren märker det."],
+    ["LLM och svar","Modellen formulerar ett svar med stöd av kontexten. RAG minskar påhitt men garanterar inte sanning.","Svaret bör visa källor. Om inget relevant hittas är rätt svar ofta ”jag vet inte”."]
+  ];
+  var panel=document.getElementById("rg-panel");
+  function show(i){
+    var d=D[i];
+    panel.innerHTML="<h4>"+WS.esc(d[0])+"</h4><p>"+WS.esc(d[1])+"</p><p class=\"hint\">"+WS.esc(d[2])+"</p>";
+    Array.prototype.forEach.call(flow.querySelectorAll("[data-rg]"),function(b){
+      b.setAttribute("aria-pressed",b.getAttribute("data-rg")===String(i)?"true":"false");
+    });
+  }
+  Array.prototype.forEach.call(flow.querySelectorAll("[data-rg]"),function(b){
+    b.addEventListener("click",function(){show(+b.getAttribute("data-rg"))});
+  });
+  var chunk=document.getElementById("rg-chunk"),topk=document.getElementById("rg-topk"),ctx=document.getElementById("rg-ctx");
+  function run(){
+    var c=+chunk.value,k=+topk.value,ct=+ctx.value;
+    document.getElementById("rg-chunkv").textContent=c;
+    document.getElementById("rg-topkv").textContent=k;
+    document.getElementById("rg-ctxv").textContent=ct.toLocaleString("sv-SE");
+    var need=c*k*1.25, cov=Math.min(1,ct*0.8/need);
+    if(c>900)cov*=1.08;
+    if(c<200)cov*=0.85;
+    cov=Math.min(1,cov);
+    var facts=Math.max(0,Math.min(5,Math.round(5*cov)));
+    var risk=cov>0.85?"låg":cov>0.55?"medel":"hög";
+    document.getElementById("rg-cov").textContent=Math.round(cov*100)+" %";
+    document.getElementById("rg-facts").textContent=facts+" av 5";
+    document.getElementById("rg-risk").textContent=risk;
+    var all=["kl. 02:14","15 misslyckade inloggningar","konto bjorn","källa NL","ett lyckat försök"];
+    var ans=facts>0?"Incidenten började "+all.slice(0,facts).join(", ")+".":"Underlaget räckte inte för att beskriva incidenten.";
+    if(cov<1)ans+="\n\n(flera chunkar fick plats dåligt – svaret kan sakna detaljer)";
+    document.getElementById("rg-answer").textContent=ans;
+    var n=[];
+    if(c<250)n.push("Mycket små chunks tappar sammanhang: ”15 misslyckade” kan hamna i en annan bit än kontot.");
+    if(c>900)n.push("Stora chunks rymmer mycket men späder ut relevansen – sökningen hittar lättare fel avsnitt.");
+    if(k>=6)n.push("Många träffar ökar chansen att rätt fakta finns med, men fyller kontexten och kan förvirra modellen.");
+    if(need>ct*0.8)n.push("Kontexten är för liten för chunkstorlek × top-k. Modellen får inte plats med allt den hämtat.");
+    document.getElementById("rg-note").innerHTML=n.length?'<div class="warn"><b>Observera:</b><ul style="margin:6px 0 0">'+n.map(function(x){return "<li>"+WS.esc(x)+"</li>"}).join("")+"</ul></div>":'<div class="note">Lagom chunkar och tillräckligt kontextfönster: underlaget får plats utan att spädas ut.</div>';
+  }
+  [chunk,topk,ctx].forEach(function(el){el.addEventListener("input",run)});
+  show(0);run();
+})();
+</script>
+
+<script>
+(function(){
+  var t=document.getElementById("lp-temp");
+  if(!t)return;
+  var tp=document.getElementById("lp-top"),mx=document.getElementById("lp-max"),cx=document.getElementById("lp-ctx");
+  function run(){
+    var temp=+t.value/100,topp=+tp.value/100,max=+mx.value,ctx=+cx.value;
+    document.getElementById("lp-tempv").textContent=temp.toFixed(2).replace(".",",");
+    document.getElementById("lp-topv").textContent=topp.toFixed(2).replace(".",",");
+    document.getElementById("lp-maxv").textContent=max;
+    document.getElementById("lp-ctxv").textContent=ctx.toLocaleString("sv-SE");
+    var fits=ctx>=2400;
+    var facts=Math.round(5*Math.min(1,max/260)*(fits?1:0.45));
+    var variation=temp<0.3?"mycket liten":temp<0.8?"lagom":temp<1.2?"stor":"mycket stor";
+    var text="";
+    if(!fits)text="(Rapporten fick inte plats i kontextfönstret. Modellen ser bara början.)\n\n";
+    text+="Sammanfattning: ";
+    var f=["kl. 02:14","15 misslyckade inloggningsförsök","mot kontot bjorn","från källa NL","varav ett lyckades"];
+    text+=facts?f.slice(0,facts).join(", ")+".":"underlaget räckte inte.";
+    if(max<160)text+="\n\n[svaret kapades av max tokens]";
+    if(temp>1.05&&fits)text+="\n\nModellen lägger till en detalj som inte finns i rapporten: ”en misstänkta enheten användes även mot VPN”.";
+    if(topp<0.5)text+="\n\nFormuleringarna upprepas eftersom top-p begränsar urvalet kraftigt.";
+    document.getElementById("lp-text").textContent=text;
+    var out=[];
+    out.push("Fakta i svaret: <b>"+facts+" av 5</b>. Variation: <b>"+variation+"</b>.");
+    if(!fits)out.push("Context window är mindre än rapporten. Höj till minst 2 400 tokens för att hela underlaget ska rymmas.");
+    if(max<160)out.push("Max tokens styr bara svarets längd, inte hur mycket modellen förstår. För kort svar klipper sammanfattningen.");
+    if(temp>1.05)out.push("Hög temperature ökar variationen och risken för påhittade detaljer. Vid incidentrapporter är låg temperatur oftast lämplig.");
+    if(topp<0.5)out.push("Låg top-p skär bort många möjliga ord. Svaret blir förutsägbart och kan upprepa sig.");
+    if(temp<0.2&&max>=260&&fits)out.push("Låg temperature + tillräckligt max tokens ger en stabil sammanfattning som håller sig till underlaget.");
+    document.getElementById("lp-out").innerHTML=out.map(function(x){return "<p>"+x+"</p>"}).join("");
+  }
+  [t,tp,mx,cx].forEach(function(el){el.addEventListener("input",run)});
+  document.getElementById("lp-reset").addEventListener("click",function(){t.value=20;tp.value=90;mx.value=300;cx.value=8000;run()});
+  run();
+})();
+</script>
+<script>window.__DB_CFG=window.__DB_CFG||{};window.__DB_CFG['05']={"title":"security_events, incidents och response_actions","intro":"En händelse blir en incident först när den kopplas ihop med andra händelser och får ett ärende. Åtgärderna kräver godkännande innan de utförs.","tables":[{"name":"security_events","pk":"event_id","cols":[["event_id","INTEGER"],["timestamp","TEXT"],["source","TEXT"],["event_type","TEXT"],["severity","TEXT"]],"fk":[],"rows":[[1,"10:05","Firewall","Failed login","Medium"],[2,"10:07","Server","Privilege escalation","High"],[3,"10:10","Endpoint","Malware alert","Critical"],[4,"10:12","Firewall","Port scan","Low"],[5,"10:15","Server","New admin account","High"],[6,"10:18","Endpoint","Suspicious process","Medium"],[7,"10:22","IDS","SQL injection","Critical"],[8,"10:25","Server","Failed login","Medium"],[9,"10:30","Endpoint","USB device","Low"],[10,"10:34","Firewall","Outbound C2","Critical"]]},{"name":"incidents","pk":"incident_id","cols":[["incident_id","INTEGER"],["event_id","INTEGER"],["incident_type","TEXT"],["status","TEXT"]],"fk":[["event_id","security_events.event_id"]],"rows":[[501,1,"Suspicious login","Open"],[502,2,"Privilege escalation","Investigating"],[503,3,"Malware","Open"],[504,5,"New admin account","Investigating"],[505,7,"SQL injection","Open"],[506,10,"Command and control","Open"]]},{"name":"response_actions","pk":"action_id","cols":[["action_id","INTEGER"],["incident_id","INTEGER"],["action","TEXT"],["approval_status","TEXT"]],"fk":[["incident_id","incidents.incident_id"]],"rows":[[1,501,"Review account","Approved"],[2,502,"Isolate device","Pending"],[3,503,"Block process","Pending"],[4,504,"Disable account","Approved"],[5,505,"Block source IP","Approved"],[6,506,"Isolate host","Pending"],[7,501,"Reset password","Approved"],[8,503,"Quarantine file","Pending"]]}],"timeline":{"table":"security_events","time":1,"title":3,"level":4},"queries":[{"label":"Händelser i tid","sql":"SELECT * FROM security_events ORDER BY timestamp;","explain":"Tio händelser i tidsordning. Flera kommer från samma källa inom några minuter – det är ledtråden till att de hör ihop.","cols":["timestamp","source","event_type","severity"],"rows":[["10:05","Firewall","Failed login","Medium"],["10:07","Server","Privilege escalation","High"],["10:10","Endpoint","Malware alert","Critical"],["10:12","Firewall","Port scan","Low"],["10:15","Server","New admin account","High"],["10:18","Endpoint","Suspicious process","Medium"],["10:22","IDS","SQL injection","Critical"],["10:25","Server","Failed login","Medium"],["10:30","Endpoint","USB device","Low"],["10:34","Firewall","Outbound C2","Critical"]]},{"label":"Öppna incidenter","sql":"SELECT i.incident_id, i.incident_type, e.severity, e.timestamp FROM incidents i JOIN security_events e ON i.event_id = e.event_id WHERE i.status = 'Open';","explain":"JOIN kopplar incidenten till sin händelse. Fyra incidenter är öppna. Sorteringen är den ordning databasen returnerar dem – lägg till ORDER BY om du vill ha tid.","cols":["incident_id","incident_type","severity","timestamp"],"rows":[[501,"Suspicious login","Medium","10:05"],[503,"Malware","Critical","10:10"],[505,"SQL injection","Critical","10:22"],[506,"Command and control","Critical","10:34"]]},{"label":"Väntar på godkännande","sql":"SELECT a.action_id, a.action, i.incident_type FROM response_actions a JOIN incidents i ON a.incident_id = i.incident_id WHERE a.approval_status = 'Pending';","explain":"Fyra åtgärder väntar på en människa. Ingen av dem får utföras automatiskt: de kan stänga av utrustning eller stoppa drift.","cols":["action_id","action","incident_type"],"rows":[[2,"Isolate device","Privilege escalation"],[3,"Block process","Malware"],[6,"Isolate host","Command and control"],[8,"Quarantine file","Malware"]]},{"label":"Incidenter per status","sql":"SELECT status, COUNT(*) AS antal FROM incidents GROUP BY status;","explain":"Fyra öppna och två under utredning. Antalet är litet nu, men frågan fungerar lika bra på tusen incidenter.","cols":["status","antal"],"rows":[["Open",4],["Investigating",2]]},{"label":"Kritiska händelser med åtgärd","sql":"SELECT e.event_id, e.event_type, a.action, a.approval_status FROM security_events e JOIN incidents i ON i.event_id = e.event_id JOIN response_actions a ON a.incident_id = i.incident_id WHERE e.severity = 'Critical';","explain":"Två JOIN i följd: händelse → incident → åtgärd. Fyra rader. Det är den kedja en AI-agent måste följa för att kunna föreslå en åtgärd med rätt underlag.","cols":["event_id","event_type","action","approval_status"],"rows":[[3,"Malware alert","Block process","Pending"],[3,"Malware alert","Quarantine file","Pending"],[7,"SQL injection","Block source IP","Approved"],[10,"Outbound C2","Isolate host","Pending"]]}],"note":"AI-agenten får läsa och föreslå. Statusen Pending är spärren: en människa måste godkänna innan åtgärden utförs."};</script>
+
+<script>
+(function(){
+  var CFG=window.__DB_CFG||{};
+  function esc(s){return WS.esc(String(s))}
+  function isNum(v){return typeof v==="number"}
+  document.querySelectorAll("[data-db]").forEach(function(host){
+    var key=host.getAttribute("data-db"),db=CFG[key];
+    if(!db)return;
+    var ti=0,qi=0,filter="",sortCol=-1,sortDir=1;
+    function tab(){return db.tables[ti]}
+    function rowsNow(){
+      var t=tab(),rows=t.rows.slice();
+      if(filter){
+        var f=filter.toLowerCase();
+        rows=rows.filter(function(r){return r.join(" ").toLowerCase().indexOf(f)>=0});
+      }
+      if(sortCol>=0){
+        rows.sort(function(a,b){
+          var x=a[sortCol],y=b[sortCol];
+          if(isNum(x)&&isNum(y))return (x-y)*sortDir;
+          return String(x).localeCompare(String(y),"sv")*sortDir;
+        });
+      }
+      return rows;
+    }
+    function tableHTML(){
+      var t=tab(),rows=rowsNow();
+      var head="<tr>"+t.cols.map(function(c,i){
+        var arrow=sortCol===i?(sortDir>0?" \u2191":" \u2193"):"";
+        return '<th data-col="'+i+'" title="Sortera">'+esc(c[0])+arrow+"</th>";
+      }).join("")+"</tr>";
+      var body=rows.length?rows.map(function(r){
+        return "<tr>"+r.map(function(v){return '<td'+(isNum(v)?' class="num"':"")+">"+(v===null?"NULL":esc(v))+"</td>"}).join("")+"</tr>";
+      }).join(""):'<tr><td colspan="'+t.cols.length+'" class="db-empty">Inga rader matchar filtret.</td></tr>';
+      return '<div class="db-scroll"><table class="tbl"><thead>'+head+"</thead><tbody data-role=\"tbody\">"+body+"</tbody></table></div>"+
+        '<p class="hint" data-role="count" style="margin:6px 0 0">'+rows.length+" av "+t.rows.length+" rader \u00b7 "+t.cols.length+" kolumner</p>";
+    }
+    function paint(){
+      host.querySelector('[data-role="tablewrap"]').innerHTML=tableHTML();
+      bindSort();
+    }
+    function bindSort(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-col]"),function(th){
+        th.addEventListener("click",function(){
+          var i=+th.getAttribute("data-col");
+          if(sortCol===i)sortDir*=-1;else{sortCol=i;sortDir=1}
+          paint();
+        });
+      });
+    }
+    function schema(){
+      var t=tab();
+      return '<ul class="schema">'+t.cols.map(function(c){
+        var key=t.pk===c[0]?' <span class="key">PK</span>':"";
+        return "<li>"+esc(c[0])+" "+esc(c[1])+key+"</li>";
+      }).join("")+"</ul>"+(t.fk&&t.fk.length?'<p class="hint" style="margin:0 0 8px">Främmande nycklar: '+t.fk.map(function(f){
+        return "<code>"+esc(f[0])+"</code> \u2192 "+esc(f[1]);
+      }).join(" \u00b7 ")+"</p>":'<p class="hint" style="margin:0 0 8px">Primärnyckel: <code>'+esc(t.pk)+"</code> identifierar varje rad.</p>");
+    }
+    function timeline(){
+      if(!db.timeline)return "";
+      var t=db.tables.filter(function(x){return x.name===db.timeline.table})[0];
+      if(!t)return "";
+      return '<h5 style="margin:10px 0 0">Tidslinje</h5><ol class="timeline">'+t.rows.map(function(r){
+        return "<li><time>"+esc(r[db.timeline.time])+"</time><b>"+esc(r[db.timeline.title])+"</b> \u00b7 "+esc(r[db.timeline.level])+"</li>";
+      }).join("")+"</ol>";
+    }
+    function featureBox(){
+      var f=db.features;
+      if(!f)return "";
+      return '<div class="featurebox"><b>Features och label</b><p class="hint">'+esc(f.prompt)+"</p>"+
+        f.items.map(function(it,i){
+          return '<label class="checkline"><input type="checkbox" data-f="'+i+'"><span>'+esc(it[0])+"</span></label>";
+        }).join("")+
+        '<div class="actions"><button type="button" data-role="fcheck">Kontrollera valen</button></div><div data-role="fout" aria-live="polite"></div></div>';
+    }
+    function render(){
+      var t=tab(),q=db.queries[qi];
+      host.innerHTML='<div class="db-head"><span class="tag">Pedagogisk databas \u00b7 syntetiska data</span><h4>'+esc(db.title)+"</h4><p class=\"hint\">"+esc(db.intro)+"</p></div>"+
+        (db.timeline?timeline():"")+
+        '<div class="db-tabs" role="group" aria-label="Tabeller">'+db.tables.map(function(x,i){
+          return '<button type="button" data-t="'+i+'" aria-pressed="'+(i===ti?"true":"false")+'">'+esc(x.name)+"</button>";
+        }).join("")+"</div>"+
+        '<div class="db-grid">'+
+          '<div class="db-box"><b>Tabell: '+esc(t.name)+"</b>"+schema()+
+            '<div class="db-tools"><input type="search" data-role="filter" placeholder="Filtrera rader\u2026" value="'+esc(filter)+'" aria-label="Filtrera tabellen"><button type="button" class="ghost" data-role="reset">\u00c5terst\u00e4ll</button></div>'+
+            '<div data-role="tablewrap">'+tableHTML()+"</div></div>"+
+          '<div class="db-box"><b>SQL-fr\u00e5gor</b><div class="sqlbtns">'+db.queries.map(function(x,i){
+            return '<button type="button" data-q="'+i+'" aria-pressed="'+(i===qi?"true":"false")+'">'+esc(x.label)+"</button>";
+          }).join("")+"</div>"+
+            '<pre class="code">'+esc(q.sql)+"</pre><p>"+esc(q.explain)+"</p>"+
+            '<p class="hint" style="margin:4px 0">F\u00f6rv\u00e4ntat resultat: <b>'+q.rows.length+" rader</b></p>"+
+            '<div class="db-scroll"><table class="tbl"><thead><tr>'+q.cols.map(function(c){return "<th>"+esc(c)+"</th>"}).join("")+"</tr></thead><tbody>"+
+            q.rows.map(function(r){return "<tr>"+r.map(function(v){return "<td"+(isNum(v)?' class="num"':"")+">"+esc(v)+"</td>"}).join("")+"</tr>"}).join("")+
+            "</tbody></table></div></div>"+
+        "</div>"+featureBox()+'<p class="hint" style="margin:10px 0 0">'+esc(db.note)+"</p>";
+      bind();
+    }
+    function bind(){
+      Array.prototype.forEach.call(host.querySelectorAll("[data-t]"),function(b){
+        b.addEventListener("click",function(){ti=+b.getAttribute("data-t");qi=0;filter="";sortCol=-1;render()});
+      });
+      Array.prototype.forEach.call(host.querySelectorAll("[data-q]"),function(b){
+        b.addEventListener("click",function(){qi=+b.getAttribute("data-q");render()});
+      });
+      var f=host.querySelector('[data-role="filter"]');
+      if(f)f.addEventListener("input",function(){filter=f.value;paint()});
+      host.querySelector('[data-role="reset"]').addEventListener("click",function(){ti=0;qi=0;filter="";sortCol=-1;render()});
+      var fc=host.querySelector('[data-role="fcheck"]');
+      if(fc)fc.addEventListener("click",function(){
+        var f=db.features,ok=0,picked=[];
+        Array.prototype.forEach.call(host.querySelectorAll("[data-f]"),function(c){
+          var i=+c.getAttribute("data-f"),good=c.checked===!!f.items[i][1];
+          if(good)ok++;else picked.push(f.items[i][0]);
+          c.parentElement.style.background=good?"#e7f4ec":"#fbe7e3";
+        });
+        var o=host.querySelector('[data-role="fout"]');
+        o.className=ok===f.items.length?"note":"warn";
+        o.innerHTML="<b>"+ok+" av "+f.items.length+" r\u00e4tt.</b> "+(picked.length?"Justera: "+picked.map(esc).join(", ")+".":"Alla val st\u00e4mmer.")+
+          "<br>"+f.items.map(function(it){return "<span class=\"hint\">"+esc(it[0])+": "+esc(it[2])+"</span>"}).join("<br>");
+      });
+      bindSort();
+    }
+    render();
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI inom cybersäkerhet – kursmaterial</title>
+<style>
+:root{--dark:#1f3a33;--acc:#a4552b;--bg:#f6f5f1;--card:#fff;--ink:#1d1c19;--muted:#5c5a54;--line:#ddd8ce;--soft:#ece8df}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header{background:var(--dark);color:#fff;padding:14px 18px}
+header strong{font-size:1.05rem} header span{font-size:.86rem;opacity:.85}
+main{max-width:1000px;margin:0 auto;padding:28px 18px 56px}
+h1{font-size:clamp(1.7rem,3.4vw,2.3rem);line-height:1.15;margin:.2em 0 .4em;color:var(--dark)}
+.lead{font-size:1.05rem;max-width:74ch;color:#33312c}
+h2{font-size:1.15rem;margin:0;color:var(--dark)}
+p,li{max-width:76ch}
+.note{background:var(--soft);border-left:4px solid var(--acc);border-radius:0 8px 8px 0;padding:12px 14px;font-size:.94rem;margin:16px 0}
+.order{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:18px 0 26px;padding:0;list-style:none}
+.order li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.9rem}
+.order b{display:block;color:var(--dark)}
+.lesson{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.lhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.lhead .no{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.lhead .time{margin-left:auto;font-size:.82rem;color:var(--muted)}
+.steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+.steps li{display:flex;gap:10px;padding:7px 8px;border-radius:8px;min-width:0}
+.steps li>div{min-width:0}
+.steps a{overflow-wrap:anywhere}
+.tablewrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:560px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-weight:600}
+.steps li.hl{background:#f1f6f2;outline:1px solid #cfe0d4}
+.steps .step{flex:0 0 24px;height:24px;border-radius:50%;background:var(--soft);color:var(--dark);font-size:.8rem;font-weight:700;display:grid;place-items:center;margin-top:2px}
+.steps b{font-size:.92rem;color:var(--dark)}
+.steps ul{margin:3px 0 0;padding-left:18px;font-size:.9rem}
+.steps li.none{color:var(--muted);list-style:none;margin-left:-18px}
+.missing{color:#a32b1c;font-size:.85rem}
+a{color:var(--dark);text-underline-offset:3px}
+footer{border-top:1px solid var(--line);padding:18px;text-align:center;color:var(--muted);font-size:.84rem}
+@media(max-width:520px){main{padding:18px 12px 40px}.lesson{padding:14px 12px}.lhead .time{margin-left:0}}
+@media print{header,footer,.note{display:none}body{background:#fff}.lesson{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><strong>AI inom cybersäkerhet</strong> <span>· kursmaterial och workshoppar</span></header>
+<main>
+<h1>AI inom cybersäkerhet – allt material på ett ställe</h1>
+<p class="lead">Sju lektioner i den ordning de används: titta och lyssna först, läs föreläsningen och gör quizet,
+arbeta sedan i HTML-workshopen och till sist i labben. Varje workshop tar cirka 60 minuter
+(lektion 03 och 06 cirka 50 minuter). Allt går att öppna direkt i webbläsaren.</p>
+
+<div class="note"><b>Ny här?</b> Börja med lektion 01. Läs begreppslistan i workshopen, arbeta igenom
+de tre uppgifterna och öppna facit när du försökt själv. Du behöver inget konto och ingen installation
+för workshopparna. Labbarna kräver Colab, Docker eller Databricks – instruktionerna ligger i varje mapp.</div>
+
+<h2>Så är materialet ordnat</h2>
+<ol class="order">
+  <li><b>1. Multimedia</b>Video och podd, före passet.</li>
+  <li><b>2. PowerPoint + quiz</b>PowerPoint, PDF och 8 frågor.</li>
+  <li><b>3. HTML-workshop</b>Tre uppgifter, gruppuppgift, quiz och facit.</li>
+  <li><b>4. Labb grund</b>Colab, Databricks, Docker eller lokalt.</li>
+  <li><b>5. Labb avancerad</b>Större labbar där de finns, annars frivillig fördjupning.</li>
+</ol>
+
+
+<article class="lesson">
+  <div class="lhead"><span class="no">Lektion 01</span><h2>Introduktion till AI, automation och ML</h2><span class="time">60 min</span></div>
+  <ol class="steps">
+    <li><span class="step">1</span><div><b>Multimedia – före passet</b><ul><li><a href="01_Introduktion%20till%20AI%2C%20automation%20och%20ML/01_Multimedia/AI%20Automation%20and%20Machine%20Learning%20Concepts.wav">Podd: AI Automation and Machine Learning Concepts</a></li></ul></div></li>
+    <li><span class="step">2</span><div><b>PowerPoint och quiz – före passet</b><ul><li><a href="01_Introduktion%20till%20AI%2C%20automation%20och%20ML/02_PowerPoint-och-quiz/1.%20Introduktion%20till%20AI%2C%20automation%20och%20maskininl%C3%A4rning%20definitioner%20och%20verkliga%20till%C3%A4mpningar.pdf">PDF: 1. Introduktion till AI, automation och maskininlärning definitioner och verkliga tillämpningar</a></li><li><a href="01_Introduktion%20till%20AI%2C%20automation%20och%20ML/02_PowerPoint-och-quiz/1.%20Introduktion%20till%20AI%2C%20automation%20och%20maskininl%C3%A4rning%20definitioner%20och%20verkliga%20till%C3%A4mpningar.pptx">PowerPoint: 1. Introduktion till AI, automation och maskininlärning definitioner och verkliga tillämpningar</a></li><li><a href="01_Introduktion%20till%20AI%2C%20automation%20och%20ML/02_PowerPoint-och-quiz/ENISA%20Threat%20Landscape%202023.pdf">PDF: ENISA Threat Landscape 2023</a></li><li><a href="01_Introduktion%20till%20AI%2C%20automation%20och%20ML/02_PowerPoint-och-quiz/1.%20Introduktion%20till%20AI%2C%20automation%20och%20maskininl%C3%A4rning%20definitioner%20och%20verkliga%20till%C3%A4mpningar%20-%20Google%20Forms.pdf">Quiz: 1. Introduktion till AI, automation och maskininlärning definitioner och verkliga tillämpningar - Google Forms</a></li></ul></div></li>
+    <li class="hl"><span class="step">3</span><div><b>HTML-workshop – på passet</b><ul><li><a href="01_Introduktion%20till%20AI%2C%20automation%20och%20ML/03_Workshop/workshop-01-introduktion-ai.html">Öppna workshop 01 (60 min)</a></li></ul></div></li>
+    <li><span class="step">4</span><div><b>Labb grund – på passet eller hemma</b><ul><li><a href="01_Introduktion%20till%20AI%2C%20automation%20och%20ML/04_Labb-grund/Detektera_anomalier_i_n%C3%A4tverkstrafik_%28synthetic_dataset%29.ipynb">Notebook: Detektera_anomalier_i_nätverkstrafik_(synthetic_dataset)</a></li><li><a href="01_Introduktion%20till%20AI%2C%20automation%20och%20ML/04_Labb-grund/Klassificera_blommor_%28Iris_dataset%29.ipynb">Notebook: Klassificera_blommor_(Iris_dataset)</a></li></ul></div></li>
+    <li><span class="step">5</span><div><b>Labb avancerad / fördjupning – frivillig, hemma</b><ul><li><a href="01_Introduktion%20till%20AI%2C%20automation%20och%20ML/05_Labb-avancerad/README.md">05_Labb-avancerad – README.md</a></li></ul></div></li>
+  </ol>
+</article>
+<article class="lesson">
+  <div class="lhead"><span class="no">Lektion 02</span><h2>M2M-kommunikation och IIoT-enheter</h2><span class="time">60 min</span></div>
+  <ol class="steps">
+    <li><span class="step">1</span><div><b>Multimedia – före passet</b><ul><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/01_Multimedia/M2M%20och%20IIoT%20Integration_%20Automatisering%20och%20Kommunikation.wav">Podd: M2M och IIoT Integration_ Automatisering och Kommunikation</a></li><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/01_Multimedia/M2M_%26_IIoT__Teori_till_Praktik.mp4">Video: M2M_&_IIoT__Teori_till_Praktik</a></li></ul></div></li>
+    <li><span class="step">2</span><div><b>PowerPoint och quiz – före passet</b><ul><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/02_PowerPoint-och-quiz/2.%20M2M-kommunikation%20och%20IIoT-enheter%20integration%20f%C3%B6r%20%C3%B6kad%20automatisering%20och%20f%C3%B6rb%C3%A4ttrad%20k.pdf">PDF: 2. M2M-kommunikation och IIoT-enheter integration för ökad automatisering och förbättrad k</a></li><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/02_PowerPoint-och-quiz/2.%20M2M-kommunikation%20och%20IIoT-enheter%20integration%20f%C3%B6r%20%C3%B6kad%20automatisering%20och%20f%C3%B6rb%C3%A4ttrad%20k.pptx">PowerPoint: 2. M2M-kommunikation och IIoT-enheter integration för ökad automatisering och förbättrad k</a></li><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/02_PowerPoint-och-quiz/2.%20M2M-kommunikation%20och%20IIoT-enheter%20integration%20f%C3%B6r%20%C3%B6kad%20automatisering%20och%20f%C3%B6rb%C3%A4ttrad%20k%20-%20Google%20Forms.pdf">Quiz: 2. M2M-kommunikation och IIoT-enheter integration för ökad automatisering och förbättrad k - Google Forms</a></li></ul></div></li>
+    <li class="hl"><span class="step">3</span><div><b>HTML-workshop – på passet</b><ul><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/03_Workshop/workshop-02-m2m-iiot.html">Öppna workshop 02 (60 min)</a></li></ul></div></li>
+    <li><span class="step">4</span><div><b>Labb grund – på passet eller hemma</b><ul><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/04_Labb-grund/Analysera_och_tolka_filens_inneh%C3%A5ll_i_GOOGLE_COLAB.ipynb">Notebook: Analysera_och_tolka_filens_innehåll_i_GOOGLE_COLAB</a></li><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/04_Labb-grund/IIoT_sensorer.ipynb">Notebook: IIoT_sensorer</a></li><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/04_Labb-grund/klient.py">Kod: klient</a></li><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/04_Labb-grund/server.py">Kod: server</a></li></ul></div></li>
+    <li><span class="step">5</span><div><b>Labb avancerad / fördjupning – frivillig, hemma</b><ul><li><a href="02_M2M-kommunikation%20och%20IIoT-enheter/05_Labb-avancerad/ai-proposal-system/README.md">ai-proposal-system – README.md</a></li></ul></div></li>
+  </ol>
+</article>
+<article class="lesson">
+  <div class="lhead"><span class="no">Lektion 03</span><h2>IT och OT – zonindelning och datadiod</h2><span class="time">50 min</span></div>
+  <ol class="steps">
+    <li><span class="step">1</span><div><b>Multimedia – före passet</b><ul><li><a href="03_IT%20och%20OT%20-%20zonindelning%20och%20datadiod/01_Multimedia/N%C3%A4r_ett_mejlklick_stoppar_hela_fabriken.m4a">Podd: När_ett_mejlklick_stoppar_hela_fabriken</a></li><li><a href="03_IT%20och%20OT%20-%20zonindelning%20och%20datadiod/01_Multimedia/S%C3%A4kra_v%C3%A5r_Fysiska_V%C3%A4rld.mp4">Video: Säkra_vår_Fysiska_Värld</a></li></ul></div></li>
+    <li><span class="step">2</span><div><b>PowerPoint och quiz – före passet</b><ul><li><a href="03_IT%20och%20OT%20-%20zonindelning%20och%20datadiod/02_PowerPoint-och-quiz/3.%20S%C3%A4kerhet%20genom%20separation%20av%20IT%20och%20OT%20zonindelningar%20och%20anv%C3%A4ndning%20av%20datadioder.pdf">PDF: 3. Säkerhet genom separation av IT och OT zonindelningar och användning av datadioder</a></li><li><a href="03_IT%20och%20OT%20-%20zonindelning%20och%20datadiod/02_PowerPoint-och-quiz/3.%20S%C3%A4kerhet%20genom%20separation%20av%20IT%20och%20OT%20zonindelningar%20och%20anv%C3%A4ndning%20av%20datadioder.pptx">PowerPoint: 3. Säkerhet genom separation av IT och OT zonindelningar och användning av datadioder</a></li><li><a href="03_IT%20och%20OT%20-%20zonindelning%20och%20datadiod/02_PowerPoint-och-quiz/3.%20S%C3%A4kerhet%20genom%20separation%20av%20IT%20och%20OT%20zonindelningar%20och%20anv%C3%A4ndning%20av%20datadioder%20-%20Google%20Forms.pdf">Quiz: 3. Säkerhet genom separation av IT och OT zonindelningar och användning av datadioder - Google Forms</a></li></ul></div></li>
+    <li class="hl"><span class="step">3</span><div><b>HTML-workshop – på passet</b><ul><li><a href="03_IT%20och%20OT%20-%20zonindelning%20och%20datadiod/03_Workshop/workshop-03-it-ot.html">Öppna workshop 03 (50 min)</a></li></ul></div></li>
+    <li><span class="step">4</span><div><b>Labb grund – på passet eller hemma</b><ul><li><a href="03_IT%20och%20OT%20-%20zonindelning%20och%20datadiod/04_Labb-grund/it_ot_security_data.ipynb">Notebook: it_ot_security_data</a></li></ul></div></li>
+    <li><span class="step">5</span><div><b>Labb avancerad / fördjupning – frivillig, hemma</b><ul><li class="none">–</li></ul></div></li>
+  </ol>
+</article>
+<article class="lesson">
+  <div class="lhead"><span class="no">Lektion 04</span><h2>Maskininlärning för nätverkssäkerhet</h2><span class="time">60 min</span></div>
+  <ol class="steps">
+    <li><span class="step">1</span><div><b>Multimedia – före passet</b><ul><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/01_Multimedia/4.2%20ML%20f%C3%B6r%20stora%20datam%C3%A4ngder/AI-driven_hotdetektor.mp4">Video: AI-driven_hotdetektor</a></li><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/01_Multimedia/4.2%20ML%20f%C3%B6r%20stora%20datam%C3%A4ngder/Bygg_ett_automatiserat_n%C3%A4tverksf%C3%B6rsvar_med_maskininl%C3%A4rning.m4a">Podd: Bygg_ett_automatiserat_nätverksförsvar_med_maskininlärning</a></li><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/01_Multimedia/Maskininl%C3%A4rning_som_n%C3%A4tverkets_nya_f%C3%B6rsvarslinje.m4a">Podd: Maskininlärning_som_nätverkets_nya_försvarslinje</a></li><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/01_Multimedia/ML_i_n%C3%A4tverkss%C3%A4kerhet.mp4">Video: ML_i_nätverkssäkerhet</a></li></ul></div></li>
+    <li><span class="step">2</span><div><b>PowerPoint och quiz – före passet</b><ul><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/02_PowerPoint-och-quiz/4.%20Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet%20analys%20av%20stora%20datam%C3%A4ngder%20f%C3%B6r%20att%20.pdf">PDF: 4. Maskininlärning för nätverkssäkerhet analys av stora datamängder för att </a></li><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/02_PowerPoint-och-quiz/4.%20Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet%20analys%20av%20stora%20datam%C3%A4ngder%20f%C3%B6r%20att%20.pptx">PowerPoint: 4. Maskininlärning för nätverkssäkerhet analys av stora datamängder för att </a></li><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/02_PowerPoint-och-quiz/4.2%20ML%20f%C3%B6r%20stora%20datam%C3%A4ngder/4.2%20Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet%20analys%20av%20stora%20datam%C3%A4ngder%20%28avancerad%29.pdf">PDF: 4.2 Maskininlärning för nätverkssäkerhet analys av stora datamängder (avancerad)</a></li><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/02_PowerPoint-och-quiz/4.2%20ML%20f%C3%B6r%20stora%20datam%C3%A4ngder/4.2%20Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet%20analys%20av%20stora%20datam%C3%A4ngder%20%28avancerad%29.pptx">PowerPoint: 4.2 Maskininlärning för nätverkssäkerhet analys av stora datamängder (avancerad)</a></li><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/02_PowerPoint-och-quiz/4.%20Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet%20analys%20av%20stora%20datam%C3%A4ngder%20f%C3%B6r%20att%20-%20Google%20Forms.pdf">Quiz: 4. Maskininlärning för nätverkssäkerhet analys av stora datamängder för att - Google Forms</a></li></ul></div></li>
+    <li class="hl"><span class="step">3</span><div><b>HTML-workshop – på passet</b><ul><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/03_Workshop/workshop-04-ml-natverkssakerhet.html">Öppna workshop 04 (60 min)</a></li></ul></div></li>
+    <li><span class="step">4</span><div><b>Labb grund – på passet eller hemma</b><ul><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/04_Labb-grund/Data%20Cleaning%20Customer%20Call%20List.ipynb">Notebook: Data Cleaning Customer Call List</a></li><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/04_Labb-grund/ML_modeller_f%C3%B6r_Anomalidetektering.ipynb">Notebook: ML_modeller_för_Anomalidetektering</a></li><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/04_Labb-grund/ML_modeller_f%C3%B6r_Anomalidetektering_i_N%C3%A4tverkss%C3%A4kerhet.ipynb">Notebook: ML_modeller_för_Anomalidetektering_i_Nätverkssäkerhet</a></li><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/04_Labb-grund/NetworkSecurity_Training.ipynb">Notebook: NetworkSecurity_Training</a></li></ul></div></li>
+    <li><span class="step">5</span><div><b>Labb avancerad / fördjupning – frivillig, hemma</b><ul><li><a href="04_Maskininl%C3%A4rning%20f%C3%B6r%20n%C3%A4tverkss%C3%A4kerhet/05_Labb-avancerad/README.md">05_Labb-avancerad – README.md</a></li></ul></div></li>
+  </ol>
+</article>
+<article class="lesson">
+  <div class="lhead"><span class="no">Lektion 05</span><h2>AI för säkerhetsincidenter</h2><span class="time">60 min</span></div>
+  <ol class="steps">
+    <li><span class="step">1</span><div><b>Multimedia – före passet</b><ul><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/01_Multimedia/AI-drivet_cybers%C3%A4kerhetssystem.mp4">Video: AI-drivet_cybersäkerhetssystem</a></li><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/01_Multimedia/AI_som_b%C3%A5de_f%C3%B6rsvar_och_s%C3%A4kerhetsrisk.m4a">Podd: AI_som_både_försvar_och_säkerhetsrisk</a></li><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/01_Multimedia/Bygg_en_robust_MLOps-f%C3%A4stning_mot_ransomware.m4a">Podd: Bygg_en_robust_MLOps-fästning_mot_ransomware</a></li></ul></div></li>
+    <li><span class="step">2</span><div><b>PowerPoint och quiz – före passet</b><ul><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/02_PowerPoint-och-quiz/5.%20Anv%C3%A4ndning%20av%20AI%20f%C3%B6r%20detektering%20och%20respons%20p%C3%A5%20s%C3%A4kerhetsincidenter.pdf">PDF: 5. Användning av AI för detektering och respons på säkerhetsincidenter</a></li><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/02_PowerPoint-och-quiz/5.%20Anv%C3%A4ndning%20av%20AI%20f%C3%B6r%20detektering%20och%20respons%20p%C3%A5%20s%C3%A4kerhetsincidenter.pptx">PowerPoint: 5. Användning av AI för detektering och respons på säkerhetsincidenter</a></li><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/02_PowerPoint-och-quiz/5.2.%20AI%20f%C3%B6r%20detektering%2C%20f%C3%B6rebyggande%20%C3%A5tg%C3%A4rder%20och%20respons%20p%C3%A5%20s%C3%A4kerhetsincidenter%20%28avancerad%29.pdf">PDF: 5.2. AI för detektering, förebyggande åtgärder och respons på säkerhetsincidenter (avancerad)</a></li><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/02_PowerPoint-och-quiz/5.2.%20AI%20f%C3%B6r%20detektering%2C%20f%C3%B6rebyggande%20%C3%A5tg%C3%A4rder%20och%20respons%20p%C3%A5%20s%C3%A4kerhetsincidenter%20%28avancerad%29.pptx">PowerPoint: 5.2. AI för detektering, förebyggande åtgärder och respons på säkerhetsincidenter (avancerad)</a></li><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/02_PowerPoint-och-quiz/5.%20Anv%C3%A4ndning%20av%20AI%20f%C3%B6r%20detektering%20och%20respons%20p%C3%A5%20s%C3%A4kerhetsincidente%20-%20Google%20Forms.pdf">Quiz: 5. Användning av AI för detektering och respons på säkerhetsincidente - Google Forms</a></li></ul></div></li>
+    <li class="hl"><span class="step">3</span><div><b>HTML-workshop – på passet</b><ul><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/03_Workshop/workshop-05-ai-incidenter.html">Öppna workshop 05 (60 min)</a></li></ul></div></li>
+    <li><span class="step">4</span><div><b>Labb grund – på passet eller hemma</b><ul><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/04_Labb-grund/AI_baserad_Loggparser_med_Flan_T5_och_Finjustering.ipynb">Notebook: AI_baserad_Loggparser_med_Flan_T5_och_Finjustering</a></li><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/04_Labb-grund/AI_baserad_Phishing_URL_Detektor_med_NLP_samt_RAG_%28Retrieval_Augmented_Generation%29_princip.ipynb">Notebook: AI_baserad_Phishing_URL_Detektor_med_NLP_samt_RAG_(Retrieval_Augmented_Generation)_princip</a></li><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/04_Labb-grund/Identifiering_av_Phishing_e_postmeddelanden_med_BERT.ipynb">Notebook: Identifiering_av_Phishing_e_postmeddelanden_med_BERT</a></li><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/04_Labb-grund/Self_Adaptive_AI_database_for_Cybersecurity.ipynb">Notebook: Self_Adaptive_AI_database_for_Cybersecurity</a></li></ul></div></li>
+    <li><span class="step">5</span><div><b>Labb avancerad / fördjupning – frivillig, hemma</b><ul><li><a href="05_AI%20f%C3%B6r%20s%C3%A4kerhetsincidenter/05_Labb-avancerad/MLOps-Docker/README.md">MLOps-Docker – README.md</a></li></ul></div></li>
+  </ol>
+</article>
+<article class="lesson">
+  <div class="lhead"><span class="no">Lektion 06</span><h2>Falsk information och deepfakes</h2><span class="time">50 min</span></div>
+  <ol class="steps">
+    <li><span class="step">1</span><div><b>Multimedia – före passet</b><ul><li><a href="06_Falsk%20information%20och%20deepfakes/01_Multimedia/Anderson%20Cooper%2C%204K%20Original_%28Deep%29Fake%20Example.mp4">Video: Anderson Cooper, 4K Original_(Deep)Fake Example</a></li><li><a href="06_Falsk%20information%20och%20deepfakes/01_Multimedia/Detecting%20Fake%20News%20Campaigns%20via%20Graph%20Convolutional%20Networks.wav">Podd: Detecting Fake News Campaigns via Graph Convolutional Networks</a></li><li><a href="06_Falsk%20information%20och%20deepfakes/01_Multimedia/This%20is%20not%20Morgan%20Freeman%20%20-%20%20A%20Deepfake%20Singularity.mp4">Video: This is not Morgan Freeman  -  A Deepfake Singularity</a></li></ul></div></li>
+    <li><span class="step">2</span><div><b>PowerPoint och quiz – före passet</b><ul><li><a href="06_Falsk%20information%20och%20deepfakes/02_PowerPoint-och-quiz/6.%20Tekniker%20f%C3%B6r%20att%20identifiera%20falsk%20information%20och%20st%C3%A4rka%20kontrollsystem.pdf">PDF: 6. Tekniker för att identifiera falsk information och stärka kontrollsystem</a></li><li><a href="06_Falsk%20information%20och%20deepfakes/02_PowerPoint-och-quiz/6.%20Tekniker%20f%C3%B6r%20att%20identifiera%20falsk%20information%20och%20st%C3%A4rka%20kontrollsystem.pptx">PowerPoint: 6. Tekniker för att identifiera falsk information och stärka kontrollsystem</a></li><li><a href="06_Falsk%20information%20och%20deepfakes/02_PowerPoint-och-quiz/6.%20Tekniker%20f%C3%B6r%20att%20identifiera%20falsk%20information%20och%20st%C3%A4rka%20kontrollsystem%20-%20Google%20Forms.pdf">Quiz: 6. Tekniker för att identifiera falsk information och stärka kontrollsystem - Google Forms</a></li></ul></div></li>
+    <li class="hl"><span class="step">3</span><div><b>HTML-workshop – på passet</b><ul><li><a href="06_Falsk%20information%20och%20deepfakes/03_Workshop/workshop-06-falsk-information.html">Öppna workshop 06 (50 min)</a></li></ul></div></li>
+    <li><span class="step">4</span><div><b>Labb grund – på passet eller hemma</b><ul><li><a href="06_Falsk%20information%20och%20deepfakes/04_Labb-grund/Deepfake_detektering_med_enkelt_CNN%2C_MTCNN%2C_EfficientNetV2%2C_CNN_med_residualf%C3%B6rbindelser_%28ResNet%29.ipynb">Notebook: Deepfake_detektering_med_enkelt_CNN,_MTCNN,_EfficientNetV2,_CNN_med_residualförbindelser_(ResNet)</a></li><li><a href="06_Falsk%20information%20och%20deepfakes/04_Labb-grund/Phishing_detektering_med_hj%C3%A4lp_av_BERT_och_GPT_2.ipynb">Notebook: Phishing_detektering_med_hjälp_av_BERT_och_GPT_2</a></li><li><a href="06_Falsk%20information%20och%20deepfakes/04_Labb-grund/Sentiment_Analysis_Model_for_Cybersecurity_Applications.ipynb">Notebook: Sentiment_Analysis_Model_for_Cybersecurity_Applications</a></li></ul></div></li>
+    <li><span class="step">5</span><div><b>Labb avancerad / fördjupning – frivillig, hemma</b><ul><li><a href="06_Falsk%20information%20och%20deepfakes/05_Labb-avancerad/README.md">05_Labb-avancerad – README.md</a></li></ul></div></li>
+  </ol>
+</article>
+<article class="lesson">
+  <div class="lhead"><span class="no">Lektion 07</span><h2>AI-verktyg i cybersäkerhet</h2><span class="time">60 min</span></div>
+  <ol class="steps">
+    <li><span class="step">1</span><div><b>Multimedia – före passet</b><ul><li><a href="07_AI-verktyg%20i%20cybers%C3%A4kerhet/01_Multimedia/Gemini%20AI%20for%20Security%20Operations_%20Use%20Cases%20and%20Insights.wav">Podd: Gemini AI for Security Operations_ Use Cases and Insights</a></li></ul></div></li>
+    <li><span class="step">2</span><div><b>PowerPoint och quiz – före passet</b><ul><li><a href="07_AI-verktyg%20i%20cybers%C3%A4kerhet/02_PowerPoint-och-quiz/7.%20Praktisk%20till%C3%A4mpning%20av%20AI-verktyg%20inom%20cybers%C3%A4kerhet.pdf">PDF: 7. Praktisk tillämpning av AI-verktyg inom cybersäkerhet</a></li><li><a href="07_AI-verktyg%20i%20cybers%C3%A4kerhet/02_PowerPoint-och-quiz/7.%20Praktisk%20till%C3%A4mpning%20av%20AI-verktyg%20inom%20cybers%C3%A4kerhet.pptx">PowerPoint: 7. Praktisk tillämpning av AI-verktyg inom cybersäkerhet</a></li><li><a href="07_AI-verktyg%20i%20cybers%C3%A4kerhet/02_PowerPoint-och-quiz/7.%20Praktisk%20till%C3%A4mpning%20av%20AI-verktyg%20inom%20cybers%C3%A4kerhet%20-%20Google%20Forms.pdf">Quiz: 7. Praktisk tillämpning av AI-verktyg inom cybersäkerhet - Google Forms</a></li></ul></div></li>
+    <li class="hl"><span class="step">3</span><div><b>HTML-workshop – på passet</b><ul><li><a href="07_AI-verktyg%20i%20cybers%C3%A4kerhet/03_Workshop/workshop-07-ai-cybersakerhetsverktyg.html">Öppna workshop 07 (60 min)</a></li></ul></div></li>
+    <li><span class="step">4</span><div><b>Labb grund – på passet eller hemma</b><ul><li><a href="07_AI-verktyg%20i%20cybers%C3%A4kerhet/04_Labb-grund/Intrusion_Detection_System_%28IDPS%29_test_med_hj%C3%A4lp_av_egen_webbhistorik.ipynb">Notebook: Intrusion_Detection_System_(IDPS)_test_med_hjälp_av_egen_webbhistorik</a></li><li><a href="07_AI-verktyg%20i%20cybers%C3%A4kerhet/04_Labb-grund/Malicious_Document_Detection.ipynb">Notebook: Malicious_Document_Detection</a></li></ul></div></li>
+    <li><span class="step">5</span><div><b>Labb avancerad / fördjupning – frivillig, hemma</b><ul><li><a href="07_AI-verktyg%20i%20cybers%C3%A4kerhet/05_Labb-avancerad/house_price_predictor/README.md">house_price_predictor – README.md</a></li><li><a href="07_AI-verktyg%20i%20cybers%C3%A4kerhet/05_Labb-avancerad/Insider-Threat-Detection/HANDLEDNING.md">Insider-Threat-Detection – HANDLEDNING.md</a></li><li><a href="07_AI-verktyg%20i%20cybers%C3%A4kerhet/05_Labb-avancerad/Insider-Threat-Detection/README.md">Insider-Threat-Detection – README.md</a></li></ul></div></li>
+  </ol>
+</article>
+
+<h2>Kursplan, projekt och lärarmaterial</h2>
+<ul>
+  <li><a href="00_Kursplan/Kurs-PM%202026.md">Kurs-PM 2026 – datum, examination och läranderesultat</a></li>
+  <li><a href="00_Kursplan/Kursplan%20AI%2C%20Automation%20och%20Machine%20learning.pdf">Kursplan – beslutad PDF</a></li>
+  <li><a href="00_Kursplan/Tidsplan%20och%20arbetsf%C3%B6rdelning.md">Tidsplan – vad som görs i klass och hemma</a></li>
+</ul>
+
+<h2>Materialkontroll</h2>
+<div class="note">Sju föreläsningar med PDF och PowerPoint, sju quiz med åtta frågor vardera, sju
+HTML-workshoppar med tre individuppgifter, en gruppuppgift, fyra quizfrågor och fyra facitblock.
+Workshopparna innehåller databaser med SQL, simuleringar och korta begreppslistor. Alla data i
+workshopparna är syntetiska och inget skickas över nätet.</div>
+
+<h2>Koppling till kursplanen</h2>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Lektion</th><th>Läranderesultat från kursplanen</th></tr></thead>
+  <tbody>
+    <tr><td>01</td><td>Redogöra för begrepp inom AI, automation och machine learning; använda och hantera AI, automation och ML.</td></tr>
+    <tr><td>02</td><td>Beskriva M2M och IIoT-enheter samt hur integrering ger ökad automatisering, bättre kommunikation och kontroll.</td></tr>
+    <tr><td>03</td><td>Förklara IT/OT-separation med zonindelningar, datadiod i zongränser och allowlisting.</td></tr>
+    <tr><td>04</td><td>Redogöra för maskininlärningens förmåga att analysera stora datamängder, upptäcka mönster och exponera nätverkssårbarheter.</td></tr>
+    <tr><td>05</td><td>Använda AI för detektering, förebyggande åtgärder och respons på säkerhetsincidenter.</td></tr>
+    <tr><td>06</td><td>Identifiera och kritiskt granska falsk information som kan förstärka attacker.</td></tr>
+    <tr><td>07</td><td>Använda teknik för att se mönster, övervaka system och stärka kontrollsystem; värdera och diskutera tekniken.</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="note">Workshopparna tränar läranderesultaten. Examinationen sker i den muntliga redovisningen och projektuppgiften enligt Kurs-PM.</p>
+</main>
+<footer>AI inom cybersäkerhet · kursmaterial · workshopparna fungerar i webbläsaren utan inloggning</footer>
+</body>
+</html>
